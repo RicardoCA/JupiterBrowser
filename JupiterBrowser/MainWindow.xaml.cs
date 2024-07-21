@@ -203,9 +203,9 @@ namespace JupiterBrowser
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
                 {
-                    if(title.Length > 25)
+                    if(title.Length > 20)
                     {
-                        tabItem.TabName = title.Substring(0,25);
+                        tabItem.TabName = title.Substring(0,20);
                         
                     }
                     else
