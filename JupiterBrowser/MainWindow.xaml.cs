@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
 
 namespace JupiterBrowser
 {
@@ -19,19 +21,52 @@ namespace JupiterBrowser
             InitializeComponent();
             Tabs = new ObservableCollection<TabItem>();
             TabListBox.ItemsSource = Tabs;
+            this.DataContext = this;
         }
 
         private void NewTabButton_Click(object sender, RoutedEventArgs e)
         {
-            Tabs.Add(new TabItem { TabName = "New Tab " + id });
+            var newTab = new TabItem { TabName = "New Tab " + id };
+            Tabs.Add(newTab);
             id += 1;
+
+            var webView = new WebView2();
+            webView.Source = new System.Uri("https://www.google.com");
+            newTab.WebView = webView;
+            webView.NavigationCompleted += WebView_NavigationCompleted;
+
+            if (TabListBox.SelectedItem is TabItem selectedTab)
+            {
+                ContentArea.Content = selectedTab.WebView;
+            }
+        }
+
+        private async void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (sender is WebView2 webView)
+            {
+                var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
+                title = title.Trim('"'); // Remove the surrounding quotes
+
+                var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
+                if (tabItem != null)
+                {
+                    tabItem.TabName = title;
+                }
+
+                // Refresh the ListBox to update the displayed tab name
+                var selectedIndex = TabListBox.SelectedIndex;
+                TabListBox.ItemsSource = null;
+                TabListBox.ItemsSource = Tabs;
+                TabListBox.SelectedIndex = selectedIndex;
+            }
         }
 
         private void TabListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (TabListBox.SelectedItem is TabItem selectedTab)
             {
-                ContentArea.Content = new TextBlock { Text = $"Content for {selectedTab.TabName}" };
+                ContentArea.Content = selectedTab.WebView;
             }
         }
 
@@ -42,6 +77,9 @@ namespace JupiterBrowser
 
             if (tabItem != null)
             {
+                // Dispose of the WebView2 control
+                tabItem.WebView?.Dispose();
+
                 Tabs.Remove(tabItem);
             }
         }
@@ -117,5 +155,6 @@ namespace JupiterBrowser
     public class TabItem
     {
         public string TabName { get; set; }
+        public WebView2 WebView { get; set; }
     }
 }
