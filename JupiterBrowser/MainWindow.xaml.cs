@@ -11,6 +11,7 @@ namespace JupiterBrowser
     public partial class MainWindow : Window
     {
         public ObservableCollection<TabItem> Tabs { get; set; }
+        public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
         private Point _startPoint;
 
@@ -23,6 +24,55 @@ namespace JupiterBrowser
             TabListBox.ItemsSource = Tabs;
             this.DataContext = this;
             this.KeyDown += Window_KeyDown;
+            PinnedTabs = new ObservableCollection<TabItem>
+            {
+                new TabItem { TabName = "Google", LogoUrl = "https://www.google.com/favicon.ico", url= "https://www.google.com/" },
+                new TabItem { TabName = "Terra", LogoUrl = "https://www.terra.com.br/favicon.ico", url= "https://www.terra.com.br" },
+                new TabItem { TabName = "Terra", LogoUrl = "https://www.chatgpt.com/favicon.ico", url= "https://www.chatgpt.com" }
+            };
+            PinnedTabsListBox.ItemsSource = PinnedTabs;
+        }
+
+        private void Pin()
+        {
+            if (PinnedTabs == null)
+            {
+                PinnedTabs = new ObservableCollection<TabItem>();
+                PinnedTabsListBox.ItemsSource = PinnedTabs;
+            }
+
+            // Suponha que você tenha um método para obter a URL atual do WebView
+            var (currentUrl, currentLogo) = GetCurrentWebViewUrl();
+
+            // Verifique se o item já está nos PinnedTabs
+            var existingTab = PinnedTabs.FirstOrDefault(tab => tab.url == currentUrl);
+            if (existingTab != null)
+            {
+                // Remove o item existente
+                PinnedTabs.Remove(existingTab);
+            }
+            else
+            {
+                // Adicione o novo item
+                PinnedTabs.Add(new TabItem
+                {
+                    TabName = "New Site",
+                    LogoUrl = currentLogo,
+                    url = currentUrl
+                });
+            }
+        }
+
+        private (string, string) GetCurrentWebViewUrl()
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                string url = selectedTab.WebView.Source.ToString();
+                string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
+                string faviconUrl = $"{domain}/favicon.ico"; // Construir a URL do favicon
+                return (url, faviconUrl);
+            }
+            return (string.Empty, string.Empty);
         }
 
         private void OpenHistoric()
@@ -108,6 +158,14 @@ namespace JupiterBrowser
             else if(e.Key == Key.L && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 EditTabUrl();
+            }
+            else if(e.Key == Key.H && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                OpenHistoric();
+            }
+            else if (e.Key == Key.D && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                Pin();
             }
         }
 
@@ -244,5 +302,7 @@ namespace JupiterBrowser
         public WebView2 WebView { get; set; }
 
         public string LogoUrl { get; set; }
+
+        public string url { get; set; }
     }
 }

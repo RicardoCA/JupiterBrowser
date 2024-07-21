@@ -37,6 +37,11 @@
             <Setter Property="Height" Value="20"/>
             <Setter Property="Content" Value="X"/>
         </Style>
+        <DataTemplate x:Key="PinnedTabTemplate">
+            <StackPanel Orientation="Vertical">
+                <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="5"/>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Key="TabItemTemplate">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="0,0,5,0"/>
@@ -45,6 +50,10 @@
                         Click="CloseTabButton_Click"/>
             </StackPanel>
         </DataTemplate>
+        <!-- Define the ItemsPanelTemplate for the PinnedTabsListBox -->
+        <ItemsPanelTemplate x:Key="PinnedTabsItemsPanelTemplate">
+            <WrapPanel Orientation="Horizontal" ItemWidth="50" ItemHeight="50"/>
+        </ItemsPanelTemplate>
     </Window.Resources>
 
     <Grid>
@@ -59,6 +68,14 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ListBox Name="PinnedTabsListBox"
+                             ItemTemplate="{StaticResource PinnedTabTemplate}"
+                             ItemsPanel="{StaticResource PinnedTabsItemsPanelTemplate}"
+                             Background="Transparent" BorderThickness="0" 
+                             Margin="10" HorizontalAlignment="Stretch"/>
+                </ScrollViewer>
                 <Button Content="+ New Tab" Click="NewTabButton_Click"/>
                 <!-- ListBox para as guias -->
                 <ListBox Name="TabListBox" 
