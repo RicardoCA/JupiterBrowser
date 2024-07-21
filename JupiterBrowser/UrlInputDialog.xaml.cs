@@ -6,6 +6,7 @@ namespace JupiterBrowser
     public partial class UrlInputDialog : Window
     {
         public string EnteredUrl { get; set; }
+        private List<string> _history = new List<string>();
 
         public UrlInputDialog()
         {
