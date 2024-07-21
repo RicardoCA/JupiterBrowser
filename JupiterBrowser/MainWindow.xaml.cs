@@ -33,6 +33,27 @@ namespace JupiterBrowser
             PinnedTabsListBox.ItemsSource = PinnedTabs;
         }
 
+        private void PinnedTabsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (PinnedTabsListBox.SelectedItem is TabItem selectedTab)
+            {
+                OpenNewTabWithUrl(selectedTab.url);
+            }
+        }
+        private void OpenNewTabWithUrl(string url)
+        {
+            var newTab = new TabItem { TabName = "New Tab " + id };
+            Tabs.Add(newTab);
+            id += 1;
+
+            var webView = new WebView2();
+            webView.Source = new System.Uri(url);
+            webView.NavigationCompleted += WebView_NavigationCompleted;
+            newTab.WebView = webView;
+
+            TabListBox.SelectedItem = newTab;
+        }
+
         private void Pin()
         {
             if (PinnedTabs == null)
@@ -175,12 +196,9 @@ namespace JupiterBrowser
             {
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
                 title = title.Trim('"'); // Remove the surrounding quotes
-                var logoUrl = await webView.CoreWebView2.ExecuteScriptAsync(@"
-            (function() {
-                var link = document.querySelector('link[rel*=""icon""]') || document.querySelector('img');
-                return link ? link.href : '';
-            })();");
-                logoUrl = logoUrl.Trim('"');
+                string url = webView.Source.ToString();
+                string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
+                string faviconUrl = $"{domain}/favicon.ico";
 
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
@@ -194,7 +212,7 @@ namespace JupiterBrowser
                     {
                         tabItem.TabName = title;
                     }
-                    tabItem.LogoUrl = logoUrl;
+                    tabItem.LogoUrl = faviconUrl;
 
                 }
 
