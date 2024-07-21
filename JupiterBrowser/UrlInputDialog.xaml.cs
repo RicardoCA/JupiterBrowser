@@ -5,7 +5,7 @@ namespace JupiterBrowser
 {
     public partial class UrlInputDialog : Window
     {
-        public string EnteredUrl { get; private set; }
+        public string EnteredUrl { get; set; }
 
         public UrlInputDialog()
         {

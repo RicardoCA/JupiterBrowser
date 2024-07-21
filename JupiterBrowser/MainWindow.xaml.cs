@@ -43,6 +43,37 @@ namespace JupiterBrowser
             }
         }
 
+        private void EditTabUrl()
+        {
+            var urlInputDialog = new UrlInputDialog();
+            if (urlInputDialog.ShowDialog() == true)
+            {
+                // Verifica se há uma guia selecionada
+                var selectedTab = TabListBox.SelectedItem as TabItem;
+                if (selectedTab != null)
+                {
+                    // Atualiza a URL do WebView da guia selecionada
+                    if (selectedTab.WebView != null)
+                    {
+                        selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                        urlInputDialog.EnteredUrl = selectedTab.WebView.Source.ToString();
+                    }
+                    else
+                    {
+                        // Se o WebView não existe ainda, cria um novo
+                        var webView = new WebView2();
+                        webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                        webView.NavigationCompleted += WebView_NavigationCompleted;
+                        selectedTab.WebView = webView;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Por favor, selecione uma guia para editar.");
+                }
+            }
+        }
+
         private void NewTabButton_Click(object sender, RoutedEventArgs e)
         {
             OpenNewTab();
@@ -53,6 +84,10 @@ namespace JupiterBrowser
             if (e.Key == Key.T && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 OpenNewTab();
+            }
+            else if(e.Key == Key.L && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                EditTabUrl();
             }
         }
 
