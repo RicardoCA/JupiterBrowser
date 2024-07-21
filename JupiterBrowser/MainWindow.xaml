@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Jupiter Browser" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="Gray"/>
@@ -19,7 +19,7 @@
         </Style>
         <Style TargetType="ListBox">
             <Setter Property="Background" Value="#FF333333"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#FF333333"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="10,40,10,10"/>
             <Setter Property="AllowDrop" Value="True"/>

@@ -22,22 +22,37 @@ namespace JupiterBrowser
             Tabs = new ObservableCollection<TabItem>();
             TabListBox.ItemsSource = Tabs;
             this.DataContext = this;
+            this.KeyDown += Window_KeyDown;
+        }
+
+        private void OpenNewTab()
+        {
+            var urlInputDialog = new UrlInputDialog();
+            if (urlInputDialog.ShowDialog() == true)
+            {
+                var newTab = new TabItem { TabName = "New Tab " + id };
+                Tabs.Add(newTab);
+                id += 1;
+
+                var webView = new WebView2();
+                webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                webView.NavigationCompleted += WebView_NavigationCompleted;
+                newTab.WebView = webView;
+
+                TabListBox.SelectedItem = newTab;
+            }
         }
 
         private void NewTabButton_Click(object sender, RoutedEventArgs e)
         {
-            var newTab = new TabItem { TabName = "New Tab " + id };
-            Tabs.Add(newTab);
-            id += 1;
+            OpenNewTab();
+        }
 
-            var webView = new WebView2();
-            webView.Source = new System.Uri("https://www.google.com");
-            newTab.WebView = webView;
-            webView.NavigationCompleted += WebView_NavigationCompleted;
-
-            if (TabListBox.SelectedItem is TabItem selectedTab)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.T && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                ContentArea.Content = selectedTab.WebView;
+                OpenNewTab();
             }
         }
 
@@ -51,7 +66,16 @@ namespace JupiterBrowser
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
                 {
-                    tabItem.TabName = title;
+                    if(title.Length > 25)
+                    {
+                        tabItem.TabName = title.Substring(0,25);
+                        
+                    }
+                    else
+                    {
+                        tabItem.TabName = title;
+                    }
+                    
                 }
 
                 // Refresh the ListBox to update the displayed tab name
