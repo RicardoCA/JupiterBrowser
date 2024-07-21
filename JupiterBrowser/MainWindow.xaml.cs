@@ -97,6 +97,12 @@ namespace JupiterBrowser
             {
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
                 title = title.Trim('"'); // Remove the surrounding quotes
+                var logoUrl = await webView.CoreWebView2.ExecuteScriptAsync(@"
+            (function() {
+                var link = document.querySelector('link[rel*=""icon""]') || document.querySelector('img');
+                return link ? link.href : '';
+            })();");
+                logoUrl = logoUrl.Trim('"');
 
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
@@ -110,7 +116,8 @@ namespace JupiterBrowser
                     {
                         tabItem.TabName = title;
                     }
-                    
+                    tabItem.LogoUrl = logoUrl;
+
                 }
 
                 // Refresh the ListBox to update the displayed tab name
@@ -215,5 +222,7 @@ namespace JupiterBrowser
     {
         public string TabName { get; set; }
         public WebView2 WebView { get; set; }
+
+        public string LogoUrl { get; set; }
     }
 }
