@@ -242,6 +242,11 @@ namespace JupiterBrowser
             }
         }
 
+        private void SidebarToggle_Click(object sender, RoutedEventArgs e)
+        {
+            SidebarToggle();
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
@@ -262,6 +267,18 @@ namespace JupiterBrowser
                     selectedTab.WebView.CoreWebView2.GoForward();
                 }
                 
+            }
+        }
+
+        private void ReloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                if (selectedTab.WebView.CoreWebView2 != null)
+                {
+                    selectedTab.WebView.CoreWebView2.Reload();
+                }
+
             }
         }
 

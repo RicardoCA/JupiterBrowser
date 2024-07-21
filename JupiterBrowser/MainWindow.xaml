@@ -95,6 +95,22 @@
                       Stretch="Uniform" />
                             </Button.Content>
                         </Button>
+                        <Button Margin="5" Width="35" Height="35" Click="ReloadButton_Click">
+                            <Button.Content>
+                                <Path Data="M12,2V6H10V3.3A8,8,0,1,0,14.7,11H12V13h6V7H16V9.7A10,10,0,1,1,12,2Z"
+                                  Fill="White"
+                                  Stretch="Uniform"/>   
+                            </Button.Content>
+                        </Button>
+                        <Button Margin="5" Width="35" Height="35" Click="SidebarToggle_Click">
+                            <Button.Content>
+                                <StackPanel>
+                                    <Rectangle Fill="White" Width="25" Height="3" Margin="0,3,0,3"/>
+                                    <Rectangle Fill="White" Width="25" Height="3" Margin="0,3,0,3"/>
+                                    <Rectangle Fill="White" Width="25" Height="3" Margin="0,3,0,3"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </StackPanel>
                 </DockPanel>
 
