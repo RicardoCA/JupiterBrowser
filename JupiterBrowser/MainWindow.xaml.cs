@@ -14,6 +14,9 @@ namespace JupiterBrowser
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
         private Point _startPoint;
+        private bool isFullScreen = false;
+
+
 
         public int id = 1;
 
@@ -116,6 +119,8 @@ namespace JupiterBrowser
             OpenHistoric();
         }
 
+        
+
         private void OpenNewTab()
         {
             var urlInputDialog = new UrlInputDialog();
@@ -128,6 +133,10 @@ namespace JupiterBrowser
                 var webView = new WebView2();
                 webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                 webView.NavigationCompleted += WebView_NavigationCompleted;
+                
+
+           
+
                 newTab.WebView = webView;
 
                 TabListBox.SelectedItem = newTab;
@@ -187,6 +196,34 @@ namespace JupiterBrowser
             else if (e.Key == Key.D && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 Pin();
+            }
+            else if(e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                SidebarToggle();
+            }
+        }
+
+        private void SidebarToggle()
+        {
+            //Sidebar.Visibility = Sidebar.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            if (isFullScreen)
+            {
+                // Restaurar o Border ao seu tamanho original
+                Grid.SetColumn(ContentBorder, 1);
+                ContentBorder.Margin = new Thickness(10);
+                ContentBorder.CornerRadius = new CornerRadius(10);
+                isFullScreen = false;
+                Sidebar.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Fazer o Border ocupar a tela toda
+                Grid.SetColumn(ContentBorder, 0);
+                Grid.SetColumnSpan(ContentBorder, 2);
+                ContentBorder.Margin = new Thickness(0);
+                ContentBorder.CornerRadius = new CornerRadius(0);
+                isFullScreen = true;
+                Sidebar.Visibility = Visibility.Collapsed;
             }
         }
 

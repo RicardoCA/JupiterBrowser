@@ -62,7 +62,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!-- Menu Lateral -->
-        <Grid Background="#FF2D2D30" Grid.Column="0">
+        <Grid Background="#FF2D2D30" Grid.Column="0" x:Name="Sidebar">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -91,7 +91,7 @@
         </Grid>
 
         <!-- Área de Conteúdo -->
-        <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="1">
+        <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="1" x:Name="ContentBorder">
             <ContentControl Name="ContentArea"/>
         </Border>
     </Grid>
