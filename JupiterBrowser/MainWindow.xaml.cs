@@ -25,6 +25,26 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
         }
 
+        private void OpenHistoric()
+        {
+            var newTab = new TabItem { TabName = "New Tab " + id };
+            Tabs.Add(newTab);
+            id += 1;
+
+            var webView = new WebView2();
+            webView.Source = new System.Uri("edge://history");
+            webView.NavigationCompleted += WebView_NavigationCompleted;
+            newTab.WebView = webView;
+
+            TabListBox.SelectedItem = newTab;
+        }
+
+        private void HistoricButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Lógica para o botão de configurações
+            OpenHistoric();
+        }
+
         private void OpenNewTab()
         {
             var urlInputDialog = new UrlInputDialog();

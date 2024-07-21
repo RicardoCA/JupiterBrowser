@@ -10,6 +10,15 @@ namespace JupiterBrowser
         public UrlInputDialog()
         {
             InitializeComponent();
+            this.KeyDown += Window_KeyDown;
+            UrlTextBox.Focus();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Escape) {
+                this.Close();
+            }
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
@@ -42,7 +51,11 @@ namespace JupiterBrowser
                 }
                 else
                 {
-                    url = $"https://www.google.com/search?q={url}";
+                    if(url.IndexOf("edge://") == -1)
+                    {
+                        url = $"https://www.google.com/search?q={url}";
+                    }
+                    
                 }
             }
             else

@@ -53,16 +53,25 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!-- Menu Lateral -->
-        <StackPanel Background="#FF2D2D30" Grid.Column="0">
-            <Button Content="+ New Tab" Click="NewTabButton_Click"/>
-            <!-- ListBox para as guias -->
-            <ListBox Name="TabListBox" 
-                     ItemTemplate="{StaticResource TabItemTemplate}" 
-                     SelectionChanged="TabListBox_SelectionChanged"
-                     PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
-                     DragOver="TabListBox_DragOver"
-                     Drop="TabListBox_Drop"/>
-        </StackPanel>
+        <Grid Background="#FF2D2D30" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Button Content="+ New Tab" Click="NewTabButton_Click"/>
+                <!-- ListBox para as guias -->
+                <ListBox Name="TabListBox" 
+                         ItemTemplate="{StaticResource TabItemTemplate}" 
+                         SelectionChanged="TabListBox_SelectionChanged"
+                         PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
+                         DragOver="TabListBox_DragOver"
+                         Drop="TabListBox_Drop"/>
+            </StackPanel>
+            <!-- Botão no final -->
+            <Button Content="H" Grid.Row="1" Margin="10" Click="HistoricButton_Click" Width="50"/>
+        </Grid>
+
         <!-- Área de Conteúdo -->
         <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="1">
             <ContentControl Name="ContentArea"/>
