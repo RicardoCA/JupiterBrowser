@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 
@@ -15,6 +16,7 @@ namespace JupiterBrowser
         private TabItem _draggedItem;
         private Point _startPoint;
         private bool isFullScreen = false;
+        private DispatcherTimer _musicTitleUpdateTimer;
 
 
 
@@ -30,10 +32,19 @@ namespace JupiterBrowser
             PinnedTabs = new ObservableCollection<TabItem>
             {
                 new TabItem { TabName = "Google", LogoUrl = "https://www.google.com/favicon.ico", url= "https://www.google.com/" },
-                new TabItem { TabName = "Terra", LogoUrl = "https://www.terra.com.br/favicon.ico", url= "https://www.terra.com.br" },
+                new TabItem { TabName = "Terra", LogoUrl = "https://music.youtube.com/favicon.ico", url= "https://music.youtube.com" },
                 new TabItem { TabName = "Terra", LogoUrl = "https://www.chatgpt.com/favicon.ico", url= "https://www.chatgpt.com" }
             };
             PinnedTabsListBox.ItemsSource = PinnedTabs;
+            // Inicializa o timer
+            _musicTitleUpdateTimer = new DispatcherTimer();
+            _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
+            _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
+        }
+
+        private async void MusicTitleUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateMiniPlayerVisibility();
         }
 
         private void PinnedTabsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -42,6 +53,7 @@ namespace JupiterBrowser
             {
                 OpenNewTabWithUrl(selectedTab.url);
             }
+            UpdateMiniPlayerVisibility();
         }
         private void OpenNewTabWithUrl(string url)
         {
@@ -55,6 +67,7 @@ namespace JupiterBrowser
             newTab.WebView = webView;
 
             TabListBox.SelectedItem = newTab;
+            UpdateMiniPlayerVisibility();
         }
 
         private void Pin()
@@ -140,6 +153,7 @@ namespace JupiterBrowser
                 newTab.WebView = webView;
 
                 TabListBox.SelectedItem = newTab;
+                UpdateMiniPlayerVisibility();
             }
         }
 
@@ -172,6 +186,7 @@ namespace JupiterBrowser
                     MessageBox.Show("Por favor, selecione uma guia para editar.");
                 }
             }
+            UpdateMiniPlayerVisibility();
         }
 
         private void NewTabButton_Click(object sender, RoutedEventArgs e)
@@ -227,6 +242,42 @@ namespace JupiterBrowser
             }
         }
 
+        private void MiniPlayer_Play_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').play(); }");
+        }
+
+        private void MiniPlayer_Pause_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').pause(); } ");
+        }
+
+        private void MiniPlayer_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').pause(); document.querySelector('video').currentTime = 0; } ");
+        }
+
+        private void MiniPlayer_Previus_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.getElementsByClassName(\"previous-button style-scope ytmusic-player-bar\")[0].click(); }");
+        }
+
+        private void MiniPlayer_Next_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.getElementsByClassName(\"next-button style-scope ytmusic-player-bar\")[0].click(); }");
+        }
+
+        private async void ExecuteMiniPlayerScript(string script)
+        {
+            foreach (var tab in Tabs)
+            {
+                if (tab.WebView != null && (tab.WebView.Source.ToString().Contains("music.youtube.com") ))
+                {
+                    await tab.WebView.ExecuteScriptAsync(script);
+                }
+            }
+        }
+
         private async void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             if (sender is WebView2 webView)
@@ -258,8 +309,47 @@ namespace JupiterBrowser
                 TabListBox.ItemsSource = null;
                 TabListBox.ItemsSource = Tabs;
                 TabListBox.SelectedIndex = selectedIndex;
+
+                UpdateMiniPlayerVisibility();
+
+                
             }
         }
+
+        private async void UpdateMiniPlayerVisibility()
+        {
+            bool hasMusicTab = Tabs.Any(tab => tab.WebView != null && tab.WebView.Source.ToString().Contains("music.youtube.com"));
+            MiniPlayer.Visibility = hasMusicTab ? Visibility.Visible : Visibility.Collapsed;
+
+            if (hasMusicTab)
+            {
+                try
+                {
+                    var musicTab = Tabs.First(tab => tab.WebView != null && tab.WebView.Source.ToString().Contains("music.youtube.com"));
+
+                    // Espera até que o CoreWebView2 seja inicializado
+                    await musicTab.WebView.EnsureCoreWebView2Async();
+
+                    string script = "document.querySelector('title').textContent";
+
+                    var musicTitle = await musicTab.WebView.CoreWebView2.ExecuteScriptAsync(script);
+                    musicTitle = musicTitle.Trim('"'); // Remove the surrounding quotes
+                    MusicTitle.Text = musicTitle;
+                    _musicTitleUpdateTimer.Start();
+                }
+                catch (Exception ex)
+                {
+                    // Tratar exceções aqui
+                    MusicTitle.Text = "Erro ao obter o título";
+                    _musicTitleUpdateTimer.Stop();
+                }
+            }
+            else
+            {
+                MusicTitle.Text = string.Empty;
+            }
+        }
+
 
         private void TabListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -267,6 +357,7 @@ namespace JupiterBrowser
             {
                 ContentArea.Content = selectedTab.WebView;
             }
+            UpdateMiniPlayerVisibility();
         }
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
@@ -281,6 +372,7 @@ namespace JupiterBrowser
 
                 Tabs.Remove(tabItem);
             }
+            UpdateMiniPlayerVisibility();
         }
 
         private void TabListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

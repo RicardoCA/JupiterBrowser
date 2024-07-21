@@ -85,6 +85,17 @@
                          PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
                          DragOver="TabListBox_DragOver"
                          Drop="TabListBox_Drop"/>
+                <Border x:Name="MiniPlayer" Visibility="Collapsed" Background="LightGray" Margin="5" Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="Mini Player" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="MusicTitle" Text="Title" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Button Content="Play" Click="MiniPlayer_Play_Click"/>
+                        <Button Content="Pause" Click="MiniPlayer_Pause_Click"/>
+                        <Button Content="Stop" Click="MiniPlayer_Stop_Click"/>
+                        <Button Content="Previus" Click="MiniPlayer_Previus_Click"/>
+                        <Button Content="Next" Click="MiniPlayer_Next_Click"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
             <!-- Botão no final -->
             <Button Content="H" Grid.Row="1" Margin="10" Click="HistoricButton_Click" Width="50"/>
