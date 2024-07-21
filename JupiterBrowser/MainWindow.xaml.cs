@@ -242,6 +242,29 @@ namespace JupiterBrowser
             }
         }
 
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                if (selectedTab.WebView.CoreWebView2 != null && selectedTab.WebView.CoreWebView2.CanGoBack)
+                {
+                    selectedTab.WebView.CoreWebView2.GoBack();
+                }
+                
+            }
+        }
+        private void ForwardButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                if (selectedTab.WebView.CoreWebView2 != null && selectedTab.WebView.CoreWebView2.CanGoForward)
+                {
+                    selectedTab.WebView.CoreWebView2.GoForward();
+                }
+                
+            }
+        }
+
         private void MiniPlayer_Play_Click(object sender, RoutedEventArgs e)
         {
             ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').play(); }");
