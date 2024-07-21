@@ -1,0 +1,70 @@
+﻿<Window x:Class="JupiterBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JupiterBrowser"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10,10,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Width" Value="180"/>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#FF333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10,40,10,10"/>
+            <Setter Property="AllowDrop" Value="True"/>
+        </Style>
+        <Style TargetType="ContentControl">
+            <Setter Property="Background" Value="#FFF0F0F0"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Content" Value="X"/>
+        </Style>
+        <DataTemplate x:Key="TabItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding TabName}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button Style="{StaticResource CloseButtonStyle}" 
+                        Click="CloseTabButton_Click"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Menu Lateral -->
+        <StackPanel Background="#FF2D2D30" Grid.Column="0">
+            <Button Content="+ New Tab" Click="NewTabButton_Click"/>
+            <!-- ListBox para as guias -->
+            <ListBox Name="TabListBox" 
+                     ItemTemplate="{StaticResource TabItemTemplate}" 
+                     SelectionChanged="TabListBox_SelectionChanged"
+                     PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
+                     DragOver="TabListBox_DragOver"
+                     Drop="TabListBox_Drop"/>
+        </StackPanel>
+        <!-- Área de Conteúdo -->
+        <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="1">
+            <ContentControl Name="ContentArea"/>
+        </Border>
+    </Grid>
+</Window>
