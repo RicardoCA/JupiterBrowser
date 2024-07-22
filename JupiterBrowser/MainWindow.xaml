@@ -9,7 +9,7 @@
     <Window.Resources>
         
         <Style TargetType="Button">
-            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="BorderThickness" Value="0"/>
