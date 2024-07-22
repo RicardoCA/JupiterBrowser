@@ -40,6 +40,7 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer = new DispatcherTimer();
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
+            //OpenNewTabWithUrl("https://google.com");
         }
 
         private async void MusicTitleUpdateTimer_Tick(object sender, EventArgs e)

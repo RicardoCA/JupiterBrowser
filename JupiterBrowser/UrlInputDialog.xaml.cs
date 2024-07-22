@@ -44,7 +44,7 @@ namespace JupiterBrowser
         {
             string url = UrlTextBox.Text;
 
-            if (url.IndexOf("https://") == -1)
+            if (url.IndexOf("https://") == -1 && url.IndexOf("http://") == -1)
             {
                 if (url.IndexOf(".com") != -1 || url.IndexOf(".net") != -1 || url.IndexOf(".gov") != -1 || url.IndexOf(".org") != -1)
                 {
