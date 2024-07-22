@@ -54,7 +54,11 @@ namespace JupiterBrowser
                 {
                     if(url.IndexOf("edge://") == -1)
                     {
-                        url = $"https://www.google.com/search?q={url}";
+                        if (!url.Equals("startpage"))
+                        {
+                            url = $"https://www.google.com/search?q={url}";
+                        }
+                        
                     }
                     
                 }

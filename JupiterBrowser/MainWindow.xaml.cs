@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using System.IO;
 
 namespace JupiterBrowser
 {
@@ -40,7 +41,13 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer = new DispatcherTimer();
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
-            //OpenNewTabWithUrl("https://google.com");
+            OpenStartPage();
+        }
+
+        private void OpenStartPage()
+        {
+            string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
+            OpenNewTabWithUrl(htmlFilePath);
         }
 
         private async void MusicTitleUpdateTimer_Tick(object sender, EventArgs e)
@@ -145,8 +152,18 @@ namespace JupiterBrowser
                 id += 1;
 
                 var webView = new WebView2();
-                webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
-                webView.NavigationCompleted += WebView_NavigationCompleted;
+                if(urlInputDialog.EnteredUrl.ToString().Equals("startpage"))
+                {
+                    string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
+                    webView.Source = new System.Uri(htmlFilePath);
+                    webView.NavigationCompleted += WebView_NavigationCompleted;
+                }
+                else
+                {
+                    webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                    webView.NavigationCompleted += WebView_NavigationCompleted;
+                }
+                
                 
 
            
@@ -359,35 +376,46 @@ namespace JupiterBrowser
 
         private async void UpdateMiniPlayerVisibility()
         {
-            bool hasMusicTab = Tabs.Any(tab => tab.WebView != null && tab.WebView.Source.ToString().Contains("music.youtube.com"));
-            MiniPlayer.Visibility = hasMusicTab ? Visibility.Visible : Visibility.Collapsed;
-
-            if (hasMusicTab)
+            try
             {
-                try
+                bool hasMusicTab = Tabs.Any(tab => tab.WebView != null &&
+                                                   tab.WebView.Source != null &&
+                                                   tab.WebView.Source.ToString().Contains("music.youtube.com"));
+                MiniPlayer.Visibility = hasMusicTab ? Visibility.Visible : Visibility.Collapsed;
+
+                if (hasMusicTab)
                 {
-                    var musicTab = Tabs.First(tab => tab.WebView != null && tab.WebView.Source.ToString().Contains("music.youtube.com"));
+                    try
+                    {
+                        var musicTab = Tabs.First(tab => tab.WebView != null &&
+                                                         tab.WebView.Source != null &&
+                                                         tab.WebView.Source.ToString().Contains("music.youtube.com"));
 
-                    // Espera até que o CoreWebView2 seja inicializado
-                    await musicTab.WebView.EnsureCoreWebView2Async();
+                        // Espera até que o CoreWebView2 seja inicializado
+                        await musicTab.WebView.EnsureCoreWebView2Async();
 
-                    string script = "document.querySelector('title').textContent";
+                        string script = "document.querySelector('title').textContent";
 
-                    var musicTitle = await musicTab.WebView.CoreWebView2.ExecuteScriptAsync(script);
-                    musicTitle = musicTitle.Trim('"'); // Remove the surrounding quotes
-                    MusicTitle.Text = musicTitle;
-                    _musicTitleUpdateTimer.Start();
+                        var musicTitle = await musicTab.WebView.CoreWebView2.ExecuteScriptAsync(script);
+                        musicTitle = musicTitle.Trim('"'); // Remove the surrounding quotes
+                        MusicTitle.Text = musicTitle;
+                        _musicTitleUpdateTimer.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Tratar exceções aqui
+                        MusicTitle.Text = "Erro ao obter o título";
+                        _musicTitleUpdateTimer.Stop();
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    // Tratar exceções aqui
-                    MusicTitle.Text = "Erro ao obter o título";
-                    _musicTitleUpdateTimer.Stop();
+                    MusicTitle.Text = string.Empty;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MusicTitle.Text = string.Empty;
+                // Tratar exceções aqui, se necessário
             }
         }
 
