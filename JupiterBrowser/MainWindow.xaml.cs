@@ -7,6 +7,13 @@ using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using System.IO;
+using Xceed.Wpf.Toolkit;
+using System.Windows.Media;
+
+using MessageBox = System.Windows.MessageBox;
+using System.Windows.Media;
+using WpfButton = System.Windows.Controls.Button;
+//using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
 {
@@ -283,7 +290,38 @@ namespace JupiterBrowser
 
         private void SidebarThemeMenu_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Sidebar Theme option clicked");
+            ColorPickerWindow colorPickerWindow = new ColorPickerWindow();
+            if (colorPickerWindow.ShowDialog() == true)
+            {
+                // Obtém as cores selecionadas
+                string backgroundColor = colorPickerWindow.SelectedBackgroundColor;
+                string textColor = colorPickerWindow.SelectedTextColor;
+
+                if (!string.IsNullOrEmpty(backgroundColor))
+                {
+                    Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                }
+
+                
+
+
+                
+            }
+        }
+
+        private void ApplyThemeColors(System.Windows.Media.Color textColor, System.Windows.Media.Color backgroundColor)
+        {
+            // Aqui você pode aplicar as cores ao seu tema, por exemplo:
+            // this.Foreground = new SolidColorBrush(textColor);
+            // this.Background = new SolidColorBrush(backgroundColor);
+
+            // Exemplo de aplicação às propriedades de um TextBlock e um Grid (ou outro controle que você deseja alterar)
+            // textBlock.Foreground = new SolidColorBrush(textColor);
+            // grid.Background = new SolidColorBrush(backgroundColor);
+
+            // Exemplo para demonstração
+            MessageBox.Show($"Texto: {textColor}, Fundo: {backgroundColor}");
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

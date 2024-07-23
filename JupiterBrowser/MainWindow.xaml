@@ -91,7 +91,7 @@
                              Margin="10" HorizontalAlignment="Stretch"/>
                 </ScrollViewer>
                 <DockPanel>
-                    <Button Content="+ New Tab" Click="NewTabButton_Click" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5"/>
+                    <Button x:Name="newTabBtn" Content="+ New Tab" Click="NewTabButton_Click" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
                         <Button Margin="5" Width="35" Height="35" Click="BackButton_Click">
                             <Button.Content>
