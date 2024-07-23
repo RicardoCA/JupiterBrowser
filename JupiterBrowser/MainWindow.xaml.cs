@@ -262,7 +262,28 @@ namespace JupiterBrowser
 
         private void SidebarToggle_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("Press Ctrl + S to show sidebar again :D","Jupiter Browser");
             SidebarToggle();
+        }
+
+        private void OpenBrowserMenu_Click(object sender, RoutedEventArgs e)
+        {
+
+            
+            Button button = sender as Button;
+            ContextMenu menu = this.FindResource("BrowserMenu") as ContextMenu;
+            menu.PlacementTarget = button;
+            menu.IsOpen = true;
+        }
+
+        private void QuitMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void SidebarThemeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Sidebar Theme option clicked");
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

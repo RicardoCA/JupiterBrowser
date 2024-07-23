@@ -7,7 +7,17 @@
         mc:Ignorable="d"
         Title="Jupiter Browser" Height="450" Width="800">
     <Window.Resources>
-        
+        <Style TargetType="ContextMenu">
+            <Setter Property="Background" Value="#FF333333" />
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <ContextMenu x:Key="BrowserMenu">
+            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click"/>
+            <MenuItem Header="Quit" Click="QuitMenu_Click"/>
+        </ContextMenu>
+
         <Style TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
@@ -56,6 +66,8 @@
             <WrapPanel Orientation="Horizontal" ItemWidth="50" ItemHeight="50"/>
         </ItemsPanelTemplate>
     </Window.Resources>
+
+    
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -134,19 +146,28 @@
                 </Border>
             </StackPanel>
             <!-- Botão no final -->
+            
             <Button Grid.Row="1" Margin="10" Click="HistoricButton_Click" Width="50">
                 <Button.Content>
                     <Path Data="M 4 1 L 6 1 L 6 0 L 10 0 L 10 1 L 12 1 L 12 3 L 2 3 L 2 1 Z
-            M 3 3 L 11 3 L 10 12 L 4 12 Z
-            M 5 5 L 5 10
-            M 7 5 L 7 10
-            M 9 5 L 9 10"
-      Fill="Transparent"
-      Stroke="White"
-      StrokeThickness="1"
-      Stretch="Uniform" />
+                                M 3 3 L 11 3 L 10 12 L 4 12 Z
+                                M 5 5 L 5 10
+                                M 7 5 L 7 10
+                                M 9 5 L 9 10"
+                                Fill="Transparent"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Stretch="Uniform" />  
                 </Button.Content>
             </Button>
+            <Button Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50">
+                <Path Data="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0zm-6.75 0a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0z"
+                    Fill="Transparent"
+                    Stroke="White"
+                    StrokeThickness="1"
+                    Stretch="Uniform" />
+            </Button>
+
         </Grid>
         
         <!-- Área de Conteúdo -->
