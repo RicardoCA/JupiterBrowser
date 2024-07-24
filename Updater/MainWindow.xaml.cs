@@ -24,13 +24,14 @@ namespace Updater
     /// </summary>
     public partial class MainWindow : Window
     {
-        string currentVersion = "0.6"; // A versão atual da aplicação
+        string currentVersion = "0.7"; // A versão atual da aplicação
         
 
         public MainWindow()
         {
             InitializeComponent();
             lblText.Content = string.Empty;
+            currentV.Content = "Current Version: "+currentVersion;
         }
 
         
@@ -93,7 +94,12 @@ namespace Updater
             {
                 File.Copy(file, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.GetFileName(file)), true);
             }
-
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string targetDirectory = Path.Combine(baseDirectory, "JupiterBrowser");
+            if (Directory.Exists(targetDirectory))
+            {
+                Directory.Delete(targetDirectory, true);
+            }
             // Inicia a aplicação principal
             Process.Start("JupiterBrowser.exe");
         }

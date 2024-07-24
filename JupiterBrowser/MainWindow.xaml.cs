@@ -13,6 +13,7 @@ using System.Windows.Media;
 using MessageBox = System.Windows.MessageBox;
 using System.Windows.Media;
 using WpfButton = System.Windows.Controls.Button;
+using System.Diagnostics;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
@@ -212,6 +213,11 @@ namespace JupiterBrowser
                 }
             }
             UpdateMiniPlayerVisibility();
+        }
+
+        private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("Updater.exe");
         }
 
         private void NewTabButton_Click(object sender, RoutedEventArgs e)

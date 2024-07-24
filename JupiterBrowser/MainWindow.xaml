@@ -14,6 +14,7 @@
         </Style>
 
         <ContextMenu x:Key="BrowserMenu">
+            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click"/>
             <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click"/>
             <MenuItem Header="Quit" Click="QuitMenu_Click"/>
         </ContextMenu>
