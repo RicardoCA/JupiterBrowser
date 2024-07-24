@@ -9,8 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3466" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
   </ItemGroup>
 
