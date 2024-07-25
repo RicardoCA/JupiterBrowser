@@ -21,7 +21,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.8.1";
+        private string VERSION = "0.9";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -53,6 +53,11 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
             OpenStartPage();
             CleanUpdates();
+        }
+
+        private void ContactJupiter_Click(object sender, RoutedEventArgs e)
+        {
+            OpenNewTabWithUrl("https://7olt4aho8ub.typeform.com/to/CNB9ea1Z");
         }
 
         private void CleanUpdates()
