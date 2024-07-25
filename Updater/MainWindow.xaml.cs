@@ -24,14 +24,14 @@ namespace Updater
     /// </summary>
     public partial class MainWindow : Window
     {
-        string currentVersion = "0.7"; // A versão atual da aplicação
+        string currentVersion = "0.8"; // A versão atual da aplicação
         
 
         public MainWindow()
         {
             InitializeComponent();
             lblText.Content = string.Empty;
-            currentV.Content = "Current Version: "+currentVersion;
+            currentV.Content = string.Empty;
         }
 
         

@@ -8,25 +8,27 @@ using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using System.IO;
 using Xceed.Wpf.Toolkit;
-using System.Windows.Media;
-
+using System.Net.Http;
+using System.Windows.Navigation;
 using MessageBox = System.Windows.MessageBox;
 using System.Windows.Media;
 using WpfButton = System.Windows.Controls.Button;
 using System.Diagnostics;
+using System.Net;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
+        private string VERSION = "0.8";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
         private Point _startPoint;
         private bool isFullScreen = false;
         private DispatcherTimer _musicTitleUpdateTimer;
-
+        
 
 
         public int id = 1;
@@ -50,6 +52,17 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
             OpenStartPage();
+        }
+
+        static string GetServerVersion()
+        {
+            // Requisita a versão disponível no servidor
+            using (WebClient client = new WebClient())
+            {
+                //https://drive.google.com/file/d/1sz4dx76iHLJ7gTl9tezuGc27_rbUsR8j/view?usp=drive_link
+                //https://drive.google.com/uc?export=download&id=1sz4dx76iHLJ7gTl9tezuGc27_rbUsR8j
+                return client.DownloadString("https://drive.google.com/uc?export=download&id=1sz4dx76iHLJ7gTl9tezuGc27_rbUsR8j").Trim();
+            }
         }
 
         private void OpenStartPage()
@@ -209,7 +222,8 @@ namespace JupiterBrowser
                 }
                 else
                 {
-                    MessageBox.Show("Por favor, selecione uma guia para editar.");
+                    ToastWindow.Show("Please select a tab to edit.");
+                    
                 }
             }
             UpdateMiniPlayerVisibility();
@@ -217,7 +231,16 @@ namespace JupiterBrowser
 
         private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("Updater.exe");
+            string serverVersion = GetServerVersion();
+            if (!serverVersion.Equals(VERSION))
+            {
+                Process.Start("Updater.exe");
+            }
+            else
+            {
+                ToastWindow.Show("You already have the latest version.");
+            }
+            
         }
 
         private void NewTabButton_Click(object sender, RoutedEventArgs e)
@@ -275,7 +298,8 @@ namespace JupiterBrowser
 
         private void SidebarToggle_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Press Ctrl + S to show sidebar again :D","Jupiter Browser");
+            
+            ToastWindow.Show("Press Ctrl + S to show sidebar again :D");
             SidebarToggle();
         }
 
