@@ -21,7 +21,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.8";
+        private string VERSION = "0.8.1";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -52,6 +52,23 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
             OpenStartPage();
+            CleanUpdates();
+        }
+
+        private void CleanUpdates()
+        {
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string targetDirectory = Path.Combine(baseDirectory, "JupiterBrowser");
+            string zipFilePath = Path.Combine(baseDirectory, "JupiterBrowser.zip");
+            if (Directory.Exists(targetDirectory))
+            {
+                Directory.Delete(targetDirectory, true);
+            }
+
+            if (File.Exists(zipFilePath))
+            {
+                File.Delete(zipFilePath);
+            }
         }
 
         static string GetServerVersion()
