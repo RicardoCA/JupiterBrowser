@@ -220,34 +220,52 @@ namespace JupiterBrowser
 
         private void EditTabUrl()
         {
-            var urlInputDialog = new UrlInputDialog();
-            if (urlInputDialog.ShowDialog() == true)
+
+
+            var selectedTab = TabListBox.SelectedItem as TabItem;
+            if (selectedTab != null)
             {
-                // Verifica se há uma guia selecionada
-                var selectedTab = TabListBox.SelectedItem as TabItem;
-                if (selectedTab != null)
+                // Atualiza a URL do WebView da guia selecionada
+                if (selectedTab.WebView != null)
                 {
-                    // Atualiza a URL do WebView da guia selecionada
-                    if (selectedTab.WebView != null)
+                    string url = selectedTab.WebView.Source.ToString();
+                    var urlInputDialog = new UrlInputDialog();
+                    if (url.IndexOf("http") != -1)
                     {
-                        selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
-                        urlInputDialog.EnteredUrl = selectedTab.WebView.Source.ToString();
+                        urlInputDialog = new UrlInputDialog(url);
                     }
-                    else
+                    
+                    
+                    if (urlInputDialog.ShowDialog() == true)
                     {
-                        // Se o WebView não existe ainda, cria um novo
+                        // Verifica se há uma guia selecionada
+                        
+                        selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                    }
+
+
+                }
+                else
+                {
+                    // Se o WebView não existe ainda, cria um novo
+                    var urlInputDialog = new UrlInputDialog();
+                    if (urlInputDialog.ShowDialog() == true)
+                    {
                         var webView = new WebView2();
                         webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         selectedTab.WebView = webView;
                     }
                 }
-                else
-                {
-                    ToastWindow.Show("Please select a tab to edit.");
-                    
-                }
             }
+            else
+            {
+                ToastWindow.Show("Please select a tab to edit.");
+
+            }
+
+
+            
             UpdateMiniPlayerVisibility();
         }
 
@@ -384,6 +402,7 @@ namespace JupiterBrowser
                 {
                     Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    
                 }
 
                 

@@ -15,7 +15,15 @@ namespace JupiterBrowser
             UrlTextBox.Focus();
         }
 
-        
+        public UrlInputDialog(string url)
+        {
+            InitializeComponent();
+            this.KeyDown += Window_KeyDown;
+            UrlTextBox.Focus();
+            UrlTextBox.Text = url;
+        }
+
+
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
