@@ -292,6 +292,37 @@ namespace JupiterBrowser
             {
                 SidebarToggle();
             }
+            else if (e.Key == Key.W && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                CopyURL();   
+            }
+        }
+
+        private void ShortCuts_Click(object sender, RoutedEventArgs e)
+        {
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)");
+        }
+
+        private void CopyURL()
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                string url = selectedTab.WebView.Source.ToString();
+                if(url.IndexOf("http") != -1)
+                {
+                    Clipboard.SetText(url);
+                    ToastWindow.Show("URL copied: " + url);
+                }
+                else
+                {
+                    ToastWindow.Show("You cannot be on a file or startpage.");
+                }
+                
+            }
+            else
+            {
+                ToastWindow.Show("No tab selected or no URL available.");
+            }
         }
 
         private void SidebarToggle()

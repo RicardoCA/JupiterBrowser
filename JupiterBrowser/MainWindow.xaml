@@ -17,8 +17,11 @@
             <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click"/>
             <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click" />
             <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click"/>
+            <MenuItem Header="Shortcuts" Click="ShortCuts_Click" />
             <MenuItem Header="Quit" Click="QuitMenu_Click"/>
         </ContextMenu>
+
+        
 
         <Style TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -136,7 +139,7 @@
                          DragOver="TabListBox_DragOver"
                          Drop="TabListBox_Drop"/>
                 <Border x:Name="MiniPlayer" Visibility="Collapsed" Background="LightGray" Margin="5" Padding="10">
-                    <StackPanel>
+                    <StackPanel x:Name="StackMiniPlayer">
                         <TextBlock Text="Mini Player" FontWeight="Bold" Margin="0,0,0,10"/>
                         <TextBlock x:Name="MusicTitle" Text="Title" FontWeight="Bold" Margin="0,0,0,10"/>
                         <Button Content="Play" Click="MiniPlayer_Play_Click"/>
