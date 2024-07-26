@@ -130,6 +130,7 @@
                         </Button>
                     </StackPanel>
                 </DockPanel>
+                <TextBox x:Name="urlLabel" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click"/>
 
                 <!-- ListBox para as guias -->
                 <ListBox Name="TabListBox" 

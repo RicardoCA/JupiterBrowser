@@ -15,6 +15,7 @@ using System.Windows.Media;
 using WpfButton = System.Windows.Controls.Button;
 using System.Diagnostics;
 using System.Net;
+using System.Security.Policy;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
@@ -216,6 +217,55 @@ namespace JupiterBrowser
                 TabListBox.SelectedItem = newTab;
                 UpdateMiniPlayerVisibility();
             }
+        }
+
+        private void Url_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedTab = TabListBox.SelectedItem as TabItem;
+            if (selectedTab != null)
+            {
+                // Atualiza a URL do WebView da guia selecionada
+                if (selectedTab.WebView != null)
+                {
+                    string url = selectedTab.WebView.Source.ToString();
+                    var urlInputDialog = new UrlInputDialog();
+                    if (url.IndexOf("http") != -1)
+                    {
+                        urlInputDialog = new UrlInputDialog(url);
+                    }
+
+
+                    if (urlInputDialog.ShowDialog() == true)
+                    {
+                        // Verifica se há uma guia selecionada
+
+                        selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                    }
+
+
+                }
+                else
+                {
+                    // Se o WebView não existe ainda, cria um novo
+                    var urlInputDialog = new UrlInputDialog();
+                    if (urlInputDialog.ShowDialog() == true)
+                    {
+                        var webView = new WebView2();
+                        webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                        webView.NavigationCompleted += WebView_NavigationCompleted;
+                        selectedTab.WebView = webView;
+                    }
+                }
+            }
+            else
+            {
+                ToastWindow.Show("Please select a tab to edit.");
+
+            }
+
+
+
+            UpdateMiniPlayerVisibility();
         }
 
         private void EditTabUrl()
@@ -514,13 +564,22 @@ namespace JupiterBrowser
                     {
                         tabItem.TabName = title.Substring(0,20);
                         
+                        
                     }
                     else
                     {
                         tabItem.TabName = title;
                     }
                     tabItem.LogoUrl = faviconUrl;
-
+                    if(url.IndexOf("http") != -1)
+                    {
+                        urlLabel.Text = url;
+                    }
+                    else
+                    {
+                        urlLabel.Text = "File or startpage";
+                    }
+                    
                 }
 
                 // Refresh the ListBox to update the displayed tab name
@@ -586,6 +645,15 @@ namespace JupiterBrowser
             if (TabListBox.SelectedItem is TabItem selectedTab)
             {
                 ContentArea.Content = selectedTab.WebView;
+                if (selectedTab.WebView.Source.ToString().IndexOf("http") != -1)
+                {
+                    urlLabel.Text = selectedTab.WebView.Source.ToString();
+                }
+                else
+                {
+                    urlLabel.Text = "File or startpage";
+                }
+                
             }
             UpdateMiniPlayerVisibility();
         }
