@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
-        Title="Jupiter Browser" Height="450" Width="800">
+        Title="Jupiter Browser" Height="450" Width="800" WindowState="Maximized">
     <Window.Resources>
         <Style TargetType="ContextMenu">
             <Setter Property="Background" Value="#FF333333" />
@@ -21,7 +21,7 @@
             <MenuItem Header="Quit" Click="QuitMenu_Click"/>
         </ContextMenu>
 
-        
+
 
         <Style TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -72,7 +72,7 @@
         </ItemsPanelTemplate>
     </Window.Resources>
 
-    
+
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -96,30 +96,30 @@
                              Margin="10" HorizontalAlignment="Stretch"/>
                 </ScrollViewer>
                 <DockPanel>
-                    <Button x:Name="newTabBtn" Content="+ New Tab" Click="NewTabButton_Click" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5"/>
+                    <Button x:Name="newTabBtn" Content="+ New Tab" Click="NewTabButton_Click" ToolTip="New Tab" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
-                        <Button Margin="5" Width="35" Height="35" Click="BackButton_Click">
+                        <Button Margin="5" Width="29" Height="30" Click="BackButton_Click" ToolTip="Back">
                             <Button.Content>
                                 <Path Data="M 10,0 L 0,10 L 10,20 L 8,18 L 2,10 L 8,2 Z"
                                     Fill="White"
                                     Stretch="Uniform" />
                             </Button.Content>
                         </Button>
-                        <Button Margin="5" Width="35" Height="35" Click="ForwardButton_Click">
+                        <Button Margin="5" Width="29" Height="30" Click="ForwardButton_Click" ToolTip="Forward">
                             <Button.Content>
                                 <Path Data="M 0,0 L 10,10 L 0,20 L 2,18 L 8,10 L 2,2 Z"
                       Fill="White"
                       Stretch="Uniform" />
                             </Button.Content>
                         </Button>
-                        <Button Margin="5" Width="35" Height="35" Click="ReloadButton_Click">
+                        <Button Margin="5" Width="29" Height="30" Click="ReloadButton_Click" ToolTip="Reload">
                             <Button.Content>
                                 <Path Data="M12,2V6H10V3.3A8,8,0,1,0,14.7,11H12V13h6V7H16V9.7A10,10,0,1,1,12,2Z"
                                   Fill="White"
-                                  Stretch="Uniform"/>   
+                                  Stretch="Uniform"/>
                             </Button.Content>
                         </Button>
-                        <Button Margin="5" Width="35" Height="35" Click="SidebarToggle_Click">
+                        <Button Margin="5" Width="29" Height="30" Click="SidebarToggle_Click" ToolTip="Hide Sidebar">
                             <Button.Content>
                                 <StackPanel>
                                     <Rectangle Fill="White" Width="25" Height="3" Margin="0,3,0,3"/>
@@ -152,8 +152,8 @@
                 </Border>
             </StackPanel>
             <!-- Botão no final -->
-            
-            <Button Grid.Row="1" Margin="10" Click="HistoricButton_Click" Width="50">
+
+            <Button Grid.Row="1" Margin="10" Click="HistoricButton_Click" Width="50" ToolTip="Historic">
                 <Button.Content>
                     <Path Data="M 4 1 L 6 1 L 6 0 L 10 0 L 10 1 L 12 1 L 12 3 L 2 3 L 2 1 Z
                                 M 3 3 L 11 3 L 10 12 L 4 12 Z
@@ -163,10 +163,10 @@
                                 Fill="Transparent"
                                 Stroke="White"
                                 StrokeThickness="1"
-                                Stretch="Uniform" />  
+                                Stretch="Uniform" />
                 </Button.Content>
             </Button>
-            <Button Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50">
+            <Button Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50" ToolTip="Jupiter Menu">
                 <Path Data="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0zm-6.75 0a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0z"
                     Fill="Transparent"
                     Stroke="White"
@@ -175,7 +175,7 @@
             </Button>
 
         </Grid>
-        
+
         <!-- Área de Conteúdo -->
         <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="1" x:Name="ContentBorder">
             <ContentControl Name="ContentArea"/>
