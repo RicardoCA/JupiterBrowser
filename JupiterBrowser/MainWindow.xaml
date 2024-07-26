@@ -128,6 +128,11 @@
                                 </StackPanel>
                             </Button.Content>
                         </Button>
+                        <Button Margin="5" Width="29" Height="30" Click="adBlock_Click" ToolTip="Enable/Disable native ad block">
+                            <Button.Content>
+                                <Path Fill="White" Data="M 12,0 L 24,8 L 24,18 A 12,12 0 0 1 12,30 A 12,12 0 0 1 0,18 L 0,8 Z" />
+                            </Button.Content>
+                        </Button>
                     </StackPanel>
                 </DockPanel>
                 <TextBox x:Name="urlLabel" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click"/>

@@ -22,7 +22,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.9";
+        private string VERSION = "0.9.1";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -43,9 +43,9 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
             PinnedTabs = new ObservableCollection<TabItem>
             {
-                new TabItem { TabName = "Google", LogoUrl = "https://www.google.com/favicon.ico", url= "https://www.google.com/" },
-                new TabItem { TabName = "Terra", LogoUrl = "https://music.youtube.com/favicon.ico", url= "https://music.youtube.com" },
-                new TabItem { TabName = "Terra", LogoUrl = "https://www.chatgpt.com/favicon.ico", url= "https://www.chatgpt.com" }
+                new TabItem { TabName = "Reddit", LogoUrl = "https://www.reddit.com/favicon.ico", url= "https://www.reddit.com/" },
+                new TabItem { TabName = "Youtube Music", LogoUrl = "https://music.youtube.com/favicon.ico", url= "https://music.youtube.com" },
+                new TabItem { TabName = "Google", LogoUrl = "https://www.google.com/favicon.ico", url= "https://www.google.com" }
             };
             PinnedTabsListBox.ItemsSource = PinnedTabs;
             // Inicializa o timer
@@ -59,6 +59,29 @@ namespace JupiterBrowser
         private void ContactJupiter_Click(object sender, RoutedEventArgs e)
         {
             OpenNewTabWithUrl("https://7olt4aho8ub.typeform.com/to/CNB9ea1Z");
+        }
+
+        private void adBlock_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                if(selectedTab.adBlock == false)
+                {
+                    selectedTab.adBlock = true;
+                    ToastWindow.Show("Native AdBlock enabled.");
+                    selectedTab.WebView.Reload();
+                }
+                else
+                {
+                    selectedTab.adBlock = false;
+                    selectedTab.WebView.Reload();
+                    ToastWindow.Show("Native AdBlock disabled.");
+                }
+            }
+            else
+            {
+                ToastWindow.Show("Select a tab for this.");
+            }
         }
 
         private void CleanUpdates()
@@ -110,6 +133,7 @@ namespace JupiterBrowser
         private void OpenNewTabWithUrl(string url)
         {
             var newTab = new TabItem { TabName = "New Tab " + id };
+            newTab.adBlock = false;
             Tabs.Add(newTab);
             id += 1;
 
@@ -214,6 +238,7 @@ namespace JupiterBrowser
         private void OpenHistoric()
         {
             var newTab = new TabItem { TabName = "New Tab " + id };
+            newTab.adBlock = false;
             Tabs.Add(newTab);
             id += 1;
 
@@ -240,6 +265,7 @@ namespace JupiterBrowser
             if (urlInputDialog.ShowDialog() == true)
             {
                 var newTab = new TabItem { TabName = "New Tab " + id };
+                newTab.adBlock = false;
                 Tabs.Add(newTab);
                 id += 1;
 
@@ -611,7 +637,14 @@ namespace JupiterBrowser
                 ";
                 if(webView.Source.ToString().IndexOf("youtube.com") == -1)
                 {
-                    await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+                    if(TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+                    {
+                        if(selectedTab.adBlock == true)
+                        {
+                            await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+                        }
+                    }
+                    
                 }
                 
 
@@ -814,5 +847,7 @@ namespace JupiterBrowser
         public string LogoUrl { get; set; }
 
         public string url { get; set; }
+
+        public bool adBlock { get; set; }
     }
 }
