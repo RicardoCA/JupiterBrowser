@@ -22,7 +22,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.9.1";
+        private string VERSION = "0.10";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -713,7 +713,11 @@ namespace JupiterBrowser
 
                         var musicTitle = await musicTab.WebView.CoreWebView2.ExecuteScriptAsync(script);
                         musicTitle = musicTitle.Trim('"'); // Remove the surrounding quotes
-                        MusicTitle.Text = musicTitle;
+                        if(musicTitle is not null)
+                        {
+                            MusicTitle.Text = musicTitle;
+                        }
+                        
                         _musicTitleUpdateTimer.Start();
                     }
                     catch (Exception ex)

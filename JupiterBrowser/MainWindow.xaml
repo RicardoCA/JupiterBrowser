@@ -143,7 +143,7 @@
                         </Button>
                     </StackPanel>
                 </DockPanel>
-                <TextBox x:Name="urlLabel" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click"/>
+                <TextBox x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" />
 
                 <!-- ListBox para as guias -->
                 <ListBox Name="TabListBox" 
@@ -158,46 +158,51 @@
                         <TextBlock x:Name="MusicTitle" Text="Title" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
                         <StackPanel Orientation="Horizontal">
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Play_Click" Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                                <!-- Ícone de Play -->
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Play_Click" Width="16" Height="16" Margin="0,0,5,0">
+                                <Canvas.RenderTransform>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Canvas.RenderTransform>
                                 <Path Fill="White" Data="M4.993,2.496C4.516,2.223,4,2.45,4,3v26c0,0.55,0.516,0.777,0.993,0.504l22.826-13.008c0.478-0.273,0.446-0.719-0.031-0.992L4.993,2.496z"/>
                                 <Path Fill="White" Data="M4.585,30.62L4.585,30.62C3.681,30.62,3,29.923,3,29V3c0-0.923,0.681-1.62,1.585-1.62c0.309,0,0.621,0.085,0.904,0.248l22.794,13.007c0.559,0.319,0.878,0.823,0.878,1.382c0,0.548-0.309,1.039-0.847,1.347L5.488,30.373C5.206,30.534,4.894,30.62,4.585,30.62z M5,3.651v24.698l21.655-12.34L5,3.651z"/>
                             </Canvas>
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Pause_Click" Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                                <!-- Primeiro retângulo de pausa -->
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Pause_Click" Width="16" Height="16" Margin="0,0,5,0">
+                                <Canvas.RenderTransform>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Canvas.RenderTransform>
                                 <Path Fill="White" Data="M6,4C5.45,4,5,4.45,5,5v22c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1V5c0-0.55-0.45-1-1-1H6z"/>
                                 <Path Fill="White" Data="M9,29H6c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C11,28.103,10.103,29,9,29z M9,27v1V27L9,27 L9,27z M6,5v22h2.997L9,5H6z"/>
 
-                                <!-- Segundo retângulo de pausa -->
                                 <Path Fill="White" Data="M23,4c-0.55,0-1,0.45-1,1v22c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1V5c0-0.55-0.45-1-1-1H23z"/>
                                 <Path Fill="White" Data="M26,29h-3c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C28,28.103,27.103,29,26,29z M26,27v1V27 L26,27L26,27z M23,5v22h2.997L26,5H23z"/>
                             </Canvas>
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Previus_Click" Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                                <!-- Primeiro conjunto de triângulo e barra (Próxima) -->
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Previus_Click" Width="16" Height="16" Margin="0,0,5,0">
+                                <Canvas.RenderTransform>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Canvas.RenderTransform>
                                 <Path Fill="White" Data="M27.136,3.736C27.508,3.332,28,3.45,28,4v24c0,0.55-0.492,0.668-0.864,0.264L16.449,16.736c-0.372-0.405-0.325-1.068,0.047-1.473L27.136,3.736z"/>
                                 <Path Fill="White" Data="M27.602,29.504c-0.441,0-0.868-0.2-1.202-0.563L15.715,17.416c-0.718-0.781-0.697-2.022,0.044-2.829L26.401,3.058c0.333-0.362,0.76-0.562,1.201-0.562C28.399,2.496,29,3.143,29,4v24C29,28.857,28.399,29.504,27.602,29.504z M27,5.358l-9.77,10.584c-0.036,0.04-0.044,0.109-0.036,0.132L27,26.646V5.358z"/>
 
-                                <!-- Segundo conjunto de triângulo e barra (Voltar) -->
                                 <Path Fill="White" Data="M14.297,3.736C14.669,3.332,15,3.45,15,4v24c0,0.55-0.331,0.668-0.703,0.264L3.69,16.736c-0.372-0.405-0.365-1.068,0.007-1.473L14.297,3.736z"/>
                                 <Path Fill="White" Data="M14.706,29.504c-0.286,0-0.717-0.098-1.146-0.563L2.954,17.414c-0.727-0.791-0.724-2.032,0.006-2.827l10.6-11.527c0.428-0.466,0.859-0.563,1.146-0.563C15.329,2.496,16,2.967,16,4v24C16,29.033,15.329,29.504,14.706,29.504z M14,5.538L4.433,15.94c-0.025,0.027-0.023,0.102-0.006,0.119L14,26.463V5.538z"/>
                             </Canvas>
 
-                            
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Next_Click" Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                                <!-- Primeiro triângulo -->
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Next_Click" Width="16" Height="16" Margin="0,0,5,0">
+                                <Canvas.RenderTransform>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Canvas.RenderTransform>
                                 <Path Fill="White" Data="M4.561,3.728C4.184,3.328,4,3.45,4,4v24c0,0.55,0.184,0.672,0.561,0.272l10.816-11.544c0.377-0.4,0.408-1.056,0.031-1.456L4.561,3.728z"/>
                                 <Path Fill="White" Data="M4.202,29.507L4.202,29.507C4.079,29.507,3,29.465,3,28V4c0-1.465,1.079-1.507,1.202-1.507c0.568,0,0.958,0.414,1.087,0.55l10.848,11.545c0.725,0.77,0.711,2.038-0.031,2.826L5.29,28.956C5.16,29.094,4.771,29.507,4.202,29.507z M5.004,5.66L5,26.337l9.674-10.389L5.004,5.66z"/>
 
-                                <!-- Segundo triângulo -->
                                 <Path Fill="White" Data="M17.561,3.728C17.184,3.328,17,3.45,17,4v24c0,0.55,0.184,0.672,0.561,0.272l10.816-11.544c0.377-0.4,0.408-1.056,0.031-1.456L17.561,3.728z"/>
                                 <Path Fill="White" Data="M17.202,29.507L17.202,29.507C17.079,29.507,16,29.465,16,28V4c0-1.465,1.079-1.507,1.202-1.507c0.568,0,0.958,0.414,1.087,0.55l10.848,11.545c0.725,0.77,0.711,2.038-0.031,2.826L18.29,28.956C18.16,29.094,17.771,29.507,17.202,29.507z M18.004,5.66L18,26.337l9.674-10.389L18.004,5.66z"/>
                             </Canvas>
-                            
+
                         </StackPanel>
                     </StackPanel>
                 </Border>
+
 
             </StackPanel>
             <!-- Botão no final -->
