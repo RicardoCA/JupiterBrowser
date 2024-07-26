@@ -128,7 +128,26 @@ namespace JupiterBrowser
             var webView = sender as WebView2;
             if (webView != null && webView.CoreWebView2 != null)
             {
+                webView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
                 webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+                webView.CoreWebView2.WebResourceRequested += CoreWebView2_WebResourceRequested;
+            }
+        }
+
+        private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
+        {
+            if (sender is WebView2 webView)
+            {
+                var uri = e.Request.Uri;
+                if (uri.Contains("ads") || uri.Contains("adserver") || uri.Contains("advertisement"))
+                {
+                    e.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(
+                        null,  // Sem corpo de resposta
+                        403,   // Código de status HTTP 403 (Forbidden)
+                        "Blocked", // Descrição
+                        "Content-Type: text/plain" // Cabeçalho de resposta
+                    );
+                }
             }
         }
 
@@ -578,6 +597,16 @@ namespace JupiterBrowser
         {
             if (sender is WebView2 webView)
             {
+                string adBlockScript = @"
+                    var ads = document.querySelectorAll('[id^=ad], [class*=ad], [class*=banner]');
+                    for (var i = 0; i < ads.length; i++) {
+                        ads[i].style.display = 'none';
+                    }
+                ";
+
+                await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+
+
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
                 title = title.Trim('"'); // Remove the surrounding quotes
                 string url = webView.Source.ToString();
