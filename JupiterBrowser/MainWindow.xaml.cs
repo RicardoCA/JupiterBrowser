@@ -139,6 +139,12 @@ namespace JupiterBrowser
             if (sender is WebView2 webView)
             {
                 var uri = e.Request.Uri;
+                if (uri.Contains("youtube.com") && !uri.Contains("ads") && !uri.Contains("adserver"))
+                {
+                    // Permitir recursos de youtube.com e music.youtube.com
+                    return;
+                }
+
                 if (uri.Contains("ads") || uri.Contains("adserver") || uri.Contains("advertisement"))
                 {
                     e.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(
@@ -603,8 +609,11 @@ namespace JupiterBrowser
                         ads[i].style.display = 'none';
                     }
                 ";
-
-                await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+                if(webView.Source.ToString().IndexOf("youtube.com") == -1)
+                {
+                    await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+                }
+                
 
 
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
