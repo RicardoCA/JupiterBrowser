@@ -599,10 +599,7 @@ namespace JupiterBrowser
             ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').pause(); } ");
         }
 
-        private void MiniPlayer_Stop_Click(object sender, RoutedEventArgs e)
-        {
-            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').pause(); document.querySelector('video').currentTime = 0; } ");
-        }
+        
 
         private void MiniPlayer_Previus_Click(object sender, RoutedEventArgs e)
         {
