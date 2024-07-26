@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
-        Title="Jupiter Browser" Height="450" Width="800" WindowState="Maximized">
+        Title="Jupiter Browser" Height="450" Width="800" WindowState="Maximized"
+        Background="#FF2D2D30"
+        x:Name="Janela">
     <Window.Resources>
         <Style TargetType="ContextMenu">
             <Setter Property="Background" Value="#FF333333" />

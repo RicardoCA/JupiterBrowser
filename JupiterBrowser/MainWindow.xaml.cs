@@ -530,7 +530,7 @@ namespace JupiterBrowser
                 {
                     Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
-                    
+                    Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                 }
 
                 
