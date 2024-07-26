@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.wpf.ui/2022"
         Title="Enter URL or Search" Height="150" Width="400" WindowStartupLocation="CenterScreen"
-        Background="Gray"
+        Background="Transparent"
         WindowStyle="None" 
         ResizeMode="NoResize"
-        >
+        AllowsTransparency="True"
+        Topmost="True"
+        ShowInTaskbar="False">
 
     <Window.Resources>
         <Style TargetType="Button">
@@ -20,10 +22,11 @@
             <Setter Property="Width" Value="180"/>
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Background" Value="#FF333333"/>
+            <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="10,40,10,10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Margin" Value="10,0,10,10"/>
             <Setter Property="AllowDrop" Value="True"/>
         </Style>
         <Style TargetType="ContentControl">
@@ -39,18 +42,28 @@
             <Setter Property="Height" Value="20"/>
             <Setter Property="Content" Value="X"/>
         </Style>
-
+        <Style TargetType="TextBlock">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
     </Window.Resources>
 
-    <Grid Margin="10">
+    <Border BorderBrush="White" BorderThickness="1" CornerRadius="10" Background="Black">
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Enter URL, Search or Press Esc:" VerticalAlignment="Center"/>
-        <TextBox Name="UrlTextBox" Grid.Row="1" Margin="0,10,0,85" KeyDown="UrlTextBox_KeyDown"/>
+            <TextBlock Text="Enter URL, Search or Press Esc:" VerticalAlignment="Center" Grid.Row="0"/>
 
-    </Grid>
+            <Grid Grid.Row="1" Margin="0,10,0,70">
+                <TextBox Name="UrlTextBox" Background="Black" Foreground="White" TextChanged="UrlTextBox_TextChanged" VerticalAlignment="Center" KeyDown="UrlTextBox_KeyDown"/>
+                <TextBlock Name="SearchIcon" Text="🔍" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,12,0" Visibility="Collapsed" Foreground="White" FontSize="16" Height="18" Width="20"/>
+            </Grid>
+
+        </Grid>
+    </Border>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace JupiterBrowser
@@ -21,6 +22,19 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
             UrlTextBox.Focus();
             UrlTextBox.Text = url;
+        }
+
+        private void UrlTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (UrlTextBox.Text.Contains(".com") || UrlTextBox.Text.Contains(".net") ||
+                UrlTextBox.Text.Contains(".org") || UrlTextBox.Text.Contains(".gov"))
+            {
+                SearchIcon.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                SearchIcon.Visibility = Visibility.Visible;
+            }
         }
 
 
