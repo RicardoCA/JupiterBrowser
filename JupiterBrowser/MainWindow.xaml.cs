@@ -116,10 +116,32 @@ namespace JupiterBrowser
             var webView = new WebView2();
             webView.Source = new System.Uri(url);
             webView.NavigationCompleted += WebView_NavigationCompleted;
+            webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
             newTab.WebView = webView;
 
             TabListBox.SelectedItem = newTab;
             UpdateMiniPlayerVisibility();
+        }
+
+        private async void WebView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        {
+            var webView = sender as WebView2;
+            if (webView != null && webView.CoreWebView2 != null)
+            {
+                webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+            }
+        }
+
+        private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
+        {
+            // Cancela a abertura da nova janela
+            e.Handled = true;
+
+            // Obtém a URL solicitada
+            string newUrl = e.Uri;
+
+            // Abre uma nova aba com a URL
+            OpenNewTabWithUrl(newUrl);
         }
 
         private void Pin()
@@ -173,6 +195,7 @@ namespace JupiterBrowser
             var webView = new WebView2();
             webView.Source = new System.Uri("edge://history");
             webView.NavigationCompleted += WebView_NavigationCompleted;
+            webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
             newTab.WebView = webView;
 
             TabListBox.SelectedItem = newTab;
@@ -201,11 +224,13 @@ namespace JupiterBrowser
                     string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
                     webView.Source = new System.Uri(htmlFilePath);
                     webView.NavigationCompleted += WebView_NavigationCompleted;
+                    webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                 }
                 else
                 {
                     webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                     webView.NavigationCompleted += WebView_NavigationCompleted;
+                    webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                 }
                 
                 
@@ -253,6 +278,7 @@ namespace JupiterBrowser
                         var webView = new WebView2();
                         webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                         webView.NavigationCompleted += WebView_NavigationCompleted;
+                        webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                         selectedTab.WebView = webView;
                     }
                 }
@@ -304,6 +330,7 @@ namespace JupiterBrowser
                         var webView = new WebView2();
                         webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                         webView.NavigationCompleted += WebView_NavigationCompleted;
+                        webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                         selectedTab.WebView = webView;
                     }
                 }
