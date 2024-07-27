@@ -59,11 +59,7 @@ namespace JupiterBrowser
 
         private void LoadSidebarColor()
         {
-            /*Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
-            TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
-            Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
-            BackgroundPersist backgroundPersist = new BackgroundPersist();
-            backgroundPersist.SaveColor(backgroundColor);*/
+          
 
             BackgroundPersist backgroundPersist = new BackgroundPersist();
             string color = backgroundPersist.GetColor();

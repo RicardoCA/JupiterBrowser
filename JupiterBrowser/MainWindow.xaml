@@ -101,7 +101,10 @@
                              ItemsPanel="{StaticResource PinnedTabsItemsPanelTemplate}"
                              Background="Transparent" BorderThickness="0" 
                              MouseDoubleClick="PinnedTabsListBox_MouseDoubleClick"
-                             Margin="10" HorizontalAlignment="Stretch"/>
+                             Margin="10" HorizontalAlignment="Stretch"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                       
+                    </ListBox>
                 </ScrollViewer>
                 <DockPanel>
                     <Button x:Name="newTabBtn" Content="+ New Tab" Click="NewTabButton_Click" ToolTip="New Tab" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5"/>
