@@ -54,6 +54,23 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
             OpenStartPage();
             CleanUpdates();
+            LoadSidebarColor();
+        }
+
+        private void LoadSidebarColor()
+        {
+            /*Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+            TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+            Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+            BackgroundPersist backgroundPersist = new BackgroundPersist();
+            backgroundPersist.SaveColor(backgroundColor);*/
+
+            BackgroundPersist backgroundPersist = new BackgroundPersist();
+            string color = backgroundPersist.GetColor();
+            Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+
         }
 
         private void ContactJupiter_Click(object sender, RoutedEventArgs e)
@@ -531,6 +548,8 @@ namespace JupiterBrowser
                     Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    BackgroundPersist backgroundPersist = new BackgroundPersist();
+                    backgroundPersist.SaveColor(backgroundColor);
                 }
 
                 
