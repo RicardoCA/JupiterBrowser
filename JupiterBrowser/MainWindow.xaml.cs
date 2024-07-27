@@ -16,6 +16,7 @@ using WpfButton = System.Windows.Controls.Button;
 using System.Diagnostics;
 using System.Net;
 using System.Security.Policy;
+using Newtonsoft.Json;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
@@ -41,13 +42,7 @@ namespace JupiterBrowser
             TabListBox.ItemsSource = Tabs;
             this.DataContext = this;
             this.KeyDown += Window_KeyDown;
-            PinnedTabs = new ObservableCollection<TabItem>
-            {
-                new TabItem { TabName = "Reddit", LogoUrl = "https://www.reddit.com/favicon.ico", url= "https://www.reddit.com/" },
-                new TabItem { TabName = "Youtube Music", LogoUrl = "https://music.youtube.com/favicon.ico", url= "https://music.youtube.com" },
-                new TabItem { TabName = "Google", LogoUrl = "https://www.google.com/favicon.ico", url= "https://www.google.com" }
-            };
-            PinnedTabsListBox.ItemsSource = PinnedTabs;
+            
             // Inicializa o timer
             _musicTitleUpdateTimer = new DispatcherTimer();
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
@@ -55,6 +50,63 @@ namespace JupiterBrowser
             OpenStartPage();
             CleanUpdates();
             LoadSidebarColor();
+            LoadPinneds();
+        }
+
+        private void LoadPinneds()
+        {
+            var JsonFilePath = "pinneds.json";
+            if (File.Exists(JsonFilePath))
+            {
+                string jsonContent = File.ReadAllText(JsonFilePath);
+                if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                {
+                    try
+                    {
+                        var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
+
+                        PinnedTabs = new ObservableCollection<TabItem>();
+
+                        foreach (var tab in loadedTabs)
+                        {
+                            // Verifica se o TabName já existe na coleção PinnedTabs
+                            if (!PinnedTabs.Any(t => t.TabName == tab.TabName))
+                            {
+                                PinnedTabs.Add(tab);
+                            }
+                        }
+
+                        PinnedTabsListBox.ItemsSource = PinnedTabs;
+                    }
+                    catch (JsonException ex)
+                    {
+                        // Lida com o erro de desserialização
+                        MessageBox.Show("Erro ao carregar as abas fixas " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                PinnedTabs = new ObservableCollection<TabItem>();
+                PinnedTabsListBox.ItemsSource = PinnedTabs;
+            }
+        }
+
+        
+    
+
+    private void SavePinneds()
+        {
+            try
+            {
+                string jsonContent = JsonConvert.SerializeObject(PinnedTabs, Formatting.Indented);
+                File.WriteAllText("pinneds.json", jsonContent);
+            }
+            catch (IOException ex)
+            {
+                // Lida com o erro de IO ao salvar o arquivo
+                MessageBox.Show("Erro ao salvar as abas fixas: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadSidebarColor()
@@ -206,7 +258,7 @@ namespace JupiterBrowser
             OpenNewTabWithUrl(newUrl);
         }
 
-        private void Pin()
+        private async void Pin()
         {
             if (PinnedTabs == null)
             {
@@ -226,14 +278,22 @@ namespace JupiterBrowser
             }
             else
             {
-                // Adicione o novo item
-                PinnedTabs.Add(new TabItem
+                if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
                 {
-                    TabName = "New Site",
-                    LogoUrl = currentLogo,
-                    url = currentUrl
-                });
+                    var title = await selectedTab.WebView.CoreWebView2.ExecuteScriptAsync("document.title");
+                    title = title.Trim('"'); // Remove the surrounding quotes
+                    // Adicione o novo item
+                    PinnedTabs.Add(new TabItem
+                    {
+                        TabName = title,
+                        LogoUrl = currentLogo,
+                        url = currentUrl
+                    });
+                    
+                }
+                    
             }
+            SavePinneds();
         }
 
         private (string, string) GetCurrentWebViewUrl()
