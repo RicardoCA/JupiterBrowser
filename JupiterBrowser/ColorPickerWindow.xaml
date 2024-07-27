@@ -1,33 +1,42 @@
 ﻿<Window x:Class="JupiterBrowser.ColorPickerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Color Picker" Height="250" Width="300" MinHeight="250" MinWidth="300">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="Color Picker" Height="250" Width="300" MinHeight="250" MinWidth="300"
+        Background="Transparent"
+        Foreground="White"
+        WindowStyle="None" 
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Topmost="True"
+        ShowInTaskbar="False">
+    <Border BorderBrush="White" BorderThickness="1" CornerRadius="10" Background="Black">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Select Background Color" Margin="10" Grid.Row="0"/>
-        <ComboBox x:Name="BackgroundColorComboBox" Margin="10" Grid.Row="1">
-            <ComboBoxItem Content="#FF2D2D30" Background="#FF2D2D30" Foreground="White" />
-            <ComboBoxItem Content="#000080" Background="#000080" Foreground="White"/>
-            <ComboBoxItem Content="#2F4F4F" Background="#2F4F4F" Foreground="White"/>
-            <ComboBoxItem Content="#4B0082" Background="#4B0082" Foreground="White"/>
-            <ComboBoxItem Content="#8B008B" Background="#8B008B" Foreground="White"/>
-            <ComboBoxItem Content="#8B0000" Background="#8B0000" Foreground="White"/>
-            <ComboBoxItem Content="#000000" Background="#000000" Foreground="White"/>
-            <!-- Add more colors as needed -->
-        </ComboBox>
+            <TextBlock Text="Select Background Color" Margin="10" Grid.Row="0"/>
+            <ComboBox x:Name="BackgroundColorComboBox" Margin="10" Grid.Row="1" Background="Transparent">
+                <ComboBoxItem Content="#FF2D2D30" Background="#FF2D2D30" Foreground="White" />
+                <ComboBoxItem Content="#000080" Background="#000080" Foreground="White"/>
+                <ComboBoxItem Content="#2F4F4F" Background="#2F4F4F" Foreground="White"/>
+                <ComboBoxItem Content="#4B0082" Background="#4B0082" Foreground="White"/>
+                <ComboBoxItem Content="#8B008B" Background="#8B008B" Foreground="White"/>
+                <ComboBoxItem Content="#8B0000" Background="#8B0000" Foreground="White"/>
+                <ComboBoxItem Content="#000000" Background="#000000" Foreground="White"/>
+                <!-- Add more colors as needed -->
+            </ComboBox>
 
-        
 
-        <Button Content="OK" Click="OkButton_Click" Margin="10" Grid.Row="4" HorizontalAlignment="Center" Width="100"/>
-    </Grid>
+
+            <Button Content="OK" Click="OkButton_Click" Margin="10" Grid.Row="4" HorizontalAlignment="Center" Width="100" Background="Black" Foreground="White"/>
+        </Grid>
+    </Border>
 </Window>

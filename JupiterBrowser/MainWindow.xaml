@@ -158,7 +158,7 @@
                         <TextBlock x:Name="MusicTitle" Text="Title" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
                         <StackPanel Orientation="Horizontal">
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Play_Click" Width="16" Height="16" Margin="0,0,5,0">
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Play_Click" Width="32" Height="37" Margin="0,0,5,0">
                                 <Canvas.RenderTransform>
                                     <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
                                 </Canvas.RenderTransform>
@@ -166,7 +166,7 @@
                                 <Path Fill="White" Data="M4.585,30.62L4.585,30.62C3.681,30.62,3,29.923,3,29V3c0-0.923,0.681-1.62,1.585-1.62c0.309,0,0.621,0.085,0.904,0.248l22.794,13.007c0.559,0.319,0.878,0.823,0.878,1.382c0,0.548-0.309,1.039-0.847,1.347L5.488,30.373C5.206,30.534,4.894,30.62,4.585,30.62z M5,3.651v24.698l21.655-12.34L5,3.651z"/>
                             </Canvas>
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Pause_Click" Width="16" Height="16" Margin="0,0,5,0">
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Pause_Click" Width="33" Height="37" Margin="0,0,5,0">
                                 <Canvas.RenderTransform>
                                     <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
                                 </Canvas.RenderTransform>
@@ -177,7 +177,7 @@
                                 <Path Fill="White" Data="M26,29h-3c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C28,28.103,27.103,29,26,29z M26,27v1V27 L26,27L26,27z M23,5v22h2.997L26,5H23z"/>
                             </Canvas>
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Previus_Click" Width="16" Height="16" Margin="0,0,5,0">
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Previus_Click" Width="35" Height="38" Margin="0,0,5,0">
                                 <Canvas.RenderTransform>
                                     <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
                                 </Canvas.RenderTransform>
@@ -188,7 +188,7 @@
                                 <Path Fill="White" Data="M14.706,29.504c-0.286,0-0.717-0.098-1.146-0.563L2.954,17.414c-0.727-0.791-0.724-2.032,0.006-2.827l10.6-11.527c0.428-0.466,0.859-0.563,1.146-0.563C15.329,2.496,16,2.967,16,4v24C16,29.033,15.329,29.504,14.706,29.504z M14,5.538L4.433,15.94c-0.025,0.027-0.023,0.102-0.006,0.119L14,26.463V5.538z"/>
                             </Canvas>
 
-                            <Canvas MouseLeftButtonDown="MiniPlayer_Next_Click" Width="16" Height="16" Margin="0,0,5,0">
+                            <Canvas MouseLeftButtonDown="MiniPlayer_Next_Click" Width="32" Height="37" Margin="0,0,5,0">
                                 <Canvas.RenderTransform>
                                     <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
                                 </Canvas.RenderTransform>

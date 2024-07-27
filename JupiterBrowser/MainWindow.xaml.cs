@@ -603,19 +603,41 @@ namespace JupiterBrowser
 
         private void MiniPlayer_Previus_Click(object sender, RoutedEventArgs e)
         {
-            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.getElementsByClassName(\"previous-button style-scope ytmusic-player-bar\")[0].click(); }");
+            string script = @"
+        if (window.location.href.includes('music.youtube.com')) {
+            // YouTube Music
+            var prevButton = document.querySelector('.previous-button.style-scope.ytmusic-player-bar');
+            if (prevButton) prevButton.click();
+        } else if (window.location.href.includes('youtube.com')) {
+            // YouTube Padrão
+            var prevButton = document.querySelector('.ytp-prev-button');
+            if (prevButton) prevButton.click();
+        }
+    ";
+            ExecuteMiniPlayerScript(script);
         }
 
         private void MiniPlayer_Next_Click(object sender, RoutedEventArgs e)
         {
-            ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.getElementsByClassName(\"next-button style-scope ytmusic-player-bar\")[0].click(); }");
+            string script = @"
+        if (window.location.href.includes('music.youtube.com')) {
+            // YouTube Music
+            var nextButton = document.querySelector('.next-button.style-scope.ytmusic-player-bar');
+            if (nextButton) nextButton.click();
+        } else if (window.location.href.includes('youtube.com')) {
+            // YouTube Padrão
+            var nextButton = document.querySelector('.ytp-next-button');
+            if (nextButton) nextButton.click();
+        }
+    ";
+            ExecuteMiniPlayerScript(script);
         }
 
         private async void ExecuteMiniPlayerScript(string script)
         {
             foreach (var tab in Tabs)
             {
-                if (tab.WebView != null && (tab.WebView.Source.ToString().Contains("music.youtube.com") ))
+                if (tab.WebView != null && (tab.WebView.Source.ToString().Contains("youtube.com") ))
                 {
                     await tab.WebView.ExecuteScriptAsync(script);
                 }
@@ -695,7 +717,7 @@ namespace JupiterBrowser
             {
                 bool hasMusicTab = Tabs.Any(tab => tab.WebView != null &&
                                                    tab.WebView.Source != null &&
-                                                   tab.WebView.Source.ToString().Contains("music.youtube.com"));
+                                                   tab.WebView.Source.ToString().Contains("youtube.com"));
                 MiniPlayer.Visibility = hasMusicTab ? Visibility.Visible : Visibility.Collapsed;
 
                 if (hasMusicTab)
@@ -704,7 +726,7 @@ namespace JupiterBrowser
                     {
                         var musicTab = Tabs.First(tab => tab.WebView != null &&
                                                          tab.WebView.Source != null &&
-                                                         tab.WebView.Source.ToString().Contains("music.youtube.com"));
+                                                         tab.WebView.Source.ToString().Contains("youtube.com"));
 
                         // Espera até que o CoreWebView2 seja inicializado
                         await musicTab.WebView.EnsureCoreWebView2Async();
