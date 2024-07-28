@@ -100,6 +100,10 @@ namespace JupiterBrowser
                         {
                             url = $"https://www.google.com/search?q={url}";
                         }
+                        if(url.Contains("chatgpt "))
+                        {
+                            url = UrlTextBox.Text;
+                        }
                         if (url.Contains("calc:"))
                         {
                             string form = url.Substring(url.IndexOf("calc:") + 5);

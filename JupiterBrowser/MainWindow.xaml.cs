@@ -32,7 +32,7 @@ namespace JupiterBrowser
         private Point _startPoint;
         private bool isFullScreen = false;
         private DispatcherTimer _musicTitleUpdateTimer;
-        
+        private string prompt = "";
 
 
         public int id = 1;
@@ -450,9 +450,22 @@ namespace JupiterBrowser
                 }
                 else
                 {
-                    webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
-                    webView.NavigationCompleted += WebView_NavigationCompleted;
-                    webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                    string url = urlInputDialog.EnteredUrl;
+                    if(url.Contains("chatgpt "))
+                    {
+                        prompt = url.Split("chatgpt ")[1];
+
+                        webView.Source = new System.Uri("https://chat.openai.com");
+                        webView.NavigationCompleted += WebView_NavigationCompleted;
+                        webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                    }
+                    else
+                    {
+                        webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                        webView.NavigationCompleted += WebView_NavigationCompleted;
+                        webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                    }
+                    
                 }
                 
                 
@@ -537,8 +550,20 @@ namespace JupiterBrowser
                     if (urlInputDialog.ShowDialog() == true)
                     {
                         // Verifica se há uma guia selecionada
+                        string newurl = urlInputDialog.EnteredUrl;
+                        if(newurl.Contains("chatgpt "))
+                        {
+                            prompt = newurl.Split("chatgpt ")[1];
+
+                            selectedTab.WebView.Source = new System.Uri("https://chat.openai.com");
+                            selectedTab.WebView.NavigationCompleted += WebView_NavigationCompleted;
+                            selectedTab.WebView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                        }
+                        else
+                        {
+                            selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
+                        }
                         
-                        selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                     }
 
 
@@ -883,6 +908,41 @@ namespace JupiterBrowser
 
 
                 UpdateMiniPlayerVisibility();
+
+
+                if(prompt.Length > 0)
+                {
+
+                    string escapedPrompt = prompt.Replace("'", @"\'").Replace("\"", "\\\"");
+                    string fillInputScript = $@"
+        console.log('Running script...');
+        var input = document.getElementById('prompt-textarea');
+        if (input) {{
+            console.log('Found input element');
+            input.value = '{escapedPrompt}';
+            
+            // Forçar a mudança de valor e o disparo do evento
+            var event = new Event('input', {{ bubbles: true }});
+            input.dispatchEvent(event);
+            
+            // Tentativa adicional de garantir que o valor foi definido
+            setTimeout(function() {{
+                var submitButton = document.querySelector('[data-testid=""send-button""]');
+                if (submitButton) {{
+                    console.log('Found submit button');
+                    submitButton.click();
+                }} else {{
+                    console.log('Submit button not found');
+                }}
+            }}, 100); // Pequeno atraso para garantir que o valor é processado
+        }} else {{
+            console.log('Input element not found');
+        }}
+    ";
+                    await webView.CoreWebView2.ExecuteScriptAsync(fillInputScript);
+                    prompt = "";
+                }
+
 
                 
             }
