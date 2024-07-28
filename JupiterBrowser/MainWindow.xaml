@@ -65,7 +65,7 @@
         </Style>
         <DataTemplate x:Key="PinnedTabTemplate">
             <StackPanel Orientation="Vertical">
-                <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image ToolTip="{Binding TabName}" Source="{Binding LogoUrl}" Width="16" Height="16" Margin="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TabItemTemplate">

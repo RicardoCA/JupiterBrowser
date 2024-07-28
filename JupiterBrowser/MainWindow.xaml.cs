@@ -165,6 +165,7 @@ namespace JupiterBrowser
                             // Verifica se o TabName já existe na coleção PinnedTabs
                             if (!PinnedTabs.Any(t => t.TabName == tab.TabName))
                             {
+                                
                                 PinnedTabs.Add(tab);
                             }
                         }
