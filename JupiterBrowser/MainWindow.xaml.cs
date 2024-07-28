@@ -56,6 +56,15 @@ namespace JupiterBrowser
             LoadTabsClosed();
         }
 
+        private void JupiterCard_Click(object sender,  RoutedEventArgs e)
+        {
+            JupiterCard jupiterCard = new JupiterCard();
+            if(jupiterCard.ShowDialog() == true)
+            {
+
+            }
+        }
+
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveTabsBeforeClose();
