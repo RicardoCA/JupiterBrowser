@@ -2,6 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Data;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace JupiterBrowser
 {
@@ -17,6 +20,7 @@ namespace JupiterBrowser
             InitializeComponent();
             this.KeyDown += Window_KeyDown;
             UrlTextBox.Focus();
+            LoadLastResult();
         }
 
         public UrlInputDialog(string url)
@@ -25,13 +29,24 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
             UrlTextBox.Focus();
             UrlTextBox.Text = url;
+            LoadLastResult();
+        }
+
+        private void LoadLastResult()
+        {
+            var JsonFilePath = "calc.json";
+            if (File.Exists(JsonFilePath))
+            {
+                string json = File.ReadAllText(JsonFilePath);
+                lastResult = int.Parse(json);
+            }
         }
 
         private void UrlTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (UrlTextBox.Text.Contains(".com") || UrlTextBox.Text.Contains(".net") ||
                 UrlTextBox.Text.Contains(".org") || UrlTextBox.Text.Contains(".gov") ||
-                UrlTextBox.Text.Contains("calc:"))
+                UrlTextBox.Text.Contains("calc:") || UrlTextBox.Text.Contains(".so"))
             {
                 SearchIcon.Visibility = Visibility.Collapsed;
             }
@@ -88,7 +103,7 @@ namespace JupiterBrowser
 
             if (url.IndexOf("https://") == -1 && url.IndexOf("http://") == -1)
             {
-                if (url.IndexOf(".com") != -1 || url.IndexOf(".net") != -1 || url.IndexOf(".gov") != -1 || url.IndexOf(".org") != -1)
+                if (url.IndexOf(".com") != -1 || url.IndexOf(".net") != -1 || url.IndexOf(".gov") != -1 || url.IndexOf(".org") != -1 || url.IndexOf(".so") != -1)
                 {
                     url = "https://" + url;
                 }
@@ -123,6 +138,10 @@ namespace JupiterBrowser
                                 string result = Calculate(form);
                                 lastResult = int.Parse(result);
                                 UrlTextBox.Text = "calc:" + form + "=" + result;
+
+                                var JsonFilePath = "calc.json";
+                                string jsonContent = JsonConvert.SerializeObject(lastResult, Formatting.Indented);
+                                File.WriteAllText(JsonFilePath, jsonContent);
                             }
                             catch (FormatException)
                             {
@@ -139,7 +158,7 @@ namespace JupiterBrowser
             }
             else
             {
-                if (url.IndexOf(".com") == -1 && url.IndexOf(".net") == -1 && url.IndexOf(".gov") == -1 && url.IndexOf(".org") == -1)
+                if (url.IndexOf(".com") == -1 && url.IndexOf(".net") == -1 && url.IndexOf(".gov") == -1 && url.IndexOf(".org") == -1 && url.IndexOf(".so") == -1)
                 {
                     url = $"https://www.google.com/search?q={url}";
                 }
