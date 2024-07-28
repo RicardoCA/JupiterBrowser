@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Data;
 
 namespace JupiterBrowser
 {
@@ -8,6 +9,8 @@ namespace JupiterBrowser
     {
         public string EnteredUrl { get; set; }
         private List<string> _history = new List<string>();
+        
+        private int lastResult = 0;
 
         public UrlInputDialog()
         {
@@ -27,7 +30,8 @@ namespace JupiterBrowser
         private void UrlTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (UrlTextBox.Text.Contains(".com") || UrlTextBox.Text.Contains(".net") ||
-                UrlTextBox.Text.Contains(".org") || UrlTextBox.Text.Contains(".gov"))
+                UrlTextBox.Text.Contains(".org") || UrlTextBox.Text.Contains(".gov") ||
+                UrlTextBox.Text.Contains("calc:"))
             {
                 SearchIcon.Visibility = Visibility.Collapsed;
             }
@@ -64,6 +68,20 @@ namespace JupiterBrowser
             }
         }
 
+        public static string Calculate(string expression)
+        {
+            try
+            {
+                DataTable table = new DataTable();
+                var value = table.Compute(expression, string.Empty);
+                return value.ToString();
+            }
+            catch (Exception ex)
+            {
+                return "Error in calculation: " + ex.Message;
+            }
+        }
+
         private void ProcessUrl()
         {
             string url = UrlTextBox.Text;
@@ -82,7 +100,35 @@ namespace JupiterBrowser
                         {
                             url = $"https://www.google.com/search?q={url}";
                         }
-                        
+                        if (url.Contains("calc:"))
+                        {
+                            string form = url.Substring(url.IndexOf("calc:") + 5);
+
+                            if (string.IsNullOrWhiteSpace(form) || form.Contains("="))
+                            {
+                                // Evita calcular se a expressão já possui um resultado ou é inválida
+                                ToastWindow.Show("Remove all result with =");
+                                return;
+                            }
+
+                            // Substitui "lastresult" pelo valor do último resultado
+                            form = form.Replace("lastresult", lastResult.ToString());
+
+                            try
+                            {
+                                string result = Calculate(form);
+                                lastResult = int.Parse(result);
+                                UrlTextBox.Text = "calc:" + form + "=" + result;
+                            }
+                            catch (FormatException)
+                            {
+                                UrlTextBox.Text = "calc:" + form + "= Error in calculation";
+                            }
+
+                            return;
+                        }
+
+
                     }
                     
                 }
