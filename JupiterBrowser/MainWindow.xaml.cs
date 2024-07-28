@@ -25,7 +25,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.13";
+        private string VERSION = "0.13.1";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -677,27 +677,59 @@ namespace JupiterBrowser
             }
         }
 
+        private void ShowSideBar()
+        {
+            // Restaurar o Border ao seu tamanho original
+            Grid.SetColumn(ContentBorder, 1);
+            ContentBorder.Margin = new Thickness(10);
+            ContentBorder.CornerRadius = new CornerRadius(10);
+            
+            Sidebar.Visibility = Visibility.Visible;
+            
+        }
+
+        private void HideSideBar()
+        {
+            // Fazer o Border ocupar a tela toda
+            Grid.SetColumn(ContentBorder, 0);
+            Grid.SetColumnSpan(ContentBorder, 2);
+            ContentBorder.Margin = new Thickness(0);
+            ContentBorder.CornerRadius = new CornerRadius(0);
+            Sidebar.Visibility = Visibility.Collapsed;
+            
+        }
+
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (isFullScreen)
+            {
+                // Mostra o sidebar temporariamente
+                ShowSideBar();
+            }
+        }
+
+        // Evento que detecta quando o mouse sai da borda da tela
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (isFullScreen)
+            {
+                // Esconde o sidebar novamente
+                HideSideBar();
+            }
+        }
+
         private void SidebarToggle()
         {
             //Sidebar.Visibility = Sidebar.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
             if (isFullScreen)
             {
-                // Restaurar o Border ao seu tamanho original
-                Grid.SetColumn(ContentBorder, 1);
-                ContentBorder.Margin = new Thickness(10);
-                ContentBorder.CornerRadius = new CornerRadius(10);
+                ShowSideBar();
                 isFullScreen = false;
-                Sidebar.Visibility = Visibility.Visible;
             }
             else
             {
-                // Fazer o Border ocupar a tela toda
-                Grid.SetColumn(ContentBorder, 0);
-                Grid.SetColumnSpan(ContentBorder, 2);
-                ContentBorder.Margin = new Thickness(0);
-                ContentBorder.CornerRadius = new CornerRadius(0);
+                HideSideBar();
                 isFullScreen = true;
-                Sidebar.Visibility = Visibility.Collapsed;
             }
         }
 
