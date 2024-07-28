@@ -53,11 +53,57 @@ namespace JupiterBrowser
             CleanUpdates();
             LoadSidebarColor();
             LoadPinneds();
+            LoadTabsClosed();
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveTabsBeforeClose();
+        }
+
+        private void LoadTabsClosed()
+        {
+            var JsonFilePath = "closedtabs.json";
+            if (File.Exists(JsonFilePath))
+            {
+                string jsonContent = File.ReadAllText(JsonFilePath);
+                if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                {
+                    try
+                    {
+
+                        ConfirmDialog confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                        if (confirmDialog.ShowDialog() == true)
+                        {
+                            var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
+                            foreach (var tab in loadedTabs)
+                            {
+                                if (!tab.url.Contains("startpage.html"))
+                                {
+                                    OpenNewTabWithUrl(tab.url, tab.TabName);
+                                }
+
+                            }
+                        }
+
+
+
+
+                        
+
+                       
+                    }
+                    catch (JsonException ex)
+                    {
+                        // Lida com o erro de desserialização
+                        
+                    }
+                }
+            }
+            else
+            {
+                
+            }
         }
 
         private void SaveTabsBeforeClose()
@@ -242,7 +288,7 @@ namespace JupiterBrowser
             }
             UpdateMiniPlayerVisibility();
         }
-        private void OpenNewTabWithUrl(string url)
+        private void OpenNewTabWithUrl(string url, string tabName = null)
         {
             var newTab = new TabItem { TabName = "New Tab " + id };
             newTab.adBlock = false;
@@ -254,6 +300,10 @@ namespace JupiterBrowser
             webView.NavigationCompleted += WebView_NavigationCompleted;
             webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
             newTab.WebView = webView;
+            if(tabName != null)
+            {
+                newTab.TabName = tabName;
+            }
 
             TabListBox.SelectedItem = newTab;
             UpdateMiniPlayerVisibility();
