@@ -17,13 +17,15 @@ using System.Diagnostics;
 using System.Net;
 using System.Security.Policy;
 using Newtonsoft.Json;
+using System.Windows.Controls.Primitives;
+using Newtonsoft.Json.Serialization;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.10";
+        private string VERSION = "0.11";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -42,7 +44,7 @@ namespace JupiterBrowser
             TabListBox.ItemsSource = Tabs;
             this.DataContext = this;
             this.KeyDown += Window_KeyDown;
-            
+            this.Closing += MainWindow_Closing;
             // Inicializa o timer
             _musicTitleUpdateTimer = new DispatcherTimer();
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
@@ -51,6 +53,51 @@ namespace JupiterBrowser
             CleanUpdates();
             LoadSidebarColor();
             LoadPinneds();
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveTabsBeforeClose();
+        }
+
+        private void SaveTabsBeforeClose()
+        {
+            if (File.Exists("closedtabs.json"))
+            {
+                File.Delete("closedtabs.json");
+            }
+
+
+            foreach (var item in TabListBox.Items)
+            {
+                var listBoxItem = TabListBox.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                if (listBoxItem != null)
+                {
+                    var tab = item as TabItem;
+                    if (tab != null)
+                    {
+                        tab.UpdateUrl();
+                        if (!tab.TabName.Equals("startpage"))
+                        {
+                            try
+                            {
+                               
+                                var JsonFilePath = "closedtabs.json";
+                                string jsonContent = JsonConvert.SerializeObject(Tabs, Formatting.Indented);
+                                File.WriteAllText(JsonFilePath, jsonContent);
+                            }
+                            catch (IOException ex)
+                            {
+                                // Lida com o erro de IO ao salvar o arquivo
+                                ToastWindow.Show("Error: " + ex.Message);
+                                
+                            }
+
+                        }
+                        
+                    }
+                }
+            }
         }
 
         private void LoadPinneds()
@@ -286,6 +333,7 @@ namespace JupiterBrowser
                     PinnedTabs.Add(new TabItem
                     {
                         TabName = title,
+                        FullTabName = title,
                         LogoUrl = currentLogo,
                         url = currentUrl
                     });
@@ -752,9 +800,9 @@ namespace JupiterBrowser
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
                 {
-                    if(title.Length > 20)
+                    if(title.Length > 18)
                     {
-                        tabItem.TabName = title.Substring(0,20);
+                        tabItem.TabName = title.Substring(0,18);
                         
                         
                     }
@@ -763,6 +811,7 @@ namespace JupiterBrowser
                         tabItem.TabName = title;
                     }
                     tabItem.LogoUrl = faviconUrl;
+                    tabItem.FullTabName = title;
                     if(url.IndexOf("http") != -1)
                     {
                         urlLabel.Text = url;
@@ -779,10 +828,35 @@ namespace JupiterBrowser
                 TabListBox.ItemsSource = null;
                 TabListBox.ItemsSource = Tabs;
                 TabListBox.SelectedIndex = selectedIndex;
+                TabListBox.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+                
+
 
                 UpdateMiniPlayerVisibility();
 
                 
+            }
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+        {
+            if (TabListBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+            {
+                // Unsubscribe from event
+                TabListBox.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
+
+                foreach (var item in TabListBox.Items)
+                {
+                    var listBoxItem = TabListBox.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                    if (listBoxItem != null)
+                    {
+                        var tab = item as TabItem;
+                        if (tab != null)
+                        {
+                            listBoxItem.ToolTip = tab.FullTabName;
+                        }
+                    }
+                }
             }
         }
 
@@ -940,12 +1014,24 @@ namespace JupiterBrowser
     public class TabItem
     {
         public string TabName { get; set; }
-        public WebView2 WebView { get; set; }
+
+        public string FullTabName { get; set; }
 
         public string LogoUrl { get; set; }
 
         public string url { get; set; }
 
         public bool adBlock { get; set; }
+
+        [JsonIgnore]
+        public WebView2 WebView { get; set; }
+
+        public void UpdateUrl()
+        {
+            if (WebView != null)
+            {
+                url = WebView.Source?.ToString();
+            }
+        }
     }
 }
