@@ -13,15 +13,74 @@
             <Setter Property="Background" Value="#FF333333" />
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="0" Padding="2">
+                            <StackPanel IsItemsHost="True" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <ContextMenu x:Key="BrowserMenu">
-            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click"/>
-            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click" />
-            <MenuItem Header="Jupiter Card" Click="JupiterCard_Click" />
-            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click"/>
-            <MenuItem Header="Shortcuts" Click="ShortCuts_Click" />
-            <MenuItem Header="Quit" Click="QuitMenu_Click"/>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="5,5"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter ContentSource="Icon" VerticalAlignment="Center" Grid.Column="0" Margin="5,0"/>
+                                <ContentPresenter ContentSource="Header" VerticalAlignment="Center" Grid.Column="1" Margin="10,0,0,0"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <ContextMenu x:Key="BrowserMenu" x:Name="BrowserMenu">
+            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click">
+                <MenuItem.Icon>
+                    <Image Source="/update.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click">
+                <MenuItem.Icon>
+                    <Image Source="/contact.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Jupiter Card" Click="JupiterCard_Click">
+                <MenuItem.Icon>
+                    <Image Source="/card.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click">
+                <MenuItem.Icon>
+                    <Image Source="/theme.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Shortcuts" Click="ShortCuts_Click">
+                <MenuItem.Icon>
+                    <Image Source="/shortcuts.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Quit" Click="QuitMenu_Click">
+                <MenuItem.Icon>
+                    <Image Source="/quit.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
 
 

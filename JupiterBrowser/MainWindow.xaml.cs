@@ -25,7 +25,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.13.1";
+        private string VERSION = "0.14";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -221,6 +221,16 @@ namespace JupiterBrowser
             Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            var contextMenu = (ContextMenu)FindResource("BrowserMenu");
+            contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            foreach (var item in contextMenu.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+                    menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                }
+            }
 
         }
 
@@ -382,6 +392,7 @@ namespace JupiterBrowser
             {
                 // Remove o item existente
                 PinnedTabs.Remove(existingTab);
+                ToastWindow.Show("Unpinned site: " + currentUrl);
             }
             else
             {
@@ -397,6 +408,7 @@ namespace JupiterBrowser
                         LogoUrl = currentLogo,
                         url = currentUrl
                     });
+                    ToastWindow.Show("Pinned site: " + currentUrl);
                     
                 }
                     
@@ -769,6 +781,17 @@ namespace JupiterBrowser
                     Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    var contextMenu = (ContextMenu)FindResource("BrowserMenu");
+                    contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    foreach (var item in contextMenu.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                        {
+                            menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                            menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                        }
+                    }
+
                     BackgroundPersist backgroundPersist = new BackgroundPersist();
                     backgroundPersist.SaveColor(backgroundColor);
                 }

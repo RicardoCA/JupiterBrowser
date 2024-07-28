@@ -10,6 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="card.png" />
+    <None Remove="contact.png" />
+    <None Remove="quit.png" />
+    <None Remove="shortcuts.png" />
+    <None Remove="theme.png" />
+    <None Remove="update.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>4</VersionMinor>
@@ -24,6 +33,15 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2592.51" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="WPF-UI" Version="3.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="card.png" />
+    <Resource Include="contact.png" />
+    <Resource Include="quit.png" />
+    <Resource Include="shortcuts.png" />
+    <Resource Include="theme.png" />
+    <Resource Include="update.png" />
   </ItemGroup>
 
 	
