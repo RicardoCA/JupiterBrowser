@@ -14,6 +14,7 @@
     <None Remove="contact.png" />
     <None Remove="quit.png" />
     <None Remove="shortcuts.png" />
+    <None Remove="sitetheme.png" />
     <None Remove="theme.png" />
     <None Remove="update.png" />
   </ItemGroup>
@@ -40,6 +41,7 @@
     <Resource Include="contact.png" />
     <Resource Include="quit.png" />
     <Resource Include="shortcuts.png" />
+    <Resource Include="sitetheme.png" />
     <Resource Include="theme.png" />
     <Resource Include="update.png" />
   </ItemGroup>

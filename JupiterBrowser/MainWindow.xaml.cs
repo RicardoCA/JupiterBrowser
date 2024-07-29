@@ -56,6 +56,81 @@ namespace JupiterBrowser
             LoadTabsClosed();
         }
 
+        private void SiteThemeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "";
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                url = selectedTab.WebView.Source.ToString();
+                var colorPicker = new SiteColorPicker(url);
+                colorPicker.OnColorsSelected += ColorPicker_OnColorsSelected;
+                colorPicker.ShowDialog();
+
+            }
+            else
+            {
+                ToastWindow.Show("Select a tab for this.");
+            }
+            
+        }
+
+        private void ColorPicker_OnColorsSelected(SiteTheme siteTheme)
+        {
+            string script = "";
+            var siteColorInfos = ColorPersistence.LoadColors();
+
+            if (!string.IsNullOrEmpty(siteTheme.ForegroundColor))
+            {
+                script += $"document.querySelectorAll('p, label').forEach(el => el.style.color = '{siteTheme.ForegroundColor}');";
+            }
+
+            if (!string.IsNullOrEmpty(siteTheme.BackgroundColor))
+            {
+                script += $"document.body.style.backgroundColor = '{siteTheme.BackgroundColor}';";
+            }
+
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                if (script.Length > 0)
+                {
+                    selectedTab.WebView.ExecuteScriptAsync(script);
+
+                    // Encontrar ou adicionar a informação do site
+                    var siteInfo = siteColorInfos.Find(info => info.Url == selectedTab.WebView.Source.ToString());
+                    if (siteInfo == null)
+                    {
+                        siteInfo = new SiteColorInfo
+                        {
+                            Url = selectedTab.WebView.Source.ToString(),
+                            ForegroundColor = siteTheme.ForegroundColor,
+                            BackgroundColor = siteTheme.BackgroundColor
+                        };
+                        siteColorInfos.Add(siteInfo);
+                    }
+                    else
+                    {
+                        // Atualizar as cores apenas se elas não forem nulas
+                        if (!string.IsNullOrEmpty(siteTheme.ForegroundColor))
+                        {
+                            siteInfo.ForegroundColor = siteTheme.ForegroundColor;
+                        }
+                        if (!string.IsNullOrEmpty(siteTheme.BackgroundColor))
+                        {
+                            siteInfo.BackgroundColor = siteTheme.BackgroundColor;
+                        }
+                    }
+
+                    // Salvar as informações atualizadas
+                    ColorPersistence.SaveColors(siteColorInfos);
+                }
+            }
+            else
+            {
+                ToastWindow.Show("Select a tab for this.");
+            }
+        }
+
+
         private void JupiterCard_Click(object sender,  RoutedEventArgs e)
         {
             JupiterCard jupiterCard = new JupiterCard();
@@ -983,8 +1058,33 @@ namespace JupiterBrowser
 
                 UpdateMiniPlayerVisibility();
 
+                // Load colors from siteColors.json
+                if (File.Exists("siteColors.json"))
+                {
+                    string siteColorsJson = File.ReadAllText("siteColors.json");
+                    var siteColors = JsonConvert.DeserializeObject<List<SiteColorInfo>>(siteColorsJson);
 
-                if(prompt.Length > 0)
+                    var currentSiteColor = siteColors.FirstOrDefault(sc => url.StartsWith(sc.Url, StringComparison.OrdinalIgnoreCase));
+                    if (currentSiteColor != null)
+                    {
+                        string setColorScript = $@"
+                document.body.style.backgroundColor = '{currentSiteColor.BackgroundColor}';
+                var paragraphs = document.getElementsByTagName('p');
+                for (var i = 0; i < paragraphs.length; i++) {{
+                    paragraphs[i].style.color = '{currentSiteColor.ForegroundColor}';
+                }}
+                var labels = document.getElementsByTagName('label');
+                for (var i = 0; i < labels.length; i++) {{
+                    labels[i].style.color = '{currentSiteColor.ForegroundColor}';
+                }}
+            ";
+                        await webView.CoreWebView2.ExecuteScriptAsync(setColorScript);
+                    }
+                }
+                
+
+
+                if (prompt.Length > 0)
                 {
 
                     string escapedPrompt = prompt.Replace("'", @"\'").Replace("\"", "\\\"");
