@@ -184,16 +184,20 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
+                    
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Disabled">
+                        
                         <ListBox Name="PinnedTabsListBox"
                                  ItemTemplate="{StaticResource PinnedTabTemplate}"
                                  ItemsPanel="{StaticResource PinnedTabsItemsPanelTemplate}"
                                  Background="Transparent" BorderThickness="0" 
                                  MouseDoubleClick="PinnedTabsListBox_MouseDoubleClick"
                                  Margin="10" HorizontalAlignment="Stretch"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 MouseLeave="PinMouseLeave"
+                                 >
+                            
                         </ListBox>
                     </ScrollViewer>
                     <DockPanel>

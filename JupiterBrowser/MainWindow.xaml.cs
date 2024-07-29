@@ -230,6 +230,8 @@ namespace JupiterBrowser
             }
         }
 
+        
+
         private void LoadPinneds()
         {
             var JsonFilePath = "pinneds.json";
@@ -382,7 +384,26 @@ namespace JupiterBrowser
                 OpenNewTabWithUrl(selectedTab.url);
             }
             UpdateMiniPlayerVisibility();
+            
         }
+
+        private void PinMouseLeave(object sender, MouseEventArgs e)
+        {
+
+            var listBox = sender as ListBox;
+
+            if (listBox != null)
+            {
+                // Desmarca todos os itens selecionados
+                listBox.SelectedItem = null;
+                // ou
+                listBox.UnselectAll();
+            }
+
+            // Define o foco para outro controle ou janela
+            Janela.Focus();
+        }
+        
         private void OpenNewTabWithUrl(string url, string tabName = null)
         {
             var newTab = new TabItem { TabName = "New Tab " + id };
@@ -401,6 +422,7 @@ namespace JupiterBrowser
             }
 
             TabListBox.SelectedItem = newTab;
+            
             UpdateMiniPlayerVisibility();
         }
 
