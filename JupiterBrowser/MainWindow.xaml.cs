@@ -379,12 +379,37 @@ namespace JupiterBrowser
 
         private void PinnedTabsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            bool existent = false;
             if (PinnedTabsListBox.SelectedItem is TabItem selectedTab)
             {
-                OpenNewTabWithUrl(selectedTab.url);
+                foreach (var tab in Tabs)
+                {
+                    if (tab.WebView != null && (tab.WebView.Source.ToString().Contains(selectedTab.url)))
+                    {
+                        existent = true;
+                        SelectTab(tab);
+                        break;
+                    }
+                }
+                if(existent == false)
+                {
+                    OpenNewTabWithUrl(selectedTab.url);
+                }
+                else
+                {
+
+                }
+                
             }
             UpdateMiniPlayerVisibility();
             
+        }
+
+        private void SelectTab(TabItem tab)
+        {
+            // Dependendo da sua implementação, pode ser necessário definir o tab como o item selecionado
+            // em algum controle de exibição de abas.
+            TabListBox.SelectedItem = tab;
         }
 
         private void PinMouseLeave(object sender, MouseEventArgs e)
