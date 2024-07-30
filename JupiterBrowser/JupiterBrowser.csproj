@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+	<ApplicationIcon>Resources\jupiter.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
@@ -10,9 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="BackIcon.png" />
     <None Remove="card.png" />
     <None Remove="contact.png" />
+    <None Remove="ForwardIcon.png" />
+    <None Remove="FullscreenIcon.png" />
     <None Remove="quit.png" />
+    <None Remove="RefreshIcon.png" />
+    <None Remove="ShieldIcon.png" />
     <None Remove="shortcuts.png" />
     <None Remove="sitetheme.png" />
     <None Remove="theme.png" />
@@ -37,9 +42,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="BackIcon.png" />
     <Resource Include="card.png" />
     <Resource Include="contact.png" />
+    <Resource Include="ForwardIcon.png" />
+    <Resource Include="FullscreenIcon.png" />
     <Resource Include="quit.png" />
+    <Resource Include="RefreshIcon.png" />
+    <Resource Include="ShieldIcon.png" />
     <Resource Include="shortcuts.png" />
     <Resource Include="sitetheme.png" />
     <Resource Include="theme.png" />

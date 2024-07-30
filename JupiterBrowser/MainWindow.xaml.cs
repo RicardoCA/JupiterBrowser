@@ -577,7 +577,7 @@ namespace JupiterBrowser
                 Uri uri = new Uri(url);
                 string domain = uri.GetLeftPart(UriPartial.Authority);
                 string defaultFaviconUrl = $"{domain}/favicon.ico";
-                MessageBox.Show(defaultFaviconUrl);
+                
 
                 // Verifica se o favicon padrão está acessível
                 if (IsUrlAccessible(defaultFaviconUrl))
