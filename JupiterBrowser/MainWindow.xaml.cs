@@ -19,13 +19,16 @@ using System.Security.Policy;
 using Newtonsoft.Json;
 using System.Windows.Controls.Primitives;
 using Newtonsoft.Json.Serialization;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows.Media.Imaging;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.14.1";
+        private string VERSION = "0.15";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -538,13 +541,128 @@ namespace JupiterBrowser
             SavePinneds();
         }
 
+        public class ImageConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                var url = value as string;
+                if (string.IsNullOrEmpty(url)) return null;
+
+                try
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(url, UriKind.Absolute);
+                    bitmap.EndInit();
+                    return bitmap;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+
+        private string GetFaviconUrl(string url)
+        {
+            try
+            {
+                // Tenta o caminho padrão
+                Uri uri = new Uri(url);
+                string domain = uri.GetLeftPart(UriPartial.Authority);
+                string defaultFaviconUrl = $"{domain}/favicon.ico";
+                MessageBox.Show(defaultFaviconUrl);
+
+                // Verifica se o favicon padrão está acessível
+                if (IsUrlAccessible(defaultFaviconUrl))
+                {
+                    return defaultFaviconUrl;
+                }
+
+                // Tenta buscar o favicon através da análise do HTML
+                using (HttpClient client = new HttpClient())
+                {
+                    var response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string htmlContent = response.Content.ReadAsStringAsync().Result;
+                        var favicons = ExtractFaviconsFromHtml(htmlContent, domain);
+
+                        if (favicons.Count > 0)
+                        {
+                            return favicons[0]; // Retorna o primeiro favicon encontrado
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Tratamento de erro ou log
+                Console.WriteLine($"Erro ao obter o favicon: {ex.Message}");
+            }
+
+            // Retorna um ícone padrão ou nulo se não encontrar o favicon
+            return "/path/to/default/favicon.ico";
+        }
+
+        private bool IsUrlAccessible(string url)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "HEAD";
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private List<string> ExtractFaviconsFromHtml(string htmlContent, string domain)
+        {
+            var favicons = new List<string>();
+            var document = new HtmlAgilityPack.HtmlDocument();
+            document.LoadHtml(htmlContent);
+
+            var nodes = document.DocumentNode.SelectNodes("//link[contains(@rel, 'icon')]");
+            if (nodes != null)
+            {
+                foreach (var node in nodes)
+                {
+                    var href = node.GetAttributeValue("href", null);
+                    if (!string.IsNullOrEmpty(href))
+                    {
+                        if (!href.StartsWith("http"))
+                        {
+                            href = new Uri(new Uri(domain), href).ToString();
+                        }
+                        favicons.Add(href);
+                    }
+                }
+            }
+
+            return favicons;
+        }
+
         private (string, string) GetCurrentWebViewUrl()
         {
             if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
             {
                 string url = selectedTab.WebView.Source.ToString();
-                string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
-                string faviconUrl = $"{domain}/favicon.ico"; // Construir a URL do favicon
+                //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
+                //string faviconUrl = $"{domain}/favicon.ico"; // Construir a URL do favicon
+                string faviconUrl = GetFaviconUrl(url);
                 return (url, faviconUrl);
             }
             return (string.Empty, string.Empty);
@@ -1065,8 +1183,10 @@ namespace JupiterBrowser
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
                 title = title.Trim('"'); // Remove the surrounding quotes
                 string url = webView.Source.ToString();
-                string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
-                string faviconUrl = $"{domain}/favicon.ico";
+                //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
+                //string faviconUrl = $"{domain}/favicon.ico";
+                string faviconUrl = GetFaviconUrl(url);
+
 
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
