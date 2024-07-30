@@ -240,6 +240,29 @@
                     <TextBox x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" />
 
                     <Border x:Name="WhiteBar" Background="White" Height="1" VerticalAlignment="Top" Margin="0,10,1,2"/>
+
+                    <Button Content="Clear" x:Name="clearBtn"
+                        Background="Transparent" Foreground="White"
+                        HorizontalAlignment="Center" Margin="0,0,0,0" Width="Auto"
+                        ToolTip="Clear Tabs" Visibility="Collapsed" Click="ClearBtn_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <!-- ListBox para as guias -->
                     <ListBox Name="TabListBox" 
                              ItemTemplate="{StaticResource TabItemTemplate}" 

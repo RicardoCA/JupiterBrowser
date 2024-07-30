@@ -440,6 +440,15 @@ namespace JupiterBrowser
             Tabs.Add(newTab);
             id += 1;
 
+            if (Tabs.Count > 5)
+            {
+                clearBtn.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                clearBtn.Visibility = Visibility.Collapsed;
+            }
+
             var webView = new WebView2();
             webView.Source = new System.Uri(url);
             webView.NavigationCompleted += WebView_NavigationCompleted;
@@ -464,6 +473,7 @@ namespace JupiterBrowser
                 webView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
                 webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
                 webView.CoreWebView2.WebResourceRequested += CoreWebView2_WebResourceRequested;
+                
             }
         }
 
@@ -589,16 +599,18 @@ namespace JupiterBrowser
         {
             try
             {
-                // Tenta o caminho padrão
+                // Tenta o caminho padrão para .ico
                 Uri uri = new Uri(url);
                 string domain = uri.GetLeftPart(UriPartial.Authority);
-                string defaultFaviconUrl = $"{domain}/favicon.ico";
-                
+                string[] possiblePaths = { "/favicon.ico", "/favicon.png", "/favicon.jpg" };
 
-                // Verifica se o favicon padrão está acessível
-                if (IsUrlAccessible(defaultFaviconUrl))
+                foreach (var path in possiblePaths)
                 {
-                    return defaultFaviconUrl;
+                    string faviconUrl = $"{domain}{path}";
+                    if (IsUrlAccessible(faviconUrl))
+                    {
+                        return faviconUrl;
+                    }
                 }
 
                 // Tenta buscar o favicon através da análise do HTML
@@ -708,6 +720,7 @@ namespace JupiterBrowser
 
         
 
+
         private void OpenNewTab()
         {
             var urlInputDialog = new UrlInputDialog();
@@ -718,6 +731,14 @@ namespace JupiterBrowser
                 Tabs.Add(newTab);
                 id += 1;
 
+                if(Tabs.Count > 5) {
+                    clearBtn.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    clearBtn.Visibility = Visibility.Collapsed;
+                }
+
                 var webView = new WebView2();
                 if(urlInputDialog.EnteredUrl.ToString().Equals("startpage"))
                 {
@@ -726,6 +747,7 @@ namespace JupiterBrowser
                     webView.NavigationCompleted += WebView_NavigationCompleted;
                     webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                     webView.NavigationStarting += WebView2_NavigationStarting;
+                    
                 }
                 else
                 {
@@ -738,6 +760,7 @@ namespace JupiterBrowser
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                         webView.NavigationStarting += WebView2_NavigationStarting;
+                        
                     }
                     else
                     {
@@ -745,6 +768,7 @@ namespace JupiterBrowser
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                         webView.NavigationStarting += WebView2_NavigationStarting;
+                        
                     }
                     
                 }
@@ -1175,11 +1199,42 @@ namespace JupiterBrowser
             }
         }
 
-        private void WebView2_NavigationStarting(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs e)
+        private void WebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
             // Start animation when navigation starts
             var storyboard = (Storyboard)this.Resources["LoadingAnimation"];
             storyboard.Begin();
+
+
+        }
+
+
+        private void LogNavigationDetails(string url, string title)
+        {
+            string logFilePath = "navigationLog.json";
+            var logEntry = new NavigationLogEntry
+            {
+                Url = url,
+                Title = title,
+                AccessedAt = DateTime.Now
+            };
+
+            List<NavigationLogEntry> logEntries;
+
+            if (File.Exists(logFilePath))
+            {
+                string existingLog = File.ReadAllText(logFilePath);
+                logEntries = JsonConvert.DeserializeObject<List<NavigationLogEntry>>(existingLog) ?? new List<NavigationLogEntry>();
+            }
+            else
+            {
+                logEntries = new List<NavigationLogEntry>();
+            }
+
+            logEntries.Add(logEntry);
+
+            string updatedLog = JsonConvert.SerializeObject(logEntries, Formatting.Indented);
+            File.WriteAllText(logFilePath, updatedLog);
         }
 
         private async void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -1213,7 +1268,7 @@ namespace JupiterBrowser
                 //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
                 //string faviconUrl = $"{domain}/favicon.ico";
                 string faviconUrl = GetFaviconUrl(url);
-
+                LogNavigationDetails(url, title);
 
                 if (string.IsNullOrEmpty(faviconUrl) || faviconUrl == "html.png")
                 {
@@ -1421,6 +1476,23 @@ namespace JupiterBrowser
             UpdateMiniPlayerVisibility();
         }
 
+        private void ClearBtn_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var tabItem in Tabs.ToList())
+            {
+                // Dispose of the WebView2 control
+                tabItem.WebView?.Dispose();
+            }
+
+            // Clear all tabs
+            Tabs.Clear();
+
+            // Update the visibility of the clear button
+            clearBtn.Visibility = Visibility.Collapsed;
+
+            UpdateMiniPlayerVisibility();
+        }
+
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -1432,6 +1504,14 @@ namespace JupiterBrowser
                 tabItem.WebView?.Dispose();
 
                 Tabs.Remove(tabItem);
+                if (Tabs.Count > 5)
+                {
+                    clearBtn.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    clearBtn.Visibility = Visibility.Collapsed;
+                }
             }
             UpdateMiniPlayerVisibility();
         }
@@ -1504,7 +1584,12 @@ namespace JupiterBrowser
         }
     }
 
-    
+    public class NavigationLogEntry
+    {
+        public string Url { get; set; }
+        public string Title { get; set; }
+        public DateTime AccessedAt { get; set; }
+    }
 
     public class TabItem
     {
