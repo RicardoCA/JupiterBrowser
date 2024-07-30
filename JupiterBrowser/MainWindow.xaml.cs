@@ -22,6 +22,7 @@ using Newtonsoft.Json.Serialization;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
@@ -443,6 +444,7 @@ namespace JupiterBrowser
             webView.Source = new System.Uri(url);
             webView.NavigationCompleted += WebView_NavigationCompleted;
             webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+            webView.NavigationStarting += WebView2_NavigationStarting;
             newTab.WebView = webView;
             if(tabName != null)
             {
@@ -723,6 +725,7 @@ namespace JupiterBrowser
                     webView.Source = new System.Uri(htmlFilePath);
                     webView.NavigationCompleted += WebView_NavigationCompleted;
                     webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                    webView.NavigationStarting += WebView2_NavigationStarting;
                 }
                 else
                 {
@@ -734,12 +737,14 @@ namespace JupiterBrowser
                         webView.Source = new System.Uri("https://chat.openai.com");
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                        webView.NavigationStarting += WebView2_NavigationStarting;
                     }
                     else
                     {
                         webView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
+                        webView.NavigationStarting += WebView2_NavigationStarting;
                     }
                     
                 }
@@ -1170,6 +1175,13 @@ namespace JupiterBrowser
             }
         }
 
+        private void WebView2_NavigationStarting(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs e)
+        {
+            // Start animation when navigation starts
+            var storyboard = (Storyboard)this.Resources["LoadingAnimation"];
+            storyboard.Begin();
+        }
+
         private async void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             if (sender is WebView2 webView)
@@ -1191,8 +1203,9 @@ namespace JupiterBrowser
                     }
                     
                 }
-                
 
+                var storyboard = (Storyboard)this.Resources["LoadingAnimation"];
+                storyboard.Stop();
 
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
                 title = title.Trim('"'); // Remove the surrounding quotes
@@ -1219,7 +1232,8 @@ namespace JupiterBrowser
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
                 if (tabItem != null)
                 {
-                    if(title.Length > 18)
+                    tabItem.OnNavigationCompleted();
+                    if (title.Length > 18)
                     {
                         tabItem.TabName = title.Substring(0,18);
                         
@@ -1490,6 +1504,8 @@ namespace JupiterBrowser
         }
     }
 
+    
+
     public class TabItem
     {
         public string TabName { get; set; }
@@ -1504,6 +1520,14 @@ namespace JupiterBrowser
 
         [JsonIgnore]
         public WebView2 WebView { get; set; }
+
+        [JsonIgnore]
+        public Visibility ProgressBarVisibility { get; set; } = Visibility.Visible;
+
+        public void OnNavigationCompleted()
+        {
+            ProgressBarVisibility = Visibility.Hidden;
+        }
 
         public void UpdateUrl()
         {
