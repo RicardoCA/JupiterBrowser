@@ -28,7 +28,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.15";
+        private string VERSION = "0.15.1";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -510,6 +510,10 @@ namespace JupiterBrowser
 
             // Suponha que você tenha um método para obter a URL atual do WebView
             var (currentUrl, currentLogo) = GetCurrentWebViewUrl();
+            if(string.IsNullOrEmpty(currentLogo) || currentLogo == "html.png")
+            {
+                currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
+            }
 
             // Verifique se o item já está nos PinnedTabs
             var existingTab = PinnedTabs.FirstOrDefault(tab => tab.url == currentUrl);
@@ -608,7 +612,7 @@ namespace JupiterBrowser
             }
 
             // Retorna um ícone padrão ou nulo se não encontrar o favicon
-            return "/path/to/default/favicon.ico";
+            return "html.png";
         }
 
         private bool IsUrlAccessible(string url)
@@ -1186,6 +1190,12 @@ namespace JupiterBrowser
                 //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
                 //string faviconUrl = $"{domain}/favicon.ico";
                 string faviconUrl = GetFaviconUrl(url);
+
+
+                if (string.IsNullOrEmpty(faviconUrl) || faviconUrl == "html.png")
+                {
+                    faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
+                }
 
 
                 var tabItem = Tabs.FirstOrDefault(tab => tab.WebView == webView);
