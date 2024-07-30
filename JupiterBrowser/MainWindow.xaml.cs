@@ -28,7 +28,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.15.1";
+        private string VERSION = "0.16";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -513,7 +513,17 @@ namespace JupiterBrowser
             if(string.IsNullOrEmpty(currentLogo) || currentLogo == "html.png")
             {
                 currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
+                if(currentUrl.IndexOf("openai.com") != -1 || currentUrl.IndexOf("chatgpt.com") != -1)
+                {
+                    currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chatgpt.png");
+                }
+                else if (currentUrl.IndexOf("reddit.com") != -1)
+                {
+                    currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reddit.png");
+                }
             }
+
+            
 
             // Verifique se o item já está nos PinnedTabs
             var existingTab = PinnedTabs.FirstOrDefault(tab => tab.url == currentUrl);
@@ -1195,6 +1205,14 @@ namespace JupiterBrowser
                 if (string.IsNullOrEmpty(faviconUrl) || faviconUrl == "html.png")
                 {
                     faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
+                    if(url.IndexOf("openai.com") != -1 || url.IndexOf("chatgpt.com") != -1)
+                    {
+                        faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chatgpt.png");
+                    }
+                    else if (url.IndexOf("reddit.com") != -1)
+                    {
+                        faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reddit.png");
+                    }
                 }
 
 
