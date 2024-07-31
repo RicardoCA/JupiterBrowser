@@ -205,6 +205,13 @@
                                  Margin="10" HorizontalAlignment="Stretch"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                  MouseLeave="PinMouseLeave"
+                                 
+                                 PreviewMouseLeftButtonDown="PinnedListBox_PreviewMouseLeftButtonDown"
+                                PreviewMouseMove="PinnedListBox_PreviewMouseMove"
+                                PreviewMouseDown="PinnedListBox_PreviewMouseDown"
+                                DragOver="PinnedListBox_DragOver"
+                                Drop="PinnedListBox_Drop"
+                                AllowDrop="True"
                                  >
                             
                         </ListBox>
