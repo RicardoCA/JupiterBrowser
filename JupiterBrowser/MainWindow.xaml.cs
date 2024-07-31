@@ -948,6 +948,33 @@ namespace JupiterBrowser
             {
                 Downloads();
             }
+            else if(e.Key == Key.F4 && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                CloseTab();
+            }
+        }
+
+        private void CloseTab()
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                if (selectedTab.WebView.CoreWebView2 != null)
+                {
+                    selectedTab.WebView?.Dispose();
+                    Tabs.Remove(selectedTab);
+                    ToastWindow.Show("Tab closed.");
+                    if (Tabs.Count > 5)
+                    {
+                        clearBtn.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        clearBtn.Visibility = Visibility.Collapsed;
+                    }
+                }
+
+            }
+            UpdateMiniPlayerVisibility();
         }
 
         private void Downloads()
@@ -957,7 +984,7 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)");
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\n Ctrl + F4 (close tab)");
         }
 
         private void CopyURL()
