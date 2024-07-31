@@ -1209,32 +1209,38 @@ namespace JupiterBrowser
         }
 
 
-        private void LogNavigationDetails(string url, string title)
+        private void LogNavigationDetails(string url, string title, string favicon)
         {
-            string logFilePath = "navigationLog.json";
-            var logEntry = new NavigationLogEntry
+            
+            if (!url.Contains("file:"))
             {
-                Url = url,
-                Title = title,
-                AccessedAt = DateTime.Now
-            };
+                string logFilePath = "navigationLog.json";
+                var logEntry = new NavigationLogEntry
+                {
+                    Url = url,
+                    UrlIco = favicon,
+                    Title = title,
+                    AccessedAt = DateTime.Now
+                };
 
-            List<NavigationLogEntry> logEntries;
+                List<NavigationLogEntry> logEntries;
 
-            if (File.Exists(logFilePath))
-            {
-                string existingLog = File.ReadAllText(logFilePath);
-                logEntries = JsonConvert.DeserializeObject<List<NavigationLogEntry>>(existingLog) ?? new List<NavigationLogEntry>();
+                if (File.Exists(logFilePath))
+                {
+                    string existingLog = File.ReadAllText(logFilePath);
+                    logEntries = JsonConvert.DeserializeObject<List<NavigationLogEntry>>(existingLog) ?? new List<NavigationLogEntry>();
+                }
+                else
+                {
+                    logEntries = new List<NavigationLogEntry>();
+                }
+
+                logEntries.Add(logEntry);
+
+                string updatedLog = JsonConvert.SerializeObject(logEntries, Formatting.Indented);
+                File.WriteAllText(logFilePath, updatedLog);
             }
-            else
-            {
-                logEntries = new List<NavigationLogEntry>();
-            }
-
-            logEntries.Add(logEntry);
-
-            string updatedLog = JsonConvert.SerializeObject(logEntries, Formatting.Indented);
-            File.WriteAllText(logFilePath, updatedLog);
+            
         }
 
         private async void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -1268,7 +1274,7 @@ namespace JupiterBrowser
                 //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
                 //string faviconUrl = $"{domain}/favicon.ico";
                 string faviconUrl = GetFaviconUrl(url);
-                LogNavigationDetails(url, title);
+                LogNavigationDetails(url, title,faviconUrl);
 
                 if (string.IsNullOrEmpty(faviconUrl) || faviconUrl == "html.png")
                 {
@@ -1587,6 +1593,8 @@ namespace JupiterBrowser
     public class NavigationLogEntry
     {
         public string Url { get; set; }
+
+        public string UrlIco { get; set; }
         public string Title { get; set; }
         public DateTime AccessedAt { get; set; }
     }

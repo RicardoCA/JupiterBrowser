@@ -11,8 +11,10 @@ namespace JupiterBrowser
     public partial class UrlInputDialog : Window
     {
         public string EnteredUrl { get; set; }
-        private List<string> _history = new List<string>();
-        
+        private List<NavigationLogEntry> _history = new List<NavigationLogEntry>();
+
+        private List<string> _suggestions = new List<string>();
+
         private int lastResult = 0;
 
         public UrlInputDialog()
@@ -21,6 +23,7 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
             UrlTextBox.Focus();
             LoadLastResult();
+            LoadNavigationHistory();
         }
 
         public UrlInputDialog(string url)
@@ -30,7 +33,72 @@ namespace JupiterBrowser
             UrlTextBox.Focus();
             UrlTextBox.Text = url;
             LoadLastResult();
+            LoadNavigationHistory();
         }
+
+        private void LoadNavigationHistory()
+        {
+            string logFilePath = "navigationLog.json";
+            if (File.Exists(logFilePath))
+            {
+                string json = File.ReadAllText(logFilePath);
+                _history = JsonConvert.DeserializeObject<List<NavigationLogEntry>>(json) ?? new List<NavigationLogEntry>();
+            }
+        }
+
+        private string GetBaseUrl(string url)
+        {
+            try
+            {
+                var uri = new Uri(url);
+                return $"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}";
+            }
+            catch
+            {
+                return url; // Retorna a URL completa se não puder ser parseada
+            }
+        }
+
+        private void ShowSuggestions(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return;
+
+            var uniqueUrls = new HashSet<string>();
+            var suggestions = new List<NavigationLogEntry>();
+
+            foreach (var entry in _history)
+            {
+                var baseUrl = GetBaseUrl(entry.Url);
+                if (baseUrl.Contains(input, StringComparison.OrdinalIgnoreCase) && uniqueUrls.Add(baseUrl))
+                {
+                    string exePath = AppDomain.CurrentDomain.BaseDirectory;
+                    // Verifica se a URL contém "reddit" e ajusta o ícone
+                    if(entry.UrlIco.Contains("html.png", StringComparison.OrdinalIgnoreCase))
+                    {
+                        entry.UrlIco = Path.Combine(exePath, "html.png");
+                    }
+                    
+                    if (entry.Url.Contains("reddit.com", StringComparison.OrdinalIgnoreCase))
+                    {
+                        entry.UrlIco = Path.Combine(exePath, "reddit.png");
+                    }
+                    else if(entry.Url.Contains("chatgpt.com", StringComparison.OrdinalIgnoreCase))
+                    {
+                        entry.UrlIco = Path.Combine(exePath, "chatgpt.png");
+                    }
+                    else if (entry.Url.Contains("openai.com", StringComparison.OrdinalIgnoreCase))
+                    {
+                        entry.UrlIco = Path.Combine(exePath, "chatgpt.png");
+                    }
+
+                    suggestions.Add(entry);
+                }
+            }
+
+            SuggestionsListBox.ItemsSource = suggestions;
+            SuggestionsListBox.Visibility = suggestions.Any() ? Visibility.Visible : Visibility.Collapsed;
+        }
+
 
         private void LoadLastResult()
         {
@@ -54,6 +122,7 @@ namespace JupiterBrowser
             {
                 SearchIcon.Visibility = Visibility.Visible;
             }
+            ShowSuggestions(UrlTextBox.Text);
         }
 
 
@@ -73,6 +142,16 @@ namespace JupiterBrowser
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void SuggestionChange(object sender, SelectionChangedEventArgs e)
+        {
+            if (SuggestionsListBox.SelectedItem is NavigationLogEntry selectedEntry)
+            {
+                UrlTextBox.Text = selectedEntry.Url;
+                SuggestionsListBox.Visibility = Visibility.Collapsed;
+                ProcessUrl();
+            }
         }
 
         private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
