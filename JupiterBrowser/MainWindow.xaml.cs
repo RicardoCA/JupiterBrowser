@@ -33,7 +33,8 @@ namespace JupiterBrowser
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
-        private Point _startPoint;
+        private bool _isDragging;
+        private Point _dragStartPoint;
         private bool isFullScreen = false;
         private DispatcherTimer _musicTitleUpdateTimer;
         private string prompt = "";
@@ -1522,63 +1523,97 @@ namespace JupiterBrowser
             UpdateMiniPlayerVisibility();
         }
 
-        private void TabListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            _startPoint = e.GetPosition(null);
-        }
 
-        private void TabListBox_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point mousePos = e.GetPosition(null);
-            Vector diff = _startPoint - mousePos;
 
-            if (e.LeftButton == MouseButtonState.Pressed &&
-                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
-            {
-                var listBoxItem = VisualUpwardSearch(e.OriginalSource as DependencyObject) as ListBoxItem;
 
-                if (listBoxItem != null)
-                {
-                    _draggedItem = listBoxItem.DataContext as TabItem;
-                    if (_draggedItem != null)
-                    {
-                        DragDrop.DoDragDrop(listBoxItem, _draggedItem, DragDropEffects.Move);
-                    }
-                }
-            }
-        }
 
         private void TabListBox_DragOver(object sender, DragEventArgs e)
         {
-            if (_draggedItem != null)
+            if (!e.Data.GetDataPresent(typeof(TabItem)) || sender != e.Source)
+            {
+                e.Effects = DragDropEffects.None;
+            }
+            else
             {
                 e.Effects = DragDropEffects.Move;
             }
+            e.Handled = true;
         }
 
-        private void TabListBox_Drop(object sender, DragEventArgs e)
+        private void TabListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_draggedItem != null)
+            // Capture the starting point of the drag
+            _dragStartPoint = e.GetPosition(null);
+            _isDragging = false; // Reset dragging state
+        }
+
+        private void TabListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Point mousePos = e.GetPosition(null);
+            Vector diff = _dragStartPoint - mousePos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
-                var listBox = sender as ListBox;
-                var targetItem = VisualUpwardSearch(e.OriginalSource as DependencyObject) as ListBoxItem;
-                var targetTab = targetItem?.DataContext as TabItem;
-
-                if (targetTab != null && targetTab != _draggedItem)
+                // Initialize the drag & drop operation
+                _isDragging = true;
+                var listBoxItem = FindAncestor<ListBoxItem>((DependencyObject)e.OriginalSource);
+                if (listBoxItem != null)
                 {
-                    int oldIndex = Tabs.IndexOf(_draggedItem);
-                    int newIndex = Tabs.IndexOf(targetTab);
-
-                    if (oldIndex != -1 && newIndex != -1)
+                    TabItem tabItem = (TabItem)listBoxItem.DataContext;
+                    if (tabItem != null)
                     {
-                        Tabs.Move(oldIndex, newIndex);
+                        DataObject dragData = new DataObject(typeof(TabItem), tabItem);
+                        DragDrop.DoDragDrop(listBoxItem, dragData, DragDropEffects.Move);
                     }
                 }
-
-                _draggedItem = null;
             }
         }
+
+        private void TabListBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_isDragging)
+            {
+                e.Handled = true; // Prevent the ListBox from changing selection
+            }
+        }
+
+        // Helper to find the ancestor of a given type
+        private static T FindAncestor<T>(DependencyObject current) where T : DependencyObject
+        {
+            while (current != null)
+            {
+                if (current is T)
+                {
+                    return (T)current;
+                }
+                current = VisualTreeHelper.GetParent(current);
+            }
+            return null;
+        }
+    
+    private void TabListBox_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TabItem)))
+            {
+                var droppedData = e.Data.GetData(typeof(TabItem)) as TabItem;
+                var target = FindAncestor<ListBoxItem>((DependencyObject)e.OriginalSource)?.DataContext as TabItem;
+
+                if (droppedData != null && target != null)
+                {
+                    int removedIdx = Tabs.IndexOf(droppedData);
+                    int targetIdx = Tabs.IndexOf(target);
+
+                    if (removedIdx != targetIdx)
+                    {
+                        Tabs.Move(removedIdx, targetIdx);
+                    }
+                }
+            }
+            _isDragging = false; // Reset dragging state after drop
+        }
+
 
         private DependencyObject VisualUpwardSearch(DependencyObject source)
         {

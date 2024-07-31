@@ -265,12 +265,15 @@
                     </Button>
                     <!-- ListBox para as guias -->
                     <ListBox Name="TabListBox" 
-                             ItemTemplate="{StaticResource TabItemTemplate}" 
-                             SelectionChanged="TabListBox_SelectionChanged"
-                             PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
-                             DragOver="TabListBox_DragOver"
-                             Drop="TabListBox_Drop"
-                             />
+         ItemTemplate="{StaticResource TabItemTemplate}" 
+         SelectionChanged="TabListBox_SelectionChanged"
+         PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
+         PreviewMouseMove="TabListBox_PreviewMouseMove"
+         PreviewMouseDown="TabListBox_PreviewMouseDown"
+         DragOver="TabListBox_DragOver"
+         Drop="TabListBox_Drop"
+         AllowDrop="True"
+         />
                     <Border x:Name="MiniPlayer" Visibility="Visible" Background="Black" Margin="5" Padding="10" CornerRadius="10">
                         <StackPanel x:Name="StackMiniPlayer">
                             <TextBlock Text="Mini Player" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
