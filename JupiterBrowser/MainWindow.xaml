@@ -98,6 +98,20 @@
             </MenuItem>
         </ContextMenu>
 
+        <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu">
+            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click">
+                <MenuItem.Icon>
+                    <Image Source="/update.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click">
+                <MenuItem.Icon>
+                    <Image Source="/contact.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            
+        </ContextMenu>
+
 
 
         <Style TargetType="Button">
@@ -144,7 +158,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TabItemTemplate">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" MouseRightButtonUp="TabItem_MouseRightButtonUp">
                 <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="0,0,5,0" Stretch="Uniform" SnapsToDevicePixels="True"/>
                 <TextBlock Text="{Binding TabName}" ToolTip="{Binding FullTabName}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <Button Style="{StaticResource CloseButtonStyle}" 

@@ -40,6 +40,10 @@ namespace JupiterBrowser
         private DispatcherTimer _musicTitleUpdateTimer;
         private string prompt = "";
         private DispatcherTimer _titleUpdateTimer;
+        
+        private string languageT = "en";
+        private bool tabMenuIsOpen = false;
+
 
         public int id = 1;
 
@@ -121,51 +125,55 @@ namespace JupiterBrowser
 
         private async Task UpdateTabTitlesAsync()
         {
-            try
+
+            if(tabMenuIsOpen == false)
             {
-                foreach (var tab in Tabs)
+                try
                 {
-                    if (tab.WebView != null && tab.WebView.CoreWebView2 != null)
+                    foreach (var tab in Tabs)
                     {
-                        try
+                        if (tab.WebView != null && tab.WebView.CoreWebView2 != null)
                         {
-                            string script = "document.title";
-                            string rawTitle = await tab.WebView.ExecuteScriptAsync(script);
-
-                            // Log do valor bruto retornado pelo script
-                            Console.WriteLine($"Raw title: {rawTitle}");
-
-                            // Remove as aspas ao redor do título
-                            string title = rawTitle.Trim(new char[] { '"' });
-
-                            // Log após a remoção das aspas
-                            Console.WriteLine($"Processed title: {title}");
-
-                            if (!string.IsNullOrEmpty(title) && title != tab.TabName)
+                            try
                             {
-                                
-                                tab.FullTabName = title;
-                                tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                                string script = "document.title";
+                                string rawTitle = await tab.WebView.ExecuteScriptAsync(script);
+
+                                // Log do valor bruto retornado pelo script
+                                Console.WriteLine($"Raw title: {rawTitle}");
+
+                                // Remove as aspas ao redor do título
+                                string title = rawTitle.Trim(new char[] { '"' });
+
+                                // Log após a remoção das aspas
+                                Console.WriteLine($"Processed title: {title}");
+
+                                if (!string.IsNullOrEmpty(title) && title != tab.TabName)
+                                {
+
+                                    tab.FullTabName = title;
+                                    tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log de exceções
+                                Console.WriteLine($"Erro ao atualizar o título: {ex.Message}");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            // Log de exceções
-                            Console.WriteLine($"Erro ao atualizar o título: {ex.Message}");
-                        }
                     }
-                }
 
-                // Atualiza a interface para refletir as mudanças nos títulos
-                var selectedIndex = TabListBox.SelectedIndex;
-                TabListBox.ItemsSource = null;
-                TabListBox.ItemsSource = Tabs;
-                TabListBox.SelectedIndex = selectedIndex;
-            }
-            catch (Exception ex)
-            {
-                // Log de exceções
-                Console.WriteLine($"Erro ao atualizar as abas: {ex.Message}");
+                    // Atualiza a interface para refletir as mudanças nos títulos
+                    var selectedIndex = TabListBox.SelectedIndex;
+                    TabListBox.ItemsSource = null;
+                    TabListBox.ItemsSource = Tabs;
+                    TabListBox.SelectedIndex = selectedIndex;
+                }
+                catch (Exception ex)
+                {
+                    // Log de exceções
+                    Console.WriteLine($"Erro ao atualizar as abas: {ex.Message}");
+                }
             }
         }
 
@@ -1190,6 +1198,47 @@ namespace JupiterBrowser
             menu.PlacementTarget = button;
             menu.IsOpen = true;
         }
+
+        private void TabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // Verifica se o sender é do tipo esperado, como StackPanel ou outro elemento de TabItem
+            if (sender is FrameworkElement element)
+            {
+                // Tenta encontrar o recurso ContextMenu com a chave "TabItemMenu"
+                if (FindResource("TabItemMenu") is ContextMenu menu)
+                {
+                    // Define o elemento como o alvo do menu de contexto e abre o menu
+                    menu.PlacementTarget = element;
+                    menu.IsOpen = true;
+                    menu.Closed += TabMenu_Closed;
+                    tabMenuIsOpen = true;
+                }
+                else
+                {
+                    // Tratar o caso em que o recurso não é encontrado
+                    Console.WriteLine("ContextMenu 'TabItemMenu' não encontrado.");
+                }
+            }
+            else
+            {
+                // Tratar o caso em que o sender não é do tipo esperado
+                Console.WriteLine("O sender não é do tipo esperado (FrameworkElement).");
+            }
+        }
+
+        private void TabMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            // Define tabMenuIsOpen como false quando o menu é fechado
+            tabMenuIsOpen = false;
+
+            // Desassina o evento Closed para evitar múltiplas assinaturas
+            if (sender is ContextMenu menu)
+            {
+                menu.Closed -= TabMenu_Closed;
+            }
+        }
+
+
 
         private void QuitMenu_Click(object sender, RoutedEventArgs e)
         {
