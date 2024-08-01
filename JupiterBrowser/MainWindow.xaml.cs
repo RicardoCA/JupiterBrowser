@@ -83,8 +83,12 @@ namespace JupiterBrowser
 
                             if (!string.IsNullOrEmpty(title) && title != tab.FullTabName)
                             {
-                                tab.FullTabName = title;
-                                tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                                if(tab.isRenamed == false)
+                                {
+                                    tab.FullTabName = title;
+                                    tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                                }
+                                
                             }
                         }
                         catch (Exception ex)
@@ -1813,6 +1817,9 @@ namespace JupiterBrowser
 
         [JsonIgnore]
         public Visibility ProgressBarVisibility { get; set; } = Visibility.Visible;
+
+        [JsonIgnore]
+        public bool isRenamed { get; set; } = false;
 
         public void OnNavigationCompleted()
         {
