@@ -13,8 +13,10 @@
     <None Remove="BackIcon.png" />
     <None Remove="card.png" />
     <None Remove="contact.png" />
+    <None Remove="edit.png" />
     <None Remove="ForwardIcon.png" />
     <None Remove="FullscreenIcon.png" />
+    <None Remove="g_translate.png" />
     <None Remove="quit.png" />
     <None Remove="RefreshIcon.png" />
     <None Remove="ShieldIcon.png" />
@@ -45,8 +47,10 @@
     <Resource Include="BackIcon.png" />
     <Resource Include="card.png" />
     <Resource Include="contact.png" />
+    <Resource Include="edit.png" />
     <Resource Include="ForwardIcon.png" />
     <Resource Include="FullscreenIcon.png" />
+    <Resource Include="g_translate.png" />
     <Resource Include="quit.png" />
     <Resource Include="RefreshIcon.png" />
     <Resource Include="ShieldIcon.png" />

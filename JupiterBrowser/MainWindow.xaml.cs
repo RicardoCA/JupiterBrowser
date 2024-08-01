@@ -73,6 +73,17 @@ namespace JupiterBrowser
             _titleUpdateTimer.Start();
         }
 
+        private void TabMenuItem_Translate(object sender, RoutedEventArgs e)
+        {
+            
+            if (selectedTabItemContextMenu != null)
+            {
+                string currentUrl = selectedTabItemContextMenu.WebView.Source.ToString();
+                string translatedUrl = "https://translate.google.com/translate?sl=auto&tl="+languageT+"&u="+currentUrl;
+                selectedTabItemContextMenu.WebView.Source = new Uri(translatedUrl);
+            }
+        }
+
         private void TabListRename_Click(object sender, MouseButtonEventArgs e)
         {
             var clickedItem = GetClickedTabItem(e);
@@ -427,6 +438,17 @@ namespace JupiterBrowser
             var contextMenu = (ContextMenu)FindResource("BrowserMenu");
             contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             foreach (var item in contextMenu.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+                    menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                }
+            }
+
+            var contextMenuTabs = (ContextMenu)FindResource("TabItemMenu");
+            contextMenuTabs.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            foreach (var item in contextMenuTabs.Items)
             {
                 if (item is MenuItem menuItem)
                 {
@@ -1320,6 +1342,18 @@ namespace JupiterBrowser
                             menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
                         }
                     }
+
+                    var contextMenuTabs = (ContextMenu)FindResource("TabItemMenu");
+                    contextMenuTabs.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    foreach (var item in contextMenuTabs.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                        {
+                            menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                            menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                        }
+                    }
+
 
                     BackgroundPersist backgroundPersist = new BackgroundPersist();
                     backgroundPersist.SaveColor(backgroundColor);

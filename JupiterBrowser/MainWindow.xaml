@@ -101,7 +101,12 @@
         <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu">
             <MenuItem Header="Rename" Click="TabMenuItem_Rename">
                 <MenuItem.Icon>
-                    <Image Source="/update.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/edit.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Translate" Click="TabMenuItem_Translate">
+                <MenuItem.Icon>
+                    <Image Source="/g_translate.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Close" Click="TabMenuItem_Close">
