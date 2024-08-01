@@ -23,6 +23,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
+using Microsoft.VisualBasic;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
@@ -65,6 +66,57 @@ namespace JupiterBrowser
             _titleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _titleUpdateTimer.Tick += async (s, e) => await UpdateTabTitlesAsync();
             _titleUpdateTimer.Start();
+        }
+
+        private void TabListRename_Click(object sender, MouseButtonEventArgs e)
+        {
+            var clickedItem = GetClickedTabItem(e);
+            if (clickedItem != null)
+            {
+                // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
+                string currentName = clickedItem.TabName;
+                PromptWindow promptWindow = new PromptWindow(currentName, "Rename Tab:");
+                if(promptWindow.ShowDialog() == true)
+                {
+                    if(promptWindow.UserInput.Length > 0)
+                    {
+                        string newName = promptWindow.UserInput;
+                        // Atualiza o nome da guia se o novo nome não for nulo ou vazio
+                        if (!string.IsNullOrEmpty(newName))
+                        {
+                            clickedItem.TabName = newName.Length > 18 ? newName.Substring(0, 18) : newName;
+                            clickedItem.FullTabName = newName;
+                            clickedItem.isRenamed = true;
+                        }
+                    }
+                    else
+                    {
+                        clickedItem.isRenamed = false;
+                    }
+                    
+                    
+
+                    
+                }
+
+                
+            }
+        }
+        private TabItem GetClickedTabItem(MouseButtonEventArgs e)
+        {
+            // Obtém o elemento visual onde ocorreu o clique
+            var clickedElement = e.OriginalSource as FrameworkElement;
+            if (clickedElement != null)
+            {
+                // Navega na árvore visual até encontrar o ListBoxItem correspondente
+                var listBoxItem = VisualUpwardSearch(clickedElement) as ListBoxItem;
+                if (listBoxItem != null)
+                {
+                    // Retorna o DataContext, que deve ser o TabItem
+                    return listBoxItem.DataContext as TabItem;
+                }
+            }
+            return null;
         }
 
         private async Task UpdateTabTitlesAsync()
@@ -1374,13 +1426,21 @@ namespace JupiterBrowser
                     tabItem.OnNavigationCompleted();
                     if (title.Length > 18)
                     {
-                        tabItem.TabName = title.Substring(0,18);
+                        if(tabItem.isRenamed == false)
+                        {
+                            tabItem.TabName = title.Substring(0, 18);
+                        }
+                        
                         
                         
                     }
                     else
                     {
-                        tabItem.TabName = title;
+                        if(tabItem.isRenamed == false)
+                        {
+                            tabItem.TabName = title;
+                        }
+                        
                     }
                     tabItem.LogoUrl = faviconUrl;
                     tabItem.FullTabName = title;
