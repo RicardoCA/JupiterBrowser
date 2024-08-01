@@ -38,7 +38,7 @@ namespace JupiterBrowser
         private bool isFullScreen = false;
         private DispatcherTimer _musicTitleUpdateTimer;
         private string prompt = "";
-
+        private DispatcherTimer _titleUpdateTimer;
 
         public int id = 1;
 
@@ -59,6 +59,52 @@ namespace JupiterBrowser
             LoadSidebarColor();
             LoadPinneds();
             LoadTabsClosed();
+
+            // Inicializa o timer de atualização de títulos
+            _titleUpdateTimer = new DispatcherTimer();
+            _titleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
+            _titleUpdateTimer.Tick += async (s, e) => await UpdateTabTitlesAsync();
+            _titleUpdateTimer.Start();
+        }
+
+        private async Task UpdateTabTitlesAsync()
+        {
+            try
+            {
+                foreach (var tab in Tabs)
+                {
+                    if (tab.WebView != null && tab.WebView.CoreWebView2 != null)
+                    {
+                        try
+                        {
+                            string script = "document.title";
+                            string title = await tab.WebView.ExecuteScriptAsync(script);
+                            title = title.Trim('"'); // Remove as aspas ao redor
+
+                            if (!string.IsNullOrEmpty(title) && title != tab.FullTabName)
+                            {
+                                tab.FullTabName = title;
+                                tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Tratar exceções, se necessário
+                        }
+                    }
+                }
+
+                // Atualiza a interface para refletir as mudanças nos títulos
+                var selectedIndex = TabListBox.SelectedIndex;
+                TabListBox.ItemsSource = null;
+                TabListBox.ItemsSource = Tabs;
+                TabListBox.SelectedIndex = selectedIndex;
+            }
+            catch(Exception ex)
+            {
+                return;
+            }
+            
         }
 
         private void SiteThemeMenu_Click(object sender, RoutedEventArgs e)
