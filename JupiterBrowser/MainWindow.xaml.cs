@@ -149,11 +149,14 @@ namespace JupiterBrowser
                                 // Log após a remoção das aspas
                                 Console.WriteLine($"Processed title: {title}");
 
-                                if (!string.IsNullOrEmpty(title) && title != tab.TabName)
+                                if (!string.IsNullOrEmpty(title) && title != tab.FullTabName)
                                 {
-
-                                    tab.FullTabName = title;
-                                    tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                                    if(tab.isRenamed == false)
+                                    {
+                                        tab.FullTabName = title;
+                                        tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
+                                    }
+                                    
                                 }
                             }
                             catch (Exception ex)
@@ -1208,6 +1211,41 @@ namespace JupiterBrowser
                 selectedTabItemContextMenu.WebView.Dispose();
                 Tabs.Remove(selectedTabItemContextMenu);
                 selectedTabItemContextMenu = null; // Limpa a referência após remover
+            }
+        }
+
+        private void TabMenuItem_Rename(object sender, RoutedEventArgs e)
+        {
+            // Obtenha o ContextMenu do sender
+            if (sender is MenuItem menuItem && menuItem.Parent is ContextMenu contextMenu)
+            {
+                // Obtenha o elemento que foi alvo do ContextMenu
+                if (contextMenu.PlacementTarget is FrameworkElement element)
+                {
+                    // Obtenha o item de dados associado ao DataContext
+                    var clickedItem = element.DataContext as TabItem;
+                    if (clickedItem != null)
+                    {
+                        // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
+                        string currentName = clickedItem.TabName;
+                        PromptWindow promptWindow = new PromptWindow(currentName, "Rename Tab:");
+                        if (promptWindow.ShowDialog() == true)
+                        {
+                            if (!string.IsNullOrEmpty(promptWindow.UserInput))
+                            {
+                                string newName = promptWindow.UserInput;
+                                // Atualiza o nome da guia se o novo nome não for nulo ou vazio
+                                clickedItem.TabName = newName.Length > 18 ? newName.Substring(0, 18) : newName;
+                                clickedItem.FullTabName = newName;
+                                clickedItem.isRenamed = true;
+                            }
+                            else
+                            {
+                                clickedItem.isRenamed = false;
+                            }
+                        }
+                    }
+                }
             }
         }
 

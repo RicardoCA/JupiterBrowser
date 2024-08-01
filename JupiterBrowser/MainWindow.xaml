@@ -99,7 +99,7 @@
         </ContextMenu>
 
         <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu">
-            <MenuItem Header="Rename">
+            <MenuItem Header="Rename" Click="TabMenuItem_Rename">
                 <MenuItem.Icon>
                     <Image Source="/update.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
