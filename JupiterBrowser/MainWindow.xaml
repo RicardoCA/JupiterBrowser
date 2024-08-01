@@ -99,6 +99,11 @@
         </ContextMenu>
 
         <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu">
+            <MenuItem Header="Pin/Unpin" Click="TabMenuItem_Pin">
+                <MenuItem.Icon>
+                    <Image Source="/keep.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Header="Rename" Click="TabMenuItem_Rename">
                 <MenuItem.Icon>
                     <Image Source="/edit.png" Width="16" Height="16" Margin="0"/>
@@ -115,6 +120,20 @@
                 </MenuItem.Icon>
             </MenuItem>
             
+        </ContextMenu>
+        <ContextMenu x:Key="PinnedItemMenu" x:Name="PinnedItemMenu">
+            <MenuItem Header="Open" Click="PinnedItemMenu_Open">
+                <MenuItem.Icon>
+                    <Image Source="/open_newTab.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Unpin" Click="PinnedItemMenu_Unpin">
+                <MenuItem.Icon>
+                    <Image Source="/keep_off.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            
+
         </ContextMenu>
 
 
@@ -158,7 +177,7 @@
             <Setter Property="Content" Value="X"/>
         </Style>
         <DataTemplate x:Key="PinnedTabTemplate">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" MouseRightButtonUp="PinnedItem_MouseRightButtonUp">
                 <Image ToolTip="{Binding TabName}" Source="{Binding LogoUrl}" Width="16" Height="16" Margin="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>

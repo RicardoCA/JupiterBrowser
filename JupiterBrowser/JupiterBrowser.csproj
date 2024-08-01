@@ -17,6 +17,9 @@
     <None Remove="ForwardIcon.png" />
     <None Remove="FullscreenIcon.png" />
     <None Remove="g_translate.png" />
+    <None Remove="keep.png" />
+    <None Remove="keep_off.png" />
+    <None Remove="open_newTab.png" />
     <None Remove="quit.png" />
     <None Remove="RefreshIcon.png" />
     <None Remove="ShieldIcon.png" />
@@ -51,6 +54,9 @@
     <Resource Include="ForwardIcon.png" />
     <Resource Include="FullscreenIcon.png" />
     <Resource Include="g_translate.png" />
+    <Resource Include="keep.png" />
+    <Resource Include="keep_off.png" />
+    <Resource Include="open_newTab.png" />
     <Resource Include="quit.png" />
     <Resource Include="RefreshIcon.png" />
     <Resource Include="ShieldIcon.png" />

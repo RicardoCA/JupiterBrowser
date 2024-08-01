@@ -44,6 +44,7 @@ namespace JupiterBrowser
         private string languageT = "en";
         private bool tabMenuIsOpen = false;
         private TabItem selectedTabItemContextMenu;
+        private TabItem selectedPinnedItemContextMenu;
 
 
         public int id = 1;
@@ -449,6 +450,17 @@ namespace JupiterBrowser
             var contextMenuTabs = (ContextMenu)FindResource("TabItemMenu");
             contextMenuTabs.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             foreach (var item in contextMenuTabs.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+                    menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                }
+            }
+
+            var contextMenuPins = (ContextMenu)FindResource("PinnedItemMenu");
+            contextMenuPins.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            foreach (var item in contextMenuPins.Items)
             {
                 if (item is MenuItem menuItem)
                 {
@@ -1236,6 +1248,11 @@ namespace JupiterBrowser
             }
         }
 
+        private void TabMenuItem_Pin(object sender, RoutedEventArgs e)
+        {
+            Pin();
+        }
+
         private void TabMenuItem_Rename(object sender, RoutedEventArgs e)
         {
             // Obtenha o ContextMenu do sender
@@ -1268,6 +1285,77 @@ namespace JupiterBrowser
                         }
                     }
                 }
+            }
+        }
+
+        
+
+        private void PinnedItemMenu_Unpin(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.Parent is ContextMenu contextMenu)
+            {
+                // Obtenha o elemento que foi alvo do ContextMenu
+                if (contextMenu.PlacementTarget is FrameworkElement element)
+                {
+                    // Obtenha o item de dados associado ao DataContext
+                    var clickedItem = element.DataContext as TabItem;
+                    if (clickedItem != null)
+                    {
+                        // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
+                        string currentName = clickedItem.TabName;
+                        ToastWindow.Show("Site unpinned: " + currentName);
+                        PinnedTabs.Remove(clickedItem);
+                        SavePinneds();
+                        
+                    }
+                }
+            }
+        }
+
+        private void PinnedItemMenu_Open(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.Parent is ContextMenu contextMenu)
+            {
+                // Obtenha o elemento que foi alvo do ContextMenu
+                if (contextMenu.PlacementTarget is FrameworkElement element)
+                {
+                    // Obtenha o item de dados associado ao DataContext
+                    var clickedItem = element.DataContext as TabItem;
+                    if (clickedItem != null)
+                    {
+                        // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
+                        string currentName = clickedItem.TabName;
+                        string url = clickedItem.url;
+                        OpenNewTabWithUrl(url, currentName);
+
+                    }
+                }
+            }
+        }
+
+        private void PinnedItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement element)
+            {
+                // Tenta encontrar o recurso ContextMenu com a chave "TabItemMenu"
+                if (FindResource("PinnedItemMenu") is ContextMenu menu)
+                {
+                    selectedTabItemContextMenu = (TabItem)element.DataContext;
+                    // Define o elemento como o alvo do menu de contexto e abre o menu
+                    menu.PlacementTarget = element;
+                    menu.IsOpen = true;
+                   
+                }
+                else
+                {
+                    // Tratar o caso em que o recurso não é encontrado
+                    Console.WriteLine("ContextMenu 'TabItemMenu' não encontrado.");
+                }
+            }
+            else
+            {
+                // Tratar o caso em que o sender não é do tipo esperado
+                Console.WriteLine("O sender não é do tipo esperado (FrameworkElement).");
             }
         }
 
@@ -1346,6 +1434,17 @@ namespace JupiterBrowser
                     var contextMenuTabs = (ContextMenu)FindResource("TabItemMenu");
                     contextMenuTabs.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     foreach (var item in contextMenuTabs.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                        {
+                            menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                            menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                        }
+                    }
+
+                    var contextMenuPins = (ContextMenu)FindResource("PinnedItemMenu");
+                    contextMenuPins.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    foreach (var item in contextMenuPins.Items)
                     {
                         if (item is MenuItem menuItem)
                         {
