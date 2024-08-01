@@ -146,7 +146,7 @@
         <DataTemplate x:Key="TabItemTemplate">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="0,0,5,0" Stretch="Uniform" SnapsToDevicePixels="True"/>
-                <TextBlock Text="{Binding TabName}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding TabName}" ToolTip="{Binding FullTabName}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <Button Style="{StaticResource CloseButtonStyle}" 
                         Click="CloseTabButton_Click"/>
                 

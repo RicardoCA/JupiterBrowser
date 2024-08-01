@@ -30,7 +30,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.17";
+        private string VERSION = "0.18";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -130,22 +130,28 @@ namespace JupiterBrowser
                         try
                         {
                             string script = "document.title";
-                            string title = await tab.WebView.ExecuteScriptAsync(script);
-                            title = title.Trim('"'); // Remove as aspas ao redor
+                            string rawTitle = await tab.WebView.ExecuteScriptAsync(script);
 
-                            if (!string.IsNullOrEmpty(title) && title != tab.FullTabName)
+                            // Log do valor bruto retornado pelo script
+                            Console.WriteLine($"Raw title: {rawTitle}");
+
+                            // Remove as aspas ao redor do título
+                            string title = rawTitle.Trim(new char[] { '"' });
+
+                            // Log após a remoção das aspas
+                            Console.WriteLine($"Processed title: {title}");
+
+                            if (!string.IsNullOrEmpty(title) && title != tab.TabName)
                             {
-                                if(tab.isRenamed == false)
-                                {
-                                    tab.FullTabName = title;
-                                    tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
-                                }
                                 
+                                tab.FullTabName = title;
+                                tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
                             }
                         }
                         catch (Exception ex)
                         {
-                            // Tratar exceções, se necessário
+                            // Log de exceções
+                            Console.WriteLine($"Erro ao atualizar o título: {ex.Message}");
                         }
                     }
                 }
@@ -156,12 +162,13 @@ namespace JupiterBrowser
                 TabListBox.ItemsSource = Tabs;
                 TabListBox.SelectedIndex = selectedIndex;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return;
+                // Log de exceções
+                Console.WriteLine($"Erro ao atualizar as abas: {ex.Message}");
             }
-            
         }
+
 
         private void SiteThemeMenu_Click(object sender, RoutedEventArgs e)
         {
