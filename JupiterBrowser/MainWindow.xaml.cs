@@ -43,6 +43,7 @@ namespace JupiterBrowser
         
         private string languageT = "en";
         private bool tabMenuIsOpen = false;
+        private TabItem selectedTabItemContextMenu;
 
 
         public int id = 1;
@@ -1199,6 +1200,17 @@ namespace JupiterBrowser
             menu.IsOpen = true;
         }
 
+        private void TabMenuItem_Close(object sender, RoutedEventArgs e)
+        {
+            // Remove o item selecionado da lista de Tabs
+            if (selectedTabItemContextMenu != null)
+            {
+                selectedTabItemContextMenu.WebView.Dispose();
+                Tabs.Remove(selectedTabItemContextMenu);
+                selectedTabItemContextMenu = null; // Limpa a referência após remover
+            }
+        }
+
         private void TabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             // Verifica se o sender é do tipo esperado, como StackPanel ou outro elemento de TabItem
@@ -1207,6 +1219,7 @@ namespace JupiterBrowser
                 // Tenta encontrar o recurso ContextMenu com a chave "TabItemMenu"
                 if (FindResource("TabItemMenu") is ContextMenu menu)
                 {
+                    selectedTabItemContextMenu = (TabItem)element.DataContext;
                     // Define o elemento como o alvo do menu de contexto e abre o menu
                     menu.PlacementTarget = element;
                     menu.IsOpen = true;
