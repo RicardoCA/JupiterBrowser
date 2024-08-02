@@ -127,6 +127,11 @@
                     <Image Source="/open_newTab.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Header="Protect" Click="PinnedItemMenu_Protect">
+                <MenuItem.Icon>
+                    <Image Source="/ShieldIcon.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Header="Rename" Click="PinnedItemMenu_Rename">
                 <MenuItem.Icon>
                     <Image Source="/edit.png" Width="16" Height="16" Margin="0"/>

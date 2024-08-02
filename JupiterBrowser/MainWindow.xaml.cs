@@ -26,13 +26,14 @@ using System.Windows.Media.Animation;
 using Microsoft.VisualBasic;
 using System.ComponentModel;
 using System.Collections.Specialized;
+using System;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.18.1";
+        private string VERSION = "0.19";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -555,7 +556,34 @@ namespace JupiterBrowser
                 }
                 if(existent == false)
                 {
-                    OpenNewTabWithUrl(selectedTab.url);
+                    if (selectedTab.isProtected == false)
+                    {
+                        OpenNewTabWithUrl(selectedTab.url);
+                    }
+                    else
+                    {
+                        PromptWindow promptWindow = new PromptWindow("", "Password:");
+                        if (promptWindow.ShowDialog() == true)
+                        {
+                            if (!string.IsNullOrEmpty(promptWindow.UserInput))
+                            {
+                                Vault vault = new Vault();
+                                string decryptedPassword = vault.GetStoredPassword();
+                                string password = promptWindow.UserInput;
+                                if (decryptedPassword.Equals(password))
+                                {
+                                    string url = vault.Decrypt(selectedTab.url);
+                                    ToastWindow.Show("Opening tab.");
+                                    OpenNewTabWithUrl(url);
+                                }
+                                else
+                                {
+                                    ToastWindow.Show("Wrong password.");
+                                }
+                            }
+                        }
+                    }
+                    
                 }
                 else
                 {
@@ -1290,6 +1318,142 @@ namespace JupiterBrowser
             }
         }
 
+        private void PinnedItemMenu_Protect(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.Parent is ContextMenu contextMenu)
+            {
+                // Obtenha o elemento que foi alvo do ContextMenu
+                if (contextMenu.PlacementTarget is FrameworkElement element)
+                {
+                    // Obtenha o item de dados associado ao DataContext
+                    var clickedItem = element.DataContext as TabItem;
+                    if (clickedItem != null)
+                    {
+                        // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia fixada
+
+                        Vault vault = new Vault();
+                        if (vault.HasVaultExist() == false)
+                        {
+                            PromptWindow promptWindow = new PromptWindow("", "Password:");
+                            if (promptWindow.ShowDialog() == true)
+                            {
+                                if (!string.IsNullOrEmpty(promptWindow.UserInput))
+                                {
+                                    //PinnedTabs.Remove(clickedItem);
+                                    string password = promptWindow.UserInput;
+
+
+                                    if(clickedItem.isProtected == false)
+                                    {
+                                        string encryptedUrl = vault.Encrypt(clickedItem.url);
+                                        clickedItem.url = encryptedUrl;
+                                        //PinnedTabs.Add(clickedItem);
+
+                                        // Encontra o item correspondente em PinnedTabs e o atualiza
+                                        var pinnedItem = PinnedTabs.FirstOrDefault(item => item.url == clickedItem.url);
+                                        if (pinnedItem != null)
+                                        {
+                                            int index = PinnedTabs.IndexOf(pinnedItem);
+                                            if (index != -1)
+                                            {
+
+                                                vault.CreateVault(password);
+
+                                                string decryptedPassword = vault.GetStoredPassword();
+
+
+                                                // Remove o item antigo
+                                                PinnedTabs.RemoveAt(index);
+
+                                                // Cria um novo item com as propriedades atualizadas
+                                                var updatedItem = new TabItem
+                                                {
+                                                    url = encryptedUrl,
+                                                    TabName = clickedItem.TabName,
+                                                    FullTabName = clickedItem.FullTabName,
+                                                    LogoUrl = clickedItem.LogoUrl,
+                                                    isProtected = true
+
+
+                                                    // Adicione outras propriedades necessárias aqui
+                                                };
+
+                                                // Insere o novo item na mesma posição
+                                                PinnedTabs.Insert(index, updatedItem);
+                                                SavePinneds();
+
+                                            }
+                                        }
+                                    }
+                                    
+
+
+
+                                }
+                            }
+
+                            
+
+
+                        }
+                        else
+                        {
+                            
+                            if(clickedItem.isProtected == false)
+                            {
+                                string encryptedUrl = vault.Encrypt(clickedItem.url);
+
+                                //PinnedTabs.Add(clickedItem);
+
+                                // Encontra o item correspondente em PinnedTabs e o atualiza
+                                var pinnedItem = PinnedTabs.FirstOrDefault(item => item.url == clickedItem.url);
+                                if (pinnedItem != null)
+                                {
+                                    int index = PinnedTabs.IndexOf(pinnedItem);
+                                    if (index != -1)
+                                    {
+
+
+
+
+                                        // Remove o item antigo
+                                        PinnedTabs.RemoveAt(index);
+
+                                        // Cria um novo item com as propriedades atualizadas
+                                        var updatedItem = new TabItem
+                                        {
+                                            url = encryptedUrl,
+                                            TabName = clickedItem.TabName,
+                                            FullTabName = clickedItem.FullTabName,
+                                            LogoUrl = clickedItem.LogoUrl,
+                                            isProtected = true
+
+
+                                            // Adicione outras propriedades necessárias aqui
+                                        };
+
+                                        // Insere o novo item na mesma posição
+                                        PinnedTabs.Insert(index, updatedItem);
+                                        SavePinneds();
+
+                                    }
+                                }
+                            }
+                        }
+
+
+
+                        
+                    }
+                }
+            }
+        
+
+
+        
+            
+        }
+
         private void PinnedItemMenu_Rename(object sender, RoutedEventArgs e)
         {
             // Obtenha o ContextMenu do sender
@@ -1388,9 +1552,44 @@ namespace JupiterBrowser
                     if (clickedItem != null)
                     {
                         // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
-                        string currentName = clickedItem.TabName;
-                        string url = clickedItem.url;
-                        OpenNewTabWithUrl(url, currentName);
+                        if(clickedItem.isProtected == false)
+                        {
+                            string currentName = clickedItem.TabName;
+                            string url = clickedItem.url;
+                            OpenNewTabWithUrl(url, currentName);
+                        }
+                        else
+                        {
+                            Vault vault = new Vault();
+                            if (vault.HasVaultExist())
+                            {
+                                PromptWindow promptWindow = new PromptWindow("", "Password:");
+                                if (promptWindow.ShowDialog() == true)
+                                {
+                                    if (!string.IsNullOrEmpty(promptWindow.UserInput))
+                                    {
+                                        string decryptedPassword = vault.GetStoredPassword();
+                                        string password = promptWindow.UserInput;
+                                        if (password == decryptedPassword)
+                                        {
+                                            string currentName = clickedItem.TabName;
+                                            string url = vault.Decrypt(clickedItem.url);
+                                            ToastWindow.Show("Opening tab.");
+                                            OpenNewTabWithUrl(url, currentName);
+                                        }
+                                        else
+                                        {
+                                            ToastWindow.Show("Wrong password.");
+                                        }
+
+                                    }
+                                }
+                                        
+
+                            }
+                            
+                        }
+                        
 
                     }
                 }
@@ -2175,6 +2374,8 @@ namespace JupiterBrowser
         public string url { get; set; }
 
         public bool adBlock { get; set; }
+
+        public bool isProtected { get; set; }
 
         [JsonIgnore]
         public WebView2 WebView { get; set; }
