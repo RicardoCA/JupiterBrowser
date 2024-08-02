@@ -24,13 +24,15 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
 using Microsoft.VisualBasic;
+using System.ComponentModel;
+using System.Collections.Specialized;
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.18";
+        private string VERSION = "0.18.1";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -1288,7 +1290,69 @@ namespace JupiterBrowser
             }
         }
 
-        
+        private void PinnedItemMenu_Rename(object sender, RoutedEventArgs e)
+        {
+            // Obtenha o ContextMenu do sender
+            if (sender is MenuItem menuItem && menuItem.Parent is ContextMenu contextMenu)
+            {
+                // Obtenha o elemento que foi alvo do ContextMenu
+                if (contextMenu.PlacementTarget is FrameworkElement element)
+                {
+                    // Obtenha o item de dados associado ao DataContext
+                    var clickedItem = element.DataContext as TabItem;
+                    if (clickedItem != null)
+                    {
+                        // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia fixada
+                        string currentName = clickedItem.TabName;
+                        PromptWindow promptWindow = new PromptWindow(currentName, "Rename Pinned Tab:");
+                        if (promptWindow.ShowDialog() == true)
+                        {
+                            if (!string.IsNullOrEmpty(promptWindow.UserInput))
+                            {
+                                //PinnedTabs.Remove(clickedItem);
+                                string newName = promptWindow.UserInput;
+                                // Atualiza o nome da guia fixada se o novo nome não for nulo ou vazio
+                                clickedItem.TabName = newName.Length > 18 ? newName.Substring(0, 18) : newName;
+                                clickedItem.FullTabName = newName;
+                                //PinnedTabs.Add(clickedItem);
+
+                                // Encontra o item correspondente em PinnedTabs e o atualiza
+                                var pinnedItem = PinnedTabs.FirstOrDefault(item => item.url == clickedItem.url);
+                                if (pinnedItem != null)
+                                {
+                                    int index = PinnedTabs.IndexOf(pinnedItem);
+                                    if (index != -1)
+                                    {
+                                        // Remove o item antigo
+                                        PinnedTabs.RemoveAt(index);
+
+                                        // Cria um novo item com as propriedades atualizadas
+                                        var updatedItem = new TabItem
+                                        {
+                                            url = clickedItem.url,
+                                            TabName = clickedItem.TabName,
+                                            FullTabName = clickedItem.FullTabName,
+                                            LogoUrl = clickedItem.LogoUrl
+
+                                            // Adicione outras propriedades necessárias aqui
+                                        };
+
+                                        // Insere o novo item na mesma posição
+                                        PinnedTabs.Insert(index, updatedItem);
+                                        SavePinneds();
+                                    }
+                                }
+
+
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         private void PinnedItemMenu_Unpin(object sender, RoutedEventArgs e)
         {
