@@ -1307,10 +1307,12 @@ namespace JupiterBrowser
                                 clickedItem.TabName = newName.Length > 18 ? newName.Substring(0, 18) : newName;
                                 clickedItem.FullTabName = newName;
                                 clickedItem.isRenamed = true;
+                                
                             }
                             else
                             {
                                 clickedItem.isRenamed = false;
+                                
                             }
                         }
                     }
@@ -1496,7 +1498,8 @@ namespace JupiterBrowser
                                             url = clickedItem.url,
                                             TabName = clickedItem.TabName,
                                             FullTabName = clickedItem.FullTabName,
-                                            LogoUrl = clickedItem.LogoUrl
+                                            LogoUrl = clickedItem.LogoUrl,
+                                            isProtected = clickedItem.isProtected
 
                                             // Adicione outras propriedades necessárias aqui
                                         };
