@@ -20,6 +20,12 @@ namespace JupiterBrowser
         public ThemeColorPicker()
         {
             InitializeComponent();
+            Loaded += ThemeColorPicker_Loaded;
+        }
+
+        private void ThemeColorPicker_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateColor(); // Chame UpdateColor ao carregar a janela
         }
 
         private void ColorBall_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
