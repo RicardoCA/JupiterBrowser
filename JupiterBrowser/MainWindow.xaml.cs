@@ -1672,6 +1672,15 @@ namespace JupiterBrowser
             Application.Current.Shutdown();
         }
 
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            Settings settings = new Settings();
+            if (settings.ShowDialog() == true)
+            {
+
+            }
+        }
+
         private void SidebarThemeMenu_Click(object sender, RoutedEventArgs e)
         {
             ThemeColorPicker themeColorPicker = new ThemeColorPicker();

@@ -23,6 +23,7 @@
     <None Remove="open_newTab.png" />
     <None Remove="quit.png" />
     <None Remove="RefreshIcon.png" />
+    <None Remove="settings.png" />
     <None Remove="ShieldIcon.png" />
     <None Remove="shortcuts.png" />
     <None Remove="sitetheme.png" />
@@ -61,6 +62,7 @@
     <Resource Include="open_newTab.png" />
     <Resource Include="quit.png" />
     <Resource Include="RefreshIcon.png" />
+    <Resource Include="settings.png" />
     <Resource Include="ShieldIcon.png" />
     <Resource Include="shortcuts.png" />
     <Resource Include="sitetheme.png" />

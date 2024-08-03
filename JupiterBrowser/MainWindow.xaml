@@ -75,6 +75,11 @@
                     <Image Source="/card.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Header="Settings" Click="Settings_Click">
+                <MenuItem.Icon>
+                    <Image Source="/settings.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Header="Shortcuts" Click="ShortCuts_Click">
                 <MenuItem.Icon>
                     <Image Source="/shortcuts.png" Width="16" Height="16" Margin="0"/>
