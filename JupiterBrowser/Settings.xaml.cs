@@ -42,6 +42,7 @@ namespace JupiterBrowser
                     {
                         SetSelectedLanguage(settings.DefaultTranslateLanguage);
                         SetPreviousNavigation(settings.PreviousNavigation);
+                        SetSearchEngine(settings.SearchEngine);
                     }
                 }
             }
@@ -66,6 +67,28 @@ namespace JupiterBrowser
                     break;
                 default:
                     EnglishRadioButton.IsChecked = true;
+                    break;
+            }
+        }
+
+        private void SetSearchEngine(string engine)
+        {
+            switch (engine)
+            {
+                case "Google":
+                    Google.IsChecked = true;
+                    break;
+                case "Bing":
+                    Bing.IsChecked = true;
+                    break;
+                case "Duckduckgo":
+                    Duckduckgo.IsChecked = true;
+                    break;
+                case "Perplexity":
+                    Perplexity.IsChecked = true;
+                    break;  
+                default:
+                    Google.IsChecked = true;
                     break;
             }
         }
@@ -129,6 +152,7 @@ namespace JupiterBrowser
             {
                 DefaultTranslateLanguage = GetSelectedLanguage(),
                 PreviousNavigation = GetPreviousNavigation(),
+                SearchEngine = GetSearchEngine(),
             };
 
             SaveSettings(settings);
@@ -136,6 +160,20 @@ namespace JupiterBrowser
 
 
             
+        }
+
+        private string GetSearchEngine()
+        {
+            if (Google.IsChecked == true)
+                return "Google";
+            if (Bing.IsChecked == true)
+                return "Bing";
+            if (Duckduckgo.IsChecked == true)
+                return "Duckduckgo";
+            if (Perplexity.IsChecked == true)
+                return "Perplexity";
+
+            return "Google"; // Default
         }
 
         private string GetSelectedLanguage()
@@ -185,5 +223,7 @@ namespace JupiterBrowser
     {
         public string DefaultTranslateLanguage { get; set; }
         public string PreviousNavigation { get; set; }
+        
+        public string SearchEngine { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace JupiterBrowser
 
         private List<string> _suggestions = new List<string>();
 
+        private string searchEngine = "Google";
+
         private int lastResult = 0;
 
         public UrlInputDialog()
@@ -24,6 +26,7 @@ namespace JupiterBrowser
             UrlTextBox.Focus();
             LoadLastResult();
             LoadNavigationHistory();
+            LoadSettings();
         }
 
         public UrlInputDialog(string url)
@@ -34,6 +37,37 @@ namespace JupiterBrowser
             UrlTextBox.Text = url;
             LoadLastResult();
             LoadNavigationHistory();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                if (File.Exists("settings.json"))
+                {
+                    var jsonString = File.ReadAllText("settings.json");
+                    var settings = JsonConvert.DeserializeObject<BrowserSettings>(jsonString);
+
+                    if (settings != null)
+                    {
+                        searchEngine = settings.SearchEngine switch
+                        {
+                            "Google" => "Google",
+                            "Bing" => "Bing",
+                            "Duckduckgo" => "Duckduckgo",
+                            "Perplexity" => "Perplexity",
+                            _ => "Google"
+                        };
+
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ToastWindow.Show($"Failed to load settings: {ex.Message}");
+            }
         }
 
         private void LoadNavigationHistory()
@@ -192,7 +226,24 @@ namespace JupiterBrowser
                     {
                         if (!url.Equals("startpage"))
                         {
-                            url = $"https://www.google.com/search?q={url}";
+                            if (searchEngine.Equals("Google"))
+                            {
+                                url = $"https://www.google.com/search?q={url}";
+
+                            }
+                            else if (searchEngine.Equals("Bing"))
+                            {
+                                url = $"https://www.bing.com/search?q={url}";
+                            }
+                            else if (searchEngine.Equals("Duckduckgo"))
+                            {
+                                url = $"https://duckduckgo.com/?q={url}&ia=web";
+                            }
+                            else if (searchEngine.Equals("Perplexity"))
+                            {
+                                url = $"https://www.perplexity.ai/search?q={url}";
+                            }
+
                         }
                         if(url.Contains("chatgpt "))
                         {
@@ -239,7 +290,24 @@ namespace JupiterBrowser
             {
                 if (url.IndexOf(".com") == -1 && url.IndexOf(".net") == -1 && url.IndexOf(".gov") == -1 && url.IndexOf(".org") == -1 && url.IndexOf(".so") == -1)
                 {
-                    url = $"https://www.google.com/search?q={url}";
+                    if (searchEngine.Equals("Google"))
+                    {
+                        url = $"https://www.google.com/search?q={url}";
+
+                    }
+                    else if (searchEngine.Equals("Bing"))
+                    {
+                        url = $"https://www.bing.com/search?q={url}";
+                    }
+                    else if (searchEngine.Equals("Duckduckgo"))
+                    {
+                        url = $"https://duckduckgo.com/?q={url}&ia=web";
+                    }
+                    else if (searchEngine.Equals("Perplexity"))
+                    {
+                        url = $"https://www.perplexity.ai/search?q={url}";
+                    }
+
                 }
             }
 

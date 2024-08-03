@@ -87,47 +87,7 @@ namespace JupiterBrowser
             anonymousWindow.Show();
         }
 
-        private async void OpenAnonymousWindow()
-        {
-            try
-            {
-                // Cria uma nova janela WPF
-                var anonymousWindow = new Window
-                {
-                    Width = 800,
-                    Height = 600,
-                    Title = "Jupiter Browser - Anonymous Window"
-                };
-
-                // Cria um WebView2 e adiciona à janela
-                var webView = new WebView2();
-                anonymousWindow.Content = webView;
-
-                // Mostra a janela
-                anonymousWindow.Show();
-
-                // Configura um diretório temporário para dados do usuário
-                string userDataFolder = Path.Combine(Path.GetTempPath(), "WebView2", Guid.NewGuid().ToString());
-                
-
-                // Inicializa o ambiente do WebView2 com o diretório temporário
-                var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
-                
-
-                // Inicializa o WebView2
-                await webView.EnsureCoreWebView2Async(env);
-                
-
-                // Navega para uma página inicial
-                webView.Source = new Uri("https://www.google.com");
-                
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening anonymous window: {ex.Message}");
-            }
-        }
+        
 
 
 
