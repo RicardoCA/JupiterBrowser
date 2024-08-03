@@ -1,0 +1,47 @@
+﻿<Window x:Class="JupiterBrowser.AnonymousWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Jupiter Browser - Incognito Window" Height="450" Width="850"
+        Background="Black">
+    <Window.Resources>
+        <Style x:Key="NavigationButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button x:Name="BackButton" Content="Back" Width="50" Click="BackButton_Click" Margin="0,0,5,0" Style="{StaticResource NavigationButtonStyle}"/>
+            <Button x:Name="ForwardButton" Content="Forward" Width="50" Click="ForwardButton_Click" Margin="0,0,5,0" Style="{StaticResource NavigationButtonStyle}"/>
+            <TextBox x:Name="UrlTextBox" Width="600" Margin="0,0,5,0" Background="Transparent" Foreground="White"/>
+            <Button x:Name="GoButton" Content="Go" Width="50" Click="GoButton_Click" Background="Transparent" Foreground="White"/>
+        </StackPanel>
+
+        <ContentControl x:Name="ContentArea" Grid.Row="1"/>
+    </Grid>
+</Window>
