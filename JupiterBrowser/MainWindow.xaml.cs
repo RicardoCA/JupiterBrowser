@@ -45,6 +45,8 @@ namespace JupiterBrowser
         private DispatcherTimer _titleUpdateTimer;
         
         private string languageT = "en";
+        private string start = "Question";
+
         private bool tabMenuIsOpen = false;
         private TabItem selectedTabItemContextMenu;
         private TabItem selectedPinnedItemContextMenu;
@@ -64,17 +66,53 @@ namespace JupiterBrowser
             _musicTitleUpdateTimer = new DispatcherTimer();
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
-            OpenStartPage();
+            LoadSettings();
             CleanUpdates();
             LoadSidebarColor();
             LoadPinneds();
             LoadTabsClosed();
+            OpenStartPage();
 
             // Inicializa o timer de atualização de títulos
             _titleUpdateTimer = new DispatcherTimer();
             _titleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _titleUpdateTimer.Tick += async (s, e) => await UpdateTabTitlesAsync();
             _titleUpdateTimer.Start();
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                if (File.Exists("settings.json"))
+                {
+                    var jsonString = File.ReadAllText("settings.json");
+                    var settings = JsonConvert.DeserializeObject<BrowserSettings>(jsonString);
+
+                    if (settings != null)
+                    {
+                        languageT = settings.DefaultTranslateLanguage switch
+                        {
+                            "English" => "en",
+                            "Português" => "pt",
+                            "Español" => "es",
+                            _ => "en"
+                        };
+
+                        start = settings.PreviousNavigation switch
+                        {
+                            "Question" => "Question",
+                            "ReopenTabs" => "ReopenTabs",
+                            "StartNewNavigation" => "StartNewNavigation",
+                            _ => "Question"
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ToastWindow.Show($"Failed to load settings: {ex.Message}");
+            }
         }
 
         private void TabMenuItem_Translate(object sender, RoutedEventArgs e)
@@ -288,17 +326,59 @@ namespace JupiterBrowser
 
         private void LoadTabsClosed()
         {
-            var JsonFilePath = "closedtabs.json";
-            if (File.Exists(JsonFilePath))
+            if (start.Equals("Question"))
             {
-                string jsonContent = File.ReadAllText(JsonFilePath);
-                if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                var JsonFilePath = "closedtabs.json";
+                if (File.Exists(JsonFilePath))
                 {
-                    try
+                    string jsonContent = File.ReadAllText(JsonFilePath);
+                    if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
                     {
+                        try
+                        {
 
-                        ConfirmDialog confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
-                        if (confirmDialog.ShowDialog() == true)
+                            ConfirmDialog confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                            if (confirmDialog.ShowDialog() == true)
+                            {
+                                var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
+                                foreach (var tab in loadedTabs)
+                                {
+                                    if (!tab.url.Contains("startpage.html"))
+                                    {
+                                        OpenNewTabWithUrl(tab.url, tab.TabName);
+                                    }
+
+                                }
+                            }
+
+
+
+
+
+
+
+                        }
+                        catch (JsonException ex)
+                        {
+                            // Lida com o erro de desserialização
+
+                        }
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            else if (start.Equals("ReopenTabs"))
+            {
+                var JsonFilePath = "closedtabs.json";
+                if (File.Exists(JsonFilePath))
+                {
+                    string jsonContent = File.ReadAllText(JsonFilePath);
+                    if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                    {
+                        try
                         {
                             var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
                             foreach (var tab in loadedTabs)
@@ -310,25 +390,15 @@ namespace JupiterBrowser
 
                             }
                         }
+                        catch (Exception ex)
+                        {
 
-
-
-
-                        
-
-                       
-                    }
-                    catch (JsonException ex)
-                    {
-                        // Lida com o erro de desserialização
-                        
+                        }
                     }
                 }
             }
-            else
-            {
-                
-            }
+            
+            
         }
 
         private void SaveTabsBeforeClose()
@@ -531,8 +601,12 @@ namespace JupiterBrowser
 
         private void OpenStartPage()
         {
-            string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
-            OpenNewTabWithUrl(htmlFilePath);
+            if(TabListBox.Items.Count == 0)
+            {
+                string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
+                OpenNewTabWithUrl(htmlFilePath);
+            }
+            
         }
 
         private async void MusicTitleUpdateTimer_Tick(object sender, EventArgs e)
