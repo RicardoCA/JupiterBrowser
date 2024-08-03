@@ -33,7 +33,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.19";
+        private string VERSION = "0.20";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -1674,18 +1674,20 @@ namespace JupiterBrowser
 
         private void SidebarThemeMenu_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow colorPickerWindow = new ColorPickerWindow();
-            if (colorPickerWindow.ShowDialog() == true)
+            ThemeColorPicker themeColorPicker = new ThemeColorPicker();
+
+            // Subscribing to the OnColorSelected event
+            themeColorPicker.OnColorSelected += (backgroundColor) =>
             {
-                // Obtém as cores selecionadas
-                string backgroundColor = colorPickerWindow.SelectedBackgroundColor;
-                string textColor = colorPickerWindow.SelectedTextColor;
+                MessageBox.Show(backgroundColor); // Exibe a cor selecionada para verificação
 
                 if (!string.IsNullOrEmpty(backgroundColor))
                 {
+                    // Aplica a cor de fundo selecionada aos elementos necessários
                     Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+
                     var contextMenu = (ContextMenu)FindResource("BrowserMenu");
                     contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     foreach (var item in contextMenu.Items)
@@ -1719,16 +1721,13 @@ namespace JupiterBrowser
                         }
                     }
 
-
+                    // Persiste a cor de fundo selecionada
                     BackgroundPersist backgroundPersist = new BackgroundPersist();
                     backgroundPersist.SaveColor(backgroundColor);
                 }
+            };
 
-                
-
-
-                
-            }
+            themeColorPicker.Show();
         }
 
         private void ApplyThemeColors(System.Windows.Media.Color textColor, System.Windows.Media.Color backgroundColor)

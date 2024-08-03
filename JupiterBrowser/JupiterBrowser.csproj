@@ -19,6 +19,7 @@
     <None Remove="g_translate.png" />
     <None Remove="keep.png" />
     <None Remove="keep_off.png" />
+    <None Remove="lock.png" />
     <None Remove="open_newTab.png" />
     <None Remove="quit.png" />
     <None Remove="RefreshIcon.png" />
@@ -56,6 +57,7 @@
     <Resource Include="g_translate.png" />
     <Resource Include="keep.png" />
     <Resource Include="keep_off.png" />
+    <Resource Include="lock.png" />
     <Resource Include="open_newTab.png" />
     <Resource Include="quit.png" />
     <Resource Include="RefreshIcon.png" />
