@@ -12,7 +12,8 @@
         ResizeMode="NoResize"
         AllowsTransparency="True"
         Topmost="True"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas x:Name="ColorCanvas" Width="300" Height="300" Background="#1C1C1C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
             <Ellipse x:Name="ColorBall" Width="20" Height="20" Fill="Red" Canvas.Left="0" Canvas.Top="140"

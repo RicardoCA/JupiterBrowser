@@ -52,6 +52,8 @@ namespace JupiterBrowser
             }
         }
 
+        
+
         private void ColorBall_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isDragging = false;

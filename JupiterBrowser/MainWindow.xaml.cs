@@ -1169,7 +1169,7 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\n Ctrl + F4 (close tab)");
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)");
         }
 
         private void CopyURL()
@@ -1679,7 +1679,7 @@ namespace JupiterBrowser
             // Subscribing to the OnColorSelected event
             themeColorPicker.OnColorSelected += (backgroundColor) =>
             {
-                MessageBox.Show(backgroundColor); // Exibe a cor selecionada para verificação
+                
 
                 if (!string.IsNullOrEmpty(backgroundColor))
                 {
