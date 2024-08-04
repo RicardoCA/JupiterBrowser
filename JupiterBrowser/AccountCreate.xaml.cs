@@ -48,7 +48,7 @@ namespace JupiterBrowser
                 string json = File.ReadAllText(loggedFile);
                 var user = JsonConvert.DeserializeObject<User>(json);
 
-                if (user != null && !string.IsNullOrEmpty(user.Name) && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
+                if (user != null && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
                 {
                     CheckCredentialsInDatabase(user);
                 }
@@ -57,11 +57,12 @@ namespace JupiterBrowser
             {
                 RegisterSection.Visibility = Visibility.Visible;
                 LoginSection.Visibility = Visibility.Visible;
+                loggedText.Visibility = Visibility.Collapsed;
                 LogoutButton.Visibility = Visibility.Collapsed;
             }
         }
 
-        private async Task CheckCredentialsInDatabase(User user)
+        private async Task<bool> CheckCredentialsInDatabase(User user)
         {
             bool exists = await CheckUserCredentials(user.Email, user.Password);
 
@@ -69,15 +70,18 @@ namespace JupiterBrowser
             {
                 RegisterSection.Visibility = Visibility.Collapsed;
                 LoginSection.Visibility = Visibility.Collapsed;
+                loggedText.Visibility = Visibility.Visible;
                 LogoutButton.Visibility = Visibility.Visible;
             }
             else
             {
                 RegisterSection.Visibility = Visibility.Visible;
                 LoginSection.Visibility = Visibility.Visible;
+                loggedText.Visibility = Visibility.Collapsed;
                 LogoutButton.Visibility = Visibility.Collapsed;
             }
-            
+
+            return exists;
         }
 
         private async Task<bool> CheckUserCredentials(string email, string password)
@@ -130,6 +134,7 @@ namespace JupiterBrowser
                 LoginSection.Visibility = Visibility.Visible;
                 RegisterSection.Visibility = Visibility.Visible;
                 LogoutButton.Visibility = Visibility.Collapsed;
+                loggedText.Visibility = Visibility.Collapsed;
                 ToastWindow.Show("You have logged out.");
             }
         }
@@ -182,6 +187,7 @@ namespace JupiterBrowser
                 LoginSection.Visibility = Visibility.Collapsed;
                 RegisterSection.Visibility = Visibility.Collapsed;
                 LogoutButton.Visibility = Visibility.Visible;
+                loggedText.Visibility = Visibility.Visible;
 
                 ToastWindow.Show($"Account successfully created for: {email}");
             }
@@ -193,8 +199,16 @@ namespace JupiterBrowser
 
         private void SaveUserToFile(User user)
         {
-            string json = JsonConvert.SerializeObject(user, Formatting.Indented);
-            File.WriteAllText(loggedFile, json);
+            try
+            {
+                string json = JsonConvert.SerializeObject(user);
+                File.WriteAllText("account.json", json);
+                
+            }
+            catch (Exception ex)
+            {
+               
+            }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -244,10 +258,53 @@ namespace JupiterBrowser
             
         }
 
-        private void Login_Click(object sender, RoutedEventArgs e)
+        private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
-            Close();
+            string email = LoginEmailTextBox.Text;
+            string pass = LoginPasswordBox.Password;
+            if (email.Length > 5)
+            {
+                if (email.IndexOf("@") != -1)
+                {
+                    if (pass.Length > 6)
+                    {
+                        Sha1 sha1 = new Sha1();
+                        pass = sha1.HashPassword(pass);
+                        User u = new User
+                        {
+                            Email = email,
+                            Password = pass
+                        };
+
+                        bool credentialsValid = await CheckUserCredentials(u.Email, u.Password);
+                        if (credentialsValid)
+                        {
+                            RegisterSection.Visibility = Visibility.Collapsed;
+                            LoginSection.Visibility = Visibility.Collapsed;
+                            LogoutButton.Visibility = Visibility.Visible;
+                            loggedText.Visibility = Visibility.Visible;
+                            SaveUserToFile(u);
+                            ToastWindow.Show("Login successful.");
+                        }
+                        else
+                        {
+                            ToastWindow.Show("Invalid email or password.");
+                        }
+                    }
+                    else
+                    {
+                        ToastWindow.Show("Invalid Password.");
+                    }
+                }
+                else
+                {
+                    ToastWindow.Show("Invalid E-mail.");
+                }
+            }
+            else
+            {
+                ToastWindow.Show("Invalid E-mail.");
+            }
         }
     }
 

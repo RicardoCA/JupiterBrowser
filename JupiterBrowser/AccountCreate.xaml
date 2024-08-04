@@ -15,6 +15,7 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen">
     <Grid>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -25,7 +26,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        
+        <Label Content="You are already logged in." Foreground="White" x:Name="loggedText"/>
 
         <!-- Create Account Section -->
         <StackPanel Grid.Column="0" Margin="10" x:Name="RegisterSection" Visibility="Collapsed">
