@@ -21,7 +21,7 @@ namespace JupiterBrowser
     /// </summary>
     public partial class Settings : Window
     {
-        private string[] restaureFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json","account.json" };
+        private string[] restaureFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json","account.json", "closedtabs.json" };
         private const string SettingsFilePath = "settings.json";
         public Settings()
         {

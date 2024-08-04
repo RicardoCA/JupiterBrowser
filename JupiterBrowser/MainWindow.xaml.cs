@@ -34,6 +34,8 @@ using FirebaseAdmin;
 using System.Text;
 using Google.Apis.Auth.OAuth2;
 using Firebase.Database.Query;
+using Firebase.Storage;
+using System.Net.Http.Json;
 
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
@@ -41,7 +43,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.21";
+        private string VERSION = "0.22";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -64,31 +66,33 @@ namespace JupiterBrowser
 
 
 
-        
+        private const string ApiKey = "AIzaSyDiVnDzUepc8yHBYxxUMgY163D-TnA40e0";
+        private const string ProjectId = "jupiterbrowser-8f6b2";
+        private const string DatabaseUrl = "https://jupiterbrowser-8f6b2-default-rtdb.firebaseio.com";
+        private const string loggedFile = "account.json";
+        private FirebaseAuthClient authClient;
+        private FirebaseClient databaseClient;
+
+        static readonly HttpClient client = new HttpClient();
+        private string email = "";
+        private string password = "";
 
 
         public MainWindow()
         {
             InitializeComponent();
-            
-
-            //CreateAccount("Ricardo","riic.andrade95@outlook.com", "12345");
-
+            RestoreAccount();
+            InitializeFirebase();
             Tabs = new ObservableCollection<TabItem>();
             TabListBox.ItemsSource = Tabs;
             this.DataContext = this;
             this.KeyDown += Window_KeyDown;
             this.Closing += MainWindow_Closing;
+
             // Inicializa o timer
             _musicTitleUpdateTimer = new DispatcherTimer();
             _musicTitleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _musicTitleUpdateTimer.Tick += MusicTitleUpdateTimer_Tick;
-            LoadSettings();
-            CleanUpdates();
-            LoadSidebarColor();
-            LoadPinneds();
-            LoadTabsClosed();
-            OpenStartPage();
 
             // Inicializa o timer de atualização de títulos
             _titleUpdateTimer = new DispatcherTimer();
@@ -96,10 +100,194 @@ namespace JupiterBrowser
             _titleUpdateTimer.Tick += async (s, e) => await UpdateTabTitlesAsync();
             _titleUpdateTimer.Start();
 
-            
+            // Chama o método de inicialização assíncrono
+            _ = InitializeAsync();
+        }
+        private async Task InitializeAsync()
+        {
+            await SyncOnStart();
+
+            LoadSettings();
+            CleanUpdates();
+            LoadSidebarColor();
+            LoadPinneds();
+            LoadTabsClosed();
+            OpenStartPage();
         }
 
-        
+        private void RestoreAccount()
+        {
+            if (File.Exists(loggedFile))
+            {
+                string json = File.ReadAllText(loggedFile);
+                Account account = JsonConvert.DeserializeObject<Account>(json);
+
+                if (account != null)
+                {
+                    this.email = account.Email;
+                    this.password = account.Password;
+                    ToastWindow.Show("Synchronizing browser.",6000);
+                }
+            }
+        }
+
+        public async Task<bool> AccountExistsAsync(string email, string password)
+        {
+            var accounts = await databaseClient.Child("users").OnceAsync<User>();
+
+            return accounts.Any(a => a.Object.Email == email && a.Object.Password == password);
+        }
+
+        private async Task<string> GetFirebaseTokenAsync()
+        {
+            // Este método deve retornar um token válido para autenticação
+            // Você precisará implementar a lógica para obter e gerenciar tokens
+            if (authClient.User != null)
+            {
+                return await authClient.User.GetIdTokenAsync();
+            }
+            return null;
+        }
+
+        private async void InitializeFirebase()
+        {
+            try
+            {
+                // Configuração do Firebase Auth
+                var config = new FirebaseAuthConfig
+                {
+                    ApiKey = ApiKey,
+                    AuthDomain = $"{ProjectId}.firebaseapp.com",
+                    Providers = new FirebaseAuthProvider[]
+                    {
+                        new EmailProvider()
+                    }
+                };
+
+                authClient = new FirebaseAuthClient(config);
+
+                // Configuração do Firebase Realtime Database
+                databaseClient = new FirebaseClient(
+                    DatabaseUrl,
+                    new FirebaseOptions { AuthTokenAsyncFactory = GetFirebaseTokenAsync }
+                );
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private async Task<List<string>> GetStorageFilesAsync(string email)
+        {
+            // Certifique-se de que o URL da API esteja correto
+            var uri = $"https://firebasestorage.googleapis.com/v0/b/jupiterbrowser-8f6b2.appspot.com/o?prefix={Uri.EscapeDataString(email)}/&delimiter=/";
+
+            var response = await client.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var firebaseResponse = JsonConvert.DeserializeObject<FirebaseStorageResponse>(responseContent);
+
+            return firebaseResponse?.Items?.Select(item => item.Name).ToList() ?? new List<string>();
+        }
+
+        private async Task SyncOnClose()
+        {
+            bool accountExists = await AccountExistsAsync(email, password);
+            if (accountExists)
+            {
+                string[] uploadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json" };
+                var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
+
+                foreach (var file in uploadFiles)
+                {
+                    try
+                    {
+                        await storage
+                            .Child(email)
+                            .Child(file)
+                            .DeleteAsync();
+                        Console.WriteLine($"Arquivo {file} na pasta {email} apagado com sucesso.");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Se o arquivo não existir, isso não é um problema, então podemos ignorar a exceção
+                        Console.WriteLine($"Aviso ao tentar apagar {file}: {ex.Message}");
+                    }
+                }
+
+                // Upload de arquivos locais
+                foreach (var file in uploadFiles)
+                {
+                    var filePath = Path.Combine(Environment.CurrentDirectory, file);
+                    if (File.Exists(filePath))
+                    {
+                        using (var fileStream = File.Open(filePath, FileMode.Open))
+                        {
+                            var task = storage
+                                .Child(email) // Usar email como nome da pasta
+                                .Child(file)  // Nome do arquivo no storage
+                                .PutAsync(fileStream);
+                            // Acompanhar progresso (opcional)
+                            task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
+                            await task;
+                        }
+                    }
+                }
+            }
+            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+        }
+
+        private async Task SyncOnStart()
+        {
+            bool accountExists = await AccountExistsAsync(email, password);
+            if (accountExists)
+            {
+                string[] downloadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json" };
+                var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
+
+                foreach (var file in downloadFiles)
+                {
+                    try
+                    {
+                        // Obter a referência do arquivo no Firebase Storage
+                        var fileReference = storage.Child(email).Child(file);
+
+                        // Caminho local para salvar o arquivo
+                        string localFilePath = Path.Combine(Environment.CurrentDirectory, file);
+
+                        // Download do arquivo
+                        var downloadTask = fileReference.GetDownloadUrlAsync();
+                        var url = await downloadTask;
+
+                        // Usar HttpClient para baixar o arquivo
+                        using (var httpClient = new HttpClient())
+                        {
+                            var fileBytes = await httpClient.GetByteArrayAsync(url);
+
+                            // Salvar o arquivo localmente, substituindo se já existir
+                            File.WriteAllBytes(localFilePath, fileBytes);
+
+                           
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Se o arquivo não existir no Storage ou houver outro erro, registre e continue
+                        Console.WriteLine($"Erro ao baixar {file}: {ex.Message}");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Conta não existe. Não foi possível sincronizar.");
+            }
+        }
+
+
 
         private void Account_Click(object sender, RoutedEventArgs e)
         {
@@ -364,9 +552,16 @@ namespace JupiterBrowser
             }
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            e.Cancel = true;
+
+            // Perform the asynchronous operation
+            
             SaveTabsBeforeClose();
+            await SyncOnClose();
+            e.Cancel = false;
+            this.Close();
         }
 
         private void LoadTabsClosed()
@@ -2499,7 +2694,21 @@ namespace JupiterBrowser
         public DateTime AccessedAt { get; set; }
     }
 
-    
+    class FirebaseStorageResponse
+    {
+        public List<FirebaseStorageItem> Items { get; set; }
+    }
+
+    class FirebaseStorageItem
+    {
+        public string Name { get; set; }
+    }
+
+    public class Account
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 
     public class TabItem
     {

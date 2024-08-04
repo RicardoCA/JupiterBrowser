@@ -284,7 +284,7 @@ namespace JupiterBrowser
                             LogoutButton.Visibility = Visibility.Visible;
                             loggedText.Visibility = Visibility.Visible;
                             SaveUserToFile(u);
-                            ToastWindow.Show("Login successful.");
+                            ToastWindow.Show("Login successful.\nRestart Jupiter Browser...");
                         }
                         else
                         {
