@@ -1,0 +1,102 @@
+﻿<Window x:Class="JupiterBrowser.AccountCreate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JupiterBrowser"
+        mc:Ignorable="d"
+        Title="AccountCreate" Height="450" Width="800"
+        Background="Black"
+        Foreground="White"
+        WindowStyle="None" 
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Topmost="True"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        
+
+        <!-- Create Account Section -->
+        <StackPanel Grid.Column="0" Margin="10" x:Name="RegisterSection" Visibility="Collapsed">
+            <Label Content="Register Account" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Margin="10"/>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                
+
+                <!-- Name -->
+                <Label Content="Name:" Foreground="White" Margin="10" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBox Name="NameTextBox" Margin="10" Grid.Row="0" Grid.Column="1" Width="200"/>
+
+                <!-- E-mail -->
+                <Label Content="E-mail:" Foreground="White" Margin="10" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBox Name="EmailTextBox" Margin="10" Grid.Row="1" Grid.Column="1" Width="200"/>
+
+                <!-- Password -->
+                <Label Content="Password:" Foreground="White" Margin="10" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <PasswordBox Name="PasswordBox" Margin="10" Grid.Row="2" Grid.Column="1" Width="200"/>
+            </Grid>
+
+            <!-- Create Account Button -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Click="Create_Click" Background="Transparent" Foreground="White" Name="CreateAccountButton" Content="Create Account" Width="100" Height="20" Margin="10"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Login Account Section -->
+        <StackPanel Grid.Column="1" Margin="10" x:Name="LoginSection" Visibility="Collapsed">
+            <Label Content="Login Account" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Margin="10"/>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- E-mail -->
+                <Label Content="E-mail:" Foreground="White" Margin="10" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBox Name="LoginEmailTextBox" Margin="10" Grid.Row="0" Grid.Column="1" Width="200"/>
+
+                <!-- Password -->
+                <Label Content="Password:" Foreground="White" Margin="10" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <PasswordBox Name="LoginPasswordBox" Margin="10" Grid.Row="1" Grid.Column="1" Width="200"/>
+            </Grid>
+
+            <!-- Login Button -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Click="Login_Click" Background="Transparent" Foreground="White" Name="LoginButton" Content="Login" Width="100" Height="20" Margin="10"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Close Button -->
+        <!-- StackPanel na linha 2 -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Margin="0">
+            <Button Click="Close_Click" Content="Close" Width="100" Height="20" Margin="10" Background="Transparent" Foreground="White"/>
+            <Button Click="Logout_Click" Content="Logout" Width="100" Height="20" Margin="10" Background="Transparent" Foreground="White" x:Name="LogoutButton" Visibility="Collapsed"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -27,6 +27,14 @@ using Microsoft.VisualBasic;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using System;
+using Firebase.Auth.Providers;
+using Firebase.Database;
+using Firebase.Auth;
+using FirebaseAdmin;
+using System.Text;
+using Google.Apis.Auth.OAuth2;
+using Firebase.Database.Query;
+
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
 namespace JupiterBrowser
@@ -54,9 +62,18 @@ namespace JupiterBrowser
 
         public int id = 1;
 
+
+
+        
+
+
         public MainWindow()
         {
             InitializeComponent();
+            
+
+            //CreateAccount("Ricardo","riic.andrade95@outlook.com", "12345");
+
             Tabs = new ObservableCollection<TabItem>();
             TabListBox.ItemsSource = Tabs;
             this.DataContext = this;
@@ -78,7 +95,22 @@ namespace JupiterBrowser
             _titleUpdateTimer.Interval = TimeSpan.FromSeconds(5);
             _titleUpdateTimer.Tick += async (s, e) => await UpdateTabTitlesAsync();
             _titleUpdateTimer.Start();
+
+            
         }
+
+        
+
+        private void Account_Click(object sender, RoutedEventArgs e)
+        {
+            AccountCreate accountCreate = new AccountCreate();
+            if(accountCreate.ShowDialog() == true)
+            {
+
+            }
+        }
+
+
 
         private void Anonymous_Click(object sender, RoutedEventArgs e)
         {
@@ -87,8 +119,8 @@ namespace JupiterBrowser
             anonymousWindow.Show();
         }
 
-
         
+
 
 
 
@@ -2466,6 +2498,8 @@ namespace JupiterBrowser
         public string Title { get; set; }
         public DateTime AccessedAt { get; set; }
     }
+
+    
 
     public class TabItem
     {
