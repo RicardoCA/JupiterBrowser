@@ -87,8 +87,8 @@ namespace JupiterBrowser
             anonymousWindow.Show();
         }
 
-        
 
+        
 
 
 
@@ -1995,7 +1995,8 @@ namespace JupiterBrowser
                     {
                         if(selectedTab.adBlock == true)
                         {
-                            await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+                             await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+                            
                         }
                     }
                     
