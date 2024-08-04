@@ -86,7 +86,10 @@ namespace JupiterBrowser
                     break;
                 case "Perplexity":
                     Perplexity.IsChecked = true;
-                    break;  
+                    break;
+                case "Morphic":
+                    Morphic.IsChecked = true;
+                    break;
                 default:
                     Google.IsChecked = true;
                     break;
@@ -172,6 +175,8 @@ namespace JupiterBrowser
                 return "Duckduckgo";
             if (Perplexity.IsChecked == true)
                 return "Perplexity";
+            if (Morphic.IsChecked == true)
+                return "Morphic";
 
             return "Google"; // Default
         }

@@ -57,6 +57,7 @@ namespace JupiterBrowser
                             "Bing" => "Bing",
                             "Duckduckgo" => "Duckduckgo",
                             "Perplexity" => "Perplexity",
+                            "Morphic" => "Morphic",
                             _ => "Google"
                         };
 
@@ -243,6 +244,10 @@ namespace JupiterBrowser
                             {
                                 url = $"https://www.perplexity.ai/search?q={url}";
                             }
+                            else if (searchEngine.Equals("Morphic"))
+                            {
+                                url = $"https://www.morphic.sh/search?q={url}";
+                            }
 
                         }
                         if(url.Contains("chatgpt "))
@@ -306,6 +311,10 @@ namespace JupiterBrowser
                     else if (searchEngine.Equals("Perplexity"))
                     {
                         url = $"https://www.perplexity.ai/search?q={url}";
+                    }
+                    else if (searchEngine.Equals("Morphic"))
+                    {
+                        url = $"https://www.morphic.sh/search?q={url}";
                     }
 
                 }

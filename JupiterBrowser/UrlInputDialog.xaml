@@ -1,7 +1,7 @@
 ﻿<Window x:Class="JupiterBrowser.UrlInputDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Enter URL or Search" Height="300" Width="800" WindowStartupLocation="CenterScreen"
+        Title="Enter URL or Search" Height="300" Width="750" WindowStartupLocation="CenterScreen"
         Background="Transparent"
         WindowStyle="None"
         ResizeMode="NoResize"

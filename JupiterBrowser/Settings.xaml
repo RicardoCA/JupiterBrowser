@@ -41,6 +41,7 @@
                 <RadioButton x:Name="Bing" Content="Bing" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
                 <RadioButton x:Name="Duckduckgo" Content="Duckduckgo" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
                 <RadioButton x:Name="Perplexity" Content="Perplexity" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
+                <RadioButton x:Name="Morphic" Content="Morphic" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
             </StackPanel>
             <Border x:Name="WhiteBarSettings" Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
             <TextBlock Text="Default Settings" Foreground="White" FontSize="24" Margin="5,0,0,0" />
