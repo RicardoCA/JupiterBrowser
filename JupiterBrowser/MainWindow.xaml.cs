@@ -196,6 +196,7 @@ namespace JupiterBrowser
 
         private async Task SyncOnClose()
         {
+            ToastWindow.Show("Synchronizing browser...");
             bool accountExists = await AccountExistsAsync(email, password);
             if (accountExists)
             {
