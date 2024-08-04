@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="account.png" />
     <None Remove="BackIcon.png" />
     <None Remove="card.png" />
     <None Remove="contact.png" />
@@ -53,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="account.png" />
     <Resource Include="BackIcon.png" />
     <Resource Include="card.png" />
     <Resource Include="contact.png" />
