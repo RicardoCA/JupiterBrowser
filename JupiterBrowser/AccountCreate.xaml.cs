@@ -136,6 +136,7 @@ namespace JupiterBrowser
                 LogoutButton.Visibility = Visibility.Collapsed;
                 loggedText.Visibility = Visibility.Collapsed;
                 ToastWindow.Show("You have logged out.");
+                Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
             }
         }
 

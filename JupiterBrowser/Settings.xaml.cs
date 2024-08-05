@@ -146,7 +146,8 @@ namespace JupiterBrowser
                     }
                 }
             }
-            ToastWindow.Show("Browser restored to factory default.\nRestart the Jupiter Browser.");
+            ToastWindow.Show("Browser restored to factory default.");
+            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
         }
 
         private void ApplyClick(object sender, RoutedEventArgs e)
