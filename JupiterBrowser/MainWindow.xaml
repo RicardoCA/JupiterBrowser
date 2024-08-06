@@ -345,13 +345,15 @@
                              AllowDrop="True"
                              MouseDoubleClick="TabListRename_Click"
                              />
-                    <Border x:Name="MiniPlayer" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+                    <Border MouseEnter="MiniPlayer_Enter" MouseLeave="MiniPlayer_Leave" x:Name="MiniPlayer" Visibility="Visible" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+                        
                         <StackPanel x:Name="StackMiniPlayer">
-                            <TextBlock Text="Mini Player" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock x:Name="MusicTitle" Text="Title" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                            <StackPanel Orientation="Horizontal">
+                            
+                            <TextBlock x:Name="PlayerTitle" Text="Mini Player" Visibility="Collapsed" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="MusicTitle" Visibility="Collapsed" Text="Title" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                                <Canvas MouseLeftButtonDown="MiniPlayer_Play_Click" Width="32" Height="37" Margin="0,0,5,0">
+                                <Canvas x:Name="MiniPlayerPlayBtn"  MouseLeftButtonDown="MiniPlayer_Play_Click" Width="32" Height="37" Margin="0,0,5,0">
                                     <Canvas.RenderTransform>
                                         <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
                                     </Canvas.RenderTransform>
@@ -393,7 +395,9 @@
                                 </Canvas>
 
                             </StackPanel>
+                            
                         </StackPanel>
+                        
                     </Border>
 
 

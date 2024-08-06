@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace JupiterBrowser
 {
@@ -27,8 +28,85 @@ namespace JupiterBrowser
         {
             InitializeComponent();
             LoadSettings();
+
+            //SetDefaultBrowser();
+            //TestOpenUrl();
         }
 
+        private void SetDefaultBrowser()
+        {
+            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string escapedExePath = exePath.Replace("\\", "\\\\");
+            string scriptContent = $@"
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser]
+@=""URL:JupiterBrowser Protocol""
+""URL Protocol""=""""
+""DefaultIcon""=""{escapedExePath},0""
+
+[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser\shell]
+
+[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser\shell\open]
+
+[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser\shell\open\command]
+@=""\""{escapedExePath}\"" \""%1\""""
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice]
+""Progid""=""JupiterBrowser""
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice]
+""Progid""=""JupiterBrowser""
+";
+
+            try
+            {
+                string scriptPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "register_jupiter_browser.reg");
+                File.WriteAllText(scriptPath, scriptContent);
+
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "regedit.exe",
+                    Arguments = $"/s \"{scriptPath}\"",
+                    Verb = "runas",
+                    UseShellExecute = true,
+                    CreateNoWindow = true
+                };
+
+                using (Process regProcess = Process.Start(psi))
+                {
+                    regProcess.WaitForExit();
+                    if (regProcess.ExitCode == 0)
+                    {
+                        MessageBox.Show("O JupiterBrowser foi definido como navegador padrão com sucesso.", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erro ao definir o JupiterBrowser como navegador padrão.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+
+                File.Delete(scriptPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocorreu um erro: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void TestOpenUrl()
+        {
+            string testUrl = "https://www.example.com";
+            try
+            {
+                Process.Start(new ProcessStartInfo(testUrl) { UseShellExecute = true });
+                MessageBox.Show($"Tentativa de abrir {testUrl}. Verifique se o JupiterBrowser foi aberto.", "Teste", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao abrir a URL: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void LoadSettings()
         {
             try

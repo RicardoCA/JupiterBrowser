@@ -565,6 +565,18 @@ namespace JupiterBrowser
             this.Close();
         }
 
+        private void MiniPlayer_Enter(object sender, MouseEventArgs e)
+        {
+            MusicTitle.Visibility = Visibility.Visible;
+            PlayerTitle.Visibility = Visibility.Visible;
+        }
+
+        private void MiniPlayer_Leave(object sender, MouseEventArgs e)
+        {
+            MusicTitle.Visibility = Visibility.Collapsed;
+            PlayerTitle.Visibility = Visibility.Collapsed;
+        }
+
         private void LoadTabsClosed()
         {
             if (start.Equals("Question"))
@@ -2414,6 +2426,14 @@ namespace JupiterBrowser
                         if(musicTitle is not null)
                         {
                             MusicTitle.Text = musicTitle;
+                            if(musicTitle.IndexOf(" - YouTube Music") != -1)
+                            {
+                                MiniPlayerPlayBtn.Visibility = Visibility.Collapsed;
+                            }
+                            else
+                            {
+                                MiniPlayerPlayBtn.Visibility = Visibility.Visible;
+                            }
                         }
                         
                         _musicTitleUpdateTimer.Start();
@@ -2683,6 +2703,11 @@ namespace JupiterBrowser
                 source = VisualTreeHelper.GetParent(source);
             }
             return source;
+        }
+
+        private void MiniPlayer_MouseLeave(object sender, MouseEventArgs e)
+        {
+
         }
     }
 
