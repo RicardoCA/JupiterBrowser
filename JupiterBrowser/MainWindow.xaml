@@ -345,7 +345,7 @@
                              AllowDrop="True"
                              MouseDoubleClick="TabListRename_Click"
                              />
-                    <Border MouseEnter="MiniPlayer_Enter" MouseLeave="MiniPlayer_Leave" x:Name="MiniPlayer" Visibility="Visible" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+                    <Border MouseEnter="MiniPlayer_Enter" MouseLeave="MiniPlayer_Leave" x:Name="MiniPlayer" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
                         
                         <StackPanel x:Name="StackMiniPlayer">
                             

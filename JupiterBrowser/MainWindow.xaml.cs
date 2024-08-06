@@ -101,7 +101,20 @@ namespace JupiterBrowser
             _titleUpdateTimer.Start();
 
             // Chama o método de inicialização assíncrono
-            _ = InitializeAsync();
+            if(email.Length > 0 && password.Length > 0)
+            {
+                _ = InitializeAsync();
+            }
+            else
+            {
+                LoadSettings();
+                CleanUpdates();
+                LoadSidebarColor();
+                LoadPinneds();
+                LoadTabsClosed();
+                OpenStartPage();
+            }
+            
         }
         private async Task InitializeAsync()
         {
@@ -196,10 +209,11 @@ namespace JupiterBrowser
 
         private async Task SyncOnClose()
         {
-            ToastWindow.Show("Synchronizing browser...");
+            
             bool accountExists = await AccountExistsAsync(email, password);
             if (accountExists)
             {
+                ToastWindow.Show("Synchronizing browser...");
                 string[] uploadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json" };
                 var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
 
