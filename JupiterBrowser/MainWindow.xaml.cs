@@ -43,7 +43,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.22";
+        private string VERSION = "0.23";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -1731,7 +1731,7 @@ namespace JupiterBrowser
                                                 // Insere o novo item na mesma posição
                                                 PinnedTabs.Insert(index, updatedItem);
                                                 SavePinneds();
-
+                                                ToastWindow.Show("Pinned protected.");
                                             }
                                         }
                                     }
@@ -1785,7 +1785,7 @@ namespace JupiterBrowser
                                         // Insere o novo item na mesma posição
                                         PinnedTabs.Insert(index, updatedItem);
                                         SavePinneds();
-
+                                        ToastWindow.Show("Pinned protected.");
                                     }
                                 }
                             }
