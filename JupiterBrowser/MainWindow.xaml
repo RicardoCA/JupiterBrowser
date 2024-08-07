@@ -299,9 +299,9 @@
                                     <Image Source="/RefreshIcon.png" Width="24" Height="24" Stretch="Uniform"/>
                                 </Button.Content>
                             </Button>
-                            <Button Margin="5" Width="40" Height="40" Click="SidebarToggle_Click" ToolTip="Hide Sidebar">
+                            <Button Click="adBlock_Click"  Margin="5" Width="40" Height="40" ToolTip="Enable/Disable native ad block">
                                 <Button.Content>
-                                    <Image Source="/FullscreenIcon.png" Width="24" Height="24" Stretch="Uniform"/>
+                                    <Image Source="/ShieldIcon.png" Width="24" Height="24" Stretch="Uniform"/>
                                 </Button.Content>
                             </Button>
                             
@@ -417,7 +417,7 @@
                                     Stretch="Uniform" />
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="1" Margin="80,10,0,10" Width="40" Height="40" Click="adBlock_Click" ToolTip="Enable/Disable native ad block">
+                <Button Click="WhatsApp_Click" Grid.Row="1" Margin="80,10,0,10" Width="40" Height="40" ToolTip="Whatsapp">
                     <Button.Content>
                         <Image Source="/ShieldIcon.png" Width="24" Height="24" Stretch="Uniform"/>
                     </Button.Content>

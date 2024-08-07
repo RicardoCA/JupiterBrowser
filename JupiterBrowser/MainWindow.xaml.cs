@@ -128,6 +128,21 @@ namespace JupiterBrowser
             OpenStartPage();
         }
 
+        private void WhatsApp_Click(object sender, RoutedEventArgs e)
+        {
+            AppWhatsapp appWhatsapp = new AppWhatsapp(this);
+            appWhatsapp.Show();
+        }
+
+        public void UpdateIcon(string newTitle)
+        {
+            // Lógica para atualizar o ícone com base no novo título
+            //this.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/newIcon.ico")); // Exemplo de atualização de ícone
+            this.Title = newTitle;
+        }
+
+
+
         private void RestoreAccount()
         {
             if (File.Exists(loggedFile))
@@ -1598,12 +1613,7 @@ namespace JupiterBrowser
             }
         }
 
-        private void SidebarToggle_Click(object sender, RoutedEventArgs e)
-        {
-            
-            ToastWindow.Show("Press Ctrl + S to show sidebar again :D");
-            SidebarToggle();
-        }
+        
 
         private void OpenBrowserMenu_Click(object sender, RoutedEventArgs e)
         {
