@@ -43,7 +43,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.23";
+        private string VERSION = "0.24";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -60,7 +60,10 @@ namespace JupiterBrowser
         private bool tabMenuIsOpen = false;
         private TabItem selectedTabItemContextMenu;
         private TabItem selectedPinnedItemContextMenu;
+        
         private AppPreview appWhatsapp;
+        private AppPreview appFacebook;
+        private AppPreview appInstagram;
 
         public int id = 1;
 
@@ -139,6 +142,42 @@ namespace JupiterBrowser
             {
                 appWhatsapp.Show();
             }
+        }
+
+        private void OpenFacebookApp()
+        {
+            if (appFacebook == null)
+            {
+                appFacebook = new AppPreview(this, "https://facebook.com");
+                appFacebook.Show();
+            }
+            else
+            {
+                appFacebook.Show();
+            }
+        }
+
+        private void OpenInstagramApp()
+        {
+            if (appInstagram == null)
+            {
+                appInstagram = new AppPreview(this, "https://instagram.com");
+                appInstagram.Show();
+            }
+            else
+            {
+                appInstagram.Show();
+            }
+        }
+
+        private void Instagram_Click(object sender, RoutedEventArgs e)
+        {
+            OpenInstagramApp();
+        }
+
+        private void Facebook_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFacebookApp();
         }
 
         private void WhatsApp_Click(object sender, RoutedEventArgs e)
@@ -1511,6 +1550,14 @@ namespace JupiterBrowser
             {
                 OpenWhatsappApp();
             }
+            else if (e.Key == Key.F && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                OpenFacebookApp();
+            }
+            else if (e.Key == Key.I && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                OpenInstagramApp();
+            }
             else if (e.Key == Key.W && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 CopyURL();   
@@ -1561,7 +1608,7 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp)");
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)",7000);
         }
 
         private void CopyURL()

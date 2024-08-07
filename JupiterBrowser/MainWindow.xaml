@@ -59,7 +59,10 @@
         </Style>
 
         <ContextMenu x:Name="AppsMenu" x:Key="AppsMenu">
+            <MenuItem Header="Facebook" Click="Facebook_Click"/>
+            <MenuItem Header="Instagram" Click="Instagram_Click"/>
             <MenuItem Header="Whatsapp" Click="WhatsApp_Click"/>
+            
         </ContextMenu>
 
 
