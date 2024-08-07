@@ -933,6 +933,15 @@ namespace JupiterBrowser
             }
         }
 
+        public static async Task<string> GetServerVersionAsync()
+        {
+            using (WebClient client = new WebClient())
+            {
+                string url = "https://drive.google.com/uc?export=download&id=1sz4dx76iHLJ7gTl9tezuGc27_rbUsR8j";
+                return (await client.DownloadStringTaskAsync(new Uri(url))).Trim();
+            }
+        }
+
         static string GetServerVersion()
         {
             // Requisita a versão disponível no servidor
@@ -1505,9 +1514,9 @@ namespace JupiterBrowser
             UpdateMiniPlayerVisibility();
         }
 
-        private void CheckForUpdates_Click(object sender, RoutedEventArgs e)
+        private async void CheckForUpdates_Click(object sender, RoutedEventArgs e)
         {
-            string serverVersion = GetServerVersion();
+            string serverVersion = await GetServerVersionAsync();
             if (!serverVersion.Equals(VERSION))
             {
                 Process.Start("Updater.exe");
