@@ -986,6 +986,7 @@ namespace JupiterBrowser
             {
                 newTab.TabName = tabName;
             }
+            
 
             TabListBox.SelectedItem = newTab;
             
@@ -1305,6 +1306,7 @@ namespace JupiterBrowser
            
 
                 newTab.WebView = webView;
+               
 
                 TabListBox.SelectedItem = newTab;
                 UpdateMiniPlayerVisibility();
@@ -2305,6 +2307,7 @@ namespace JupiterBrowser
                     }
                     tabItem.LogoUrl = faviconUrl;
                     tabItem.FullTabName = title;
+                    
                     if(url.IndexOf("http") != -1)
                     {
                         urlLabel.Text = url;
@@ -2671,6 +2674,44 @@ namespace JupiterBrowser
                         }
                         catch(Exception ex)
                         {
+                            if(droppedData.isProtected == false)
+                            {
+                                OpenNewTabWithUrl(droppedData.url);
+                                ToastWindow.Show("Opening tab.");
+                            }
+                            else
+                            {
+                                Vault vault = new Vault();
+                                if (vault.HasVaultExist())
+                                {
+                                    PromptWindow promptWindow = new PromptWindow("", "Password:");
+                                    if (promptWindow.ShowDialog() == true)
+                                    {
+                                        if (!string.IsNullOrEmpty(promptWindow.UserInput))
+                                        {
+                                            string decryptedPassword = vault.GetStoredPassword();
+                                            string password = promptWindow.UserInput;
+                                            if (password == decryptedPassword)
+                                            {
+                                                string currentName = droppedData.TabName;
+                                                string url = vault.Decrypt(droppedData.url);
+                                                ToastWindow.Show("Opening tab.");
+                                                OpenNewTabWithUrl(url, currentName);
+                                            }
+                                            else
+                                            {
+                                                ToastWindow.Show("Wrong password.");
+                                            }
+
+                                        }
+                                    }
+
+
+                                }
+
+                            }
+
+
                             return;
                         }
                     }
@@ -2700,6 +2741,28 @@ namespace JupiterBrowser
                         }
                         catch(Exception ex)
                         {
+                            droppedData.url = urlLabel.Text;
+
+                           
+
+                            bool exists = false;
+                            foreach (var tab in PinnedTabs)
+                            {
+                                if (tab.url == droppedData.url)
+                                {
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                            if (!exists)
+                            {
+                                PinnedTabs.Add(droppedData);
+                                ToastWindow.Show($"Pinned site: {droppedData.url}");
+                                SavePinneds();
+                                droppedData.WebView.Dispose();
+                                Tabs.Remove(droppedData);
+                            }
+                            
                             return;
                         }
                         
