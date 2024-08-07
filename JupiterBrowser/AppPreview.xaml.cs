@@ -19,14 +19,15 @@ namespace JupiterBrowser
     /// <summary>
     /// Lógica interna para AppWhatsapp.xaml
     /// </summary>
-    public partial class AppWhatsapp : Window
+    public partial class AppPreview : Window
     {
+        WebView2 webView = new WebView2();
         private MainWindow _mainWindow;
-        public AppWhatsapp(MainWindow mainWindow)
+        public AppPreview(MainWindow mainWindow, string url)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
-            start();
+            start(url);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -34,10 +35,18 @@ namespace JupiterBrowser
             this.Hide();
         }
 
-        public void start()
+        private void NewTab_Click(object sender, RoutedEventArgs e)
         {
-            var webView = new WebView2();
-            webView.Source = new System.Uri("https://web.whatsapp.com");
+            _mainWindow.OpenNewTabWithUrl(webView.Source?.ToString());
+            _mainWindow.UpdateIcon("Jupiter Browser");
+            this.Hide();
+            
+        }
+
+        public void start(string url)
+        {
+            
+            webView.Source = new System.Uri(url);
             webView.CoreWebView2InitializationCompleted += (s, e) =>
             {
                 webView.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;

@@ -60,7 +60,7 @@ namespace JupiterBrowser
         private bool tabMenuIsOpen = false;
         private TabItem selectedTabItemContextMenu;
         private TabItem selectedPinnedItemContextMenu;
-
+        private AppPreview appWhatsapp;
 
         public int id = 1;
 
@@ -128,10 +128,22 @@ namespace JupiterBrowser
             OpenStartPage();
         }
 
+        private void OpenWhatsappApp()
+        {
+            if (appWhatsapp == null)
+            {
+                appWhatsapp = new AppPreview(this, "https://web.whatsapp.com");
+                appWhatsapp.Show();
+            }
+            else
+            {
+                appWhatsapp.Show();
+            }
+        }
+
         private void WhatsApp_Click(object sender, RoutedEventArgs e)
         {
-            AppWhatsapp appWhatsapp = new AppWhatsapp(this);
-            appWhatsapp.Show();
+            OpenWhatsappApp();   
         }
 
         public void UpdateIcon(string newTitle)
@@ -139,6 +151,7 @@ namespace JupiterBrowser
             // Lógica para atualizar o ícone com base no novo título
             //this.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/newIcon.ico")); // Exemplo de atualização de ícone
             this.Title = newTitle;
+
         }
 
 
@@ -824,6 +837,17 @@ namespace JupiterBrowser
                 }
             }
 
+            var contextMenuApps = (ContextMenu)FindResource("AppsMenu");
+            contextMenuApps.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            foreach (var item in contextMenuApps.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+                    menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                }
+            }
+
         }
 
         private void ContactJupiter_Click(object sender, RoutedEventArgs e)
@@ -975,7 +999,7 @@ namespace JupiterBrowser
             Janela.Focus();
         }
         
-        private void OpenNewTabWithUrl(string url, string tabName = null)
+        public void OpenNewTabWithUrl(string url, string tabName = null)
         {
             var newTab = new TabItem { TabName = "New Tab " + id };
             newTab.adBlock = false;
@@ -1483,6 +1507,10 @@ namespace JupiterBrowser
             {
                 SidebarToggle();
             }
+            else if (e.Key == Key.W && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                OpenWhatsappApp();
+            }
             else if (e.Key == Key.W && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 CopyURL();   
@@ -1500,6 +1528,7 @@ namespace JupiterBrowser
                 AnonymousWindow anonymousWindow = new AnonymousWindow();
                 anonymousWindow.Show();
             }
+            
         }
 
         private void CloseTab()
@@ -1532,7 +1561,7 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)");
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp)");
         }
 
         private void CopyURL()
@@ -1613,7 +1642,13 @@ namespace JupiterBrowser
             }
         }
 
-        
+        private void Apps_Click(object sender, RoutedEventArgs e) {
+            Button button = sender as Button;
+            ContextMenu menu = this.FindResource("AppsMenu") as ContextMenu;
+            menu.PlacementTarget = button;
+            menu.IsOpen = true;
+            
+        }
 
         private void OpenBrowserMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -2080,6 +2115,17 @@ namespace JupiterBrowser
                     var contextMenuPins = (ContextMenu)FindResource("PinnedItemMenu");
                     contextMenuPins.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     foreach (var item in contextMenuPins.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                        {
+                            menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                            menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                        }
+                    }
+
+                    var contextMenuApps = (ContextMenu)FindResource("AppsMenu");
+                    contextMenuApps.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    foreach (var item in contextMenuApps.Items)
                     {
                         if (item is MenuItem menuItem)
                         {

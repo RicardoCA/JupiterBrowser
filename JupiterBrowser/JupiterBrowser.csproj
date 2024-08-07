@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="account.png" />
+    <None Remove="apps.png" />
     <None Remove="BackIcon.png" />
     <None Remove="card.png" />
     <None Remove="contact.png" />
@@ -56,6 +57,7 @@
 
   <ItemGroup>
     <Resource Include="account.png" />
+    <Resource Include="apps.png" />
     <Resource Include="BackIcon.png" />
     <Resource Include="card.png" />
     <Resource Include="contact.png" />

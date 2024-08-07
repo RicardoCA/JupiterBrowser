@@ -58,6 +58,10 @@
             </Setter>
         </Style>
 
+        <ContextMenu x:Name="AppsMenu" x:Key="AppsMenu">
+            <MenuItem Header="Whatsapp" Click="WhatsApp_Click"/>
+        </ContextMenu>
+
 
         <ContextMenu x:Key="BrowserMenu" x:Name="BrowserMenu">
             <MenuItem Header="Account" Click="Account_Click">
@@ -417,9 +421,9 @@
                                     Stretch="Uniform" />
                     </Button.Content>
                 </Button>
-                <Button Click="WhatsApp_Click" Grid.Row="1" Margin="80,10,0,10" Width="40" Height="40" ToolTip="Whatsapp">
+                <Button Click="Apps_Click" Grid.Row="1" Margin="80,10,0,10" Width="40" Height="40" ToolTip="Apps">
                     <Button.Content>
-                        <Image Source="/ShieldIcon.png" Width="24" Height="24" Stretch="Uniform"/>
+                        <Image Source="/apps.png" Width="24" Height="24" Stretch="Uniform"/>
                     </Button.Content>
                 </Button>
 
