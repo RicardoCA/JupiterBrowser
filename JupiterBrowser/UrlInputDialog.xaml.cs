@@ -149,7 +149,8 @@ namespace JupiterBrowser
         {
             if (UrlTextBox.Text.Contains(".com") || UrlTextBox.Text.Contains(".net") ||
                 UrlTextBox.Text.Contains(".org") || UrlTextBox.Text.Contains(".gov") ||
-                UrlTextBox.Text.Contains("calc:") || UrlTextBox.Text.Contains(".so"))
+                UrlTextBox.Text.Contains("calc:") || UrlTextBox.Text.Contains(".so") ||
+                    UrlTextBox.Text.Contains(".ai"))
             {
                 SearchIcon.Visibility = Visibility.Collapsed;
             }
@@ -217,7 +218,7 @@ namespace JupiterBrowser
 
             if (url.IndexOf("https://") == -1 && url.IndexOf("http://") == -1)
             {
-                if (url.IndexOf(".com") != -1 || url.IndexOf(".net") != -1 || url.IndexOf(".gov") != -1 || url.IndexOf(".org") != -1 || url.IndexOf(".so") != -1)
+                if (url.IndexOf(".com") != -1 || url.IndexOf(".net") != -1 || url.IndexOf(".gov") != -1 || url.IndexOf(".org") != -1 || url.IndexOf(".so") != -1 || url.IndexOf(".ai") != -1)
                 {
                     url = "https://" + url;
                 }
@@ -293,7 +294,7 @@ namespace JupiterBrowser
             }
             else
             {
-                if (url.IndexOf(".com") == -1 && url.IndexOf(".net") == -1 && url.IndexOf(".gov") == -1 && url.IndexOf(".org") == -1 && url.IndexOf(".so") == -1)
+                if (url.IndexOf(".com") == -1 && url.IndexOf(".net") == -1 && url.IndexOf(".gov") == -1 && url.IndexOf(".org") == -1 && url.IndexOf(".so") == -1 && url.IndexOf(".ai") == -1 )
                 {
                     if (searchEngine.Equals("Google"))
                     {
