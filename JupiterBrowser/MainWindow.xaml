@@ -352,6 +352,16 @@
                              AllowDrop="True"
                              MouseDoubleClick="TabListRename_Click"
                              />
+
+                    <Border MouseLeftButtonUp="ClickBannerAtt" x:Name="BannerAtt" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+                        <StackPanel x:Name="StackBannerAtt">
+
+                            <TextBlock x:Name="BannerAttTitle" Text="Update Availble" Visibility="Visible" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="BannerAttText" Visibility="Visible" Text="Click to Update" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    
                     <Border MouseEnter="MiniPlayer_Enter" MouseLeave="MiniPlayer_Leave" x:Name="MiniPlayer" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
                         
                         <StackPanel x:Name="StackMiniPlayer">

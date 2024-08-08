@@ -43,7 +43,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.24";
+        private string VERSION = "0.25";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -53,6 +53,7 @@ namespace JupiterBrowser
         private DispatcherTimer _musicTitleUpdateTimer;
         private string prompt = "";
         private DispatcherTimer _titleUpdateTimer;
+        private DispatcherTimer _updateCheckerTimer;
         
         private string languageT = "en";
         private string start = "Question";
@@ -103,8 +104,14 @@ namespace JupiterBrowser
             _titleUpdateTimer.Tick += async (s, e) => await UpdateTabTitlesAsync();
             _titleUpdateTimer.Start();
 
+            _updateCheckerTimer = new DispatcherTimer();
+            _updateCheckerTimer.Interval = TimeSpan.FromMinutes(30);
+            _updateCheckerTimer.Tick += CheckForUpdatesTimer_Tick;
+            _updateCheckerTimer.Start();
+
+
             // Chama o método de inicialização assíncrono
-            if(email.Length > 0 && password.Length > 0)
+            if (email.Length > 0 && password.Length > 0)
             {
                 _ = InitializeAsync();
             }
@@ -129,6 +136,27 @@ namespace JupiterBrowser
             LoadPinneds();
             LoadTabsClosed();
             OpenStartPage();
+        }
+
+        private void CheckForUpdatesTimer_Tick(object sender, EventArgs e)
+        {
+            CheckForUpdatesTimer();
+        }
+
+        private async void CheckForUpdatesTimer()
+        {
+            string serverVersion = await GetServerVersionAsync();
+            if (!serverVersion.Equals(VERSION))
+            {
+                BannerAtt.Visibility = Visibility.Visible;
+                _updateCheckerTimer.Stop();
+            }
+            
+        }
+
+        private void ClickBannerAtt(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("Updater.exe");
         }
 
         private void OpenWhatsappApp()
@@ -1513,6 +1541,8 @@ namespace JupiterBrowser
             
             UpdateMiniPlayerVisibility();
         }
+
+        
 
         private async void CheckForUpdates_Click(object sender, RoutedEventArgs e)
         {

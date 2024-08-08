@@ -24,7 +24,7 @@ namespace Updater
     /// </summary>
     public partial class MainWindow : Window
     {
-        string currentVersion = "0.24"; // A versão atual da aplicação
+        string currentVersion = "0.25"; // A versão atual da aplicação
         
 
         public MainWindow()
