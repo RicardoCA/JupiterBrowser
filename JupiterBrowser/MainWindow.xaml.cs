@@ -154,6 +154,11 @@ namespace JupiterBrowser
             
         }
 
+        private void ClickBannerWhats(object sender, MouseButtonEventArgs e)
+        {
+            OpenWhatsappApp();
+        }
+
         private void ClickBannerAtt(object sender, MouseButtonEventArgs e)
         {
             Process.Start("Updater.exe");
@@ -218,6 +223,28 @@ namespace JupiterBrowser
             // Lógica para atualizar o ícone com base no novo título
             //this.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/newIcon.ico")); // Exemplo de atualização de ícone
             this.Title = newTitle;
+            if(newTitle.IndexOf("(") != -1)
+            {
+                if(newTitle.IndexOf(")") != -1)
+                {
+                    if(newTitle.IndexOf("WhatsApp") != -1)
+                    {
+                        BannerWhats.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        BannerWhats.Visibility = Visibility.Collapsed;
+                    }
+                }
+                else
+                {
+                    BannerWhats.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                BannerWhats.Visibility = Visibility.Collapsed;
+            }
 
         }
 
