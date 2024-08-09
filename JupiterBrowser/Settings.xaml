@@ -47,7 +47,7 @@
             <TextBlock Text="Mini Window" Foreground="White" FontSize="24" Margin="5,0,0,0" />
             <TextBlock Text="Select your preference, whether you want to open new tabs in mini window or in new tab" Foreground="White" FontSize="12" Margin="5,0,0,0"  />
             <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
-                <RadioButton x:Name="MiniWindowTrue" Content="Enabled" GroupName="MiniWindow" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
+                <RadioButton x:Name="MiniWindowTrue" Content="Enabled (default)" GroupName="MiniWindow" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
                 <RadioButton x:Name="MiniWindowFalse" Content="Disabled" GroupName="MiniWindow" Foreground="White" Margin="5,5,0,0"/>
                 
             </StackPanel>
