@@ -43,7 +43,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.25";
+        private string VERSION = "0.26";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -65,6 +65,9 @@ namespace JupiterBrowser
         private AppPreview appWhatsapp;
         private AppPreview appFacebook;
         private AppPreview appInstagram;
+        private AppPreview appX;
+        private AppPreview appYoutube;
+        private AppPreview appTiktok;
 
         public int id = 1;
 
@@ -138,6 +141,8 @@ namespace JupiterBrowser
             OpenStartPage();
         }
 
+        
+
         private void CheckForUpdatesTimer_Tick(object sender, EventArgs e)
         {
             CheckForUpdatesTimer();
@@ -162,6 +167,61 @@ namespace JupiterBrowser
         private void ClickBannerAtt(object sender, MouseButtonEventArgs e)
         {
             Process.Start("Updater.exe");
+        }
+
+
+        private void X_Click(object sender, RoutedEventArgs e)
+        {
+            OpenXApp();
+        }
+
+        private void TikTok_Click(object sender, RoutedEventArgs e)
+        {
+            OpenTiktokApp();
+        }
+
+        private void Youtube_Click(object sender, RoutedEventArgs e)
+        {
+            OpenYoutubeApp();
+        }
+
+        private void OpenXApp()
+        {
+            if (appX == null)
+            {
+                appX = new AppPreview(this, "https://x.com");
+                appX.Show();
+            }
+            else
+            {
+                appX.Show();
+            }
+        }
+
+        private void OpenTiktokApp()
+        {
+            if (appTiktok == null)
+            {
+                appTiktok = new AppPreview(this, "https://tiktok.com");
+                appTiktok.Show();
+            }
+            else
+            {
+                appTiktok.Show();
+            }
+        }
+
+        private void OpenYoutubeApp()
+        {
+            if (appYoutube == null)
+            {
+                appYoutube = new AppPreview(this, "https://youtube.com");
+                appYoutube.Show();
+            }
+            else
+            {
+                appYoutube.Show();
+            }
         }
 
         private void OpenWhatsappApp()
@@ -1592,7 +1652,11 @@ namespace JupiterBrowser
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.T && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            if (e.Key == Key.T && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                OpenTiktokApp();
+            }
+            else if (e.Key == Key.T && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 OpenNewTab();
             }
@@ -1619,6 +1683,15 @@ namespace JupiterBrowser
             else if (e.Key == Key.F && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
             {
                 OpenFacebookApp();
+            }
+            
+            else if (e.Key == Key.X && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                OpenXApp();
+            }
+            else if (e.Key == Key.Y && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                OpenYoutubeApp();
             }
             else if (e.Key == Key.I && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
             {
@@ -1674,7 +1747,7 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)",7000);
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)\nCtrl + Shift + Y(open youtube app)\nCtrl + Shift + T(open tiktok app)\nCtrl + Shift + X(open X app) ",7000);
         }
 
         private void CopyURL()

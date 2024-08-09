@@ -57,6 +57,12 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice]
 ""Progid""=""JupiterBrowser""
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\DefaultIcon]
+@=""{escapedExePath},0""
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\DefaultIcon]
+@=""{escapedExePath},0""
 ";
 
             try
@@ -93,7 +99,6 @@ Windows Registry Editor Version 5.00
                 MessageBox.Show($"Ocorreu um erro: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         public void TestOpenUrl()
         {
             string testUrl = "https://www.example.com";

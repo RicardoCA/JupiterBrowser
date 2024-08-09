@@ -61,8 +61,10 @@
         <ContextMenu x:Name="AppsMenu" x:Key="AppsMenu">
             <MenuItem Header="Facebook" Click="Facebook_Click"/>
             <MenuItem Header="Instagram" Click="Instagram_Click"/>
+            <MenuItem Header="TikTok" Click="TikTok_Click" />
             <MenuItem Header="Whatsapp" Click="WhatsApp_Click"/>
-            
+            <MenuItem Header="X" Click="X_Click" />
+            <MenuItem Header="YouTube" Click="Youtube_Click" />
         </ContextMenu>
 
 
