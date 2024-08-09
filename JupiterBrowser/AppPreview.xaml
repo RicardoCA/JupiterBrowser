@@ -25,6 +25,6 @@
         </Border>
 
         <Button Background="Black" Foreground="White" Content="Close" Width="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" Grid.Column="1" Click="CloseButton_Click"/>
-        <Button Background="Black" Foreground="White" Content="New Tab" Width="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,70,0,0" Grid.Column="1" Click="NewTab_Click"/>
+        <Button Background="Black" Foreground="White" Content="Expand" Width="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,70,0,0" Grid.Column="1" Click="NewTab_Click"/>
     </Grid>
 </Window>
