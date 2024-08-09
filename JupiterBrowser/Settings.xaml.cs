@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using Newtonsoft.Json;
 using System.IO;
-using Newtonsoft.Json;
-using System.Diagnostics;
+using System.Windows;
 
 namespace JupiterBrowser
 {
@@ -22,18 +9,18 @@ namespace JupiterBrowser
     /// </summary>
     public partial class Settings : Window
     {
-        private string[] restaureFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json","account.json", "closedtabs.json" };
+        private string[] restaureFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "account.json", "closedtabs.json" };
         private const string SettingsFilePath = "settings.json";
         public Settings()
         {
             InitializeComponent();
             LoadSettings();
 
-            
+
         }
 
-        
-       
+
+
         private void LoadSettings()
         {
             try
@@ -164,7 +151,7 @@ namespace JupiterBrowser
                     catch (Exception ex)
                     {
                         ToastWindow.Show($"Erro ao deletar o arquivo {file}: {ex.Message}");
-                        
+
                     }
                 }
             }
@@ -186,7 +173,7 @@ namespace JupiterBrowser
             ToastWindow.Show("Settings have been applied.");
 
 
-            
+
         }
 
         private string GetMiniWindow()
@@ -268,7 +255,7 @@ namespace JupiterBrowser
         public string PreviousNavigation { get; set; }
 
         public string MiniWindow { get; set; }
-        
+
         public string SearchEngine { get; set; }
     }
 }

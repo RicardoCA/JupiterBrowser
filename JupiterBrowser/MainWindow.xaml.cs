@@ -1,41 +1,26 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.Wpf;
-using System.IO;
-using Xceed.Wpf.Toolkit;
-using System.Net.Http;
-using System.Windows.Navigation;
-using MessageBox = System.Windows.MessageBox;
-using System.Windows.Media;
-using WpfButton = System.Windows.Controls.Button;
-using System.Diagnostics;
-using System.Net;
-using System.Security.Policy;
-using Newtonsoft.Json;
-using System.Windows.Controls.Primitives;
-using Newtonsoft.Json.Serialization;
-using System.Globalization;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Animation;
-using Microsoft.VisualBasic;
-using System.ComponentModel;
-using System.Collections.Specialized;
-using System;
+﻿using Firebase.Auth;
 using Firebase.Auth.Providers;
 using Firebase.Database;
-using Firebase.Auth;
-using FirebaseAdmin;
-using System.Text;
-using Google.Apis.Auth.OAuth2;
-using Firebase.Database.Query;
 using Firebase.Storage;
-using System.Net.Http.Json;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using MessageBox = System.Windows.MessageBox;
 
 //using Wpf.Ui.Controls; // Para as cores do WPF
 
@@ -54,7 +39,7 @@ namespace JupiterBrowser
         private string prompt = "";
         private DispatcherTimer _titleUpdateTimer;
         private DispatcherTimer _updateCheckerTimer;
-        
+
         private string languageT = "en";
         private string start = "Question";
         private string miniWindow = "MiniWindowTrue";
@@ -62,7 +47,7 @@ namespace JupiterBrowser
         private bool tabMenuIsOpen = false;
         private TabItem selectedTabItemContextMenu;
         private TabItem selectedPinnedItemContextMenu;
-        
+
         private AppPreview appWhatsapp;
         private AppPreview appFacebook;
         private AppPreview appInstagram;
@@ -118,6 +103,7 @@ namespace JupiterBrowser
             if (email.Length > 0 && password.Length > 0)
             {
                 _ = InitializeAsync();
+                CheckForUpdatesTimer();
             }
             else
             {
@@ -127,8 +113,9 @@ namespace JupiterBrowser
                 LoadPinneds();
                 LoadTabsClosed();
                 OpenStartPage();
+                CheckForUpdatesTimer();
             }
-            
+
         }
         private async Task InitializeAsync()
         {
@@ -142,7 +129,7 @@ namespace JupiterBrowser
             OpenStartPage();
         }
 
-        
+
 
         private void CheckForUpdatesTimer_Tick(object sender, EventArgs e)
         {
@@ -157,7 +144,7 @@ namespace JupiterBrowser
                 BannerAtt.Visibility = Visibility.Visible;
                 _updateCheckerTimer.Stop();
             }
-            
+
         }
 
         private void ClickBannerWhats(object sender, MouseButtonEventArgs e)
@@ -276,7 +263,7 @@ namespace JupiterBrowser
 
         private void WhatsApp_Click(object sender, RoutedEventArgs e)
         {
-            OpenWhatsappApp();   
+            OpenWhatsappApp();
         }
 
         public void UpdateIcon(string newTitle)
@@ -284,11 +271,11 @@ namespace JupiterBrowser
             // Lógica para atualizar o ícone com base no novo título
             //this.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/newIcon.ico")); // Exemplo de atualização de ícone
             this.Title = newTitle;
-            if(newTitle.IndexOf("(") != -1)
+            if (newTitle.IndexOf("(") != -1)
             {
-                if(newTitle.IndexOf(")") != -1)
+                if (newTitle.IndexOf(")") != -1)
                 {
-                    if(newTitle.IndexOf("WhatsApp") != -1)
+                    if (newTitle.IndexOf("WhatsApp") != -1)
                     {
                         BannerWhats.Visibility = Visibility.Visible;
                     }
@@ -322,7 +309,7 @@ namespace JupiterBrowser
                 {
                     this.email = account.Email;
                     this.password = account.Password;
-                    ToastWindow.Show("Synchronizing browser.",6000);
+                    ToastWindow.Show("Synchronizing browser.", 6000);
                 }
             }
         }
@@ -392,7 +379,7 @@ namespace JupiterBrowser
 
         private async Task SyncOnClose()
         {
-            
+
             bool accountExists = await AccountExistsAsync(email, password);
             if (accountExists)
             {
@@ -469,7 +456,7 @@ namespace JupiterBrowser
                             // Salvar o arquivo localmente, substituindo se já existir
                             File.WriteAllBytes(localFilePath, fileBytes);
 
-                           
+
                         }
                     }
                     catch (Exception ex)
@@ -490,7 +477,7 @@ namespace JupiterBrowser
         private void Account_Click(object sender, RoutedEventArgs e)
         {
             AccountCreate accountCreate = new AccountCreate();
-            if(accountCreate.ShowDialog() == true)
+            if (accountCreate.ShowDialog() == true)
             {
 
             }
@@ -505,7 +492,7 @@ namespace JupiterBrowser
             anonymousWindow.Show();
         }
 
-        
+
 
 
 
@@ -555,11 +542,11 @@ namespace JupiterBrowser
 
         private void TabMenuItem_Translate(object sender, RoutedEventArgs e)
         {
-            
+
             if (selectedTabItemContextMenu != null)
             {
                 string currentUrl = selectedTabItemContextMenu.WebView.Source.ToString();
-                string translatedUrl = "https://translate.google.com/translate?sl=auto&tl="+languageT+"&u="+currentUrl;
+                string translatedUrl = "https://translate.google.com/translate?sl=auto&tl=" + languageT + "&u=" + currentUrl;
                 selectedTabItemContextMenu.WebView.Source = new Uri(translatedUrl);
             }
         }
@@ -572,9 +559,9 @@ namespace JupiterBrowser
                 // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
                 string currentName = clickedItem.TabName;
                 PromptWindow promptWindow = new PromptWindow(currentName, "Rename Tab:");
-                if(promptWindow.ShowDialog() == true)
+                if (promptWindow.ShowDialog() == true)
                 {
-                    if(promptWindow.UserInput.Length > 0)
+                    if (promptWindow.UserInput.Length > 0)
                     {
                         string newName = promptWindow.UserInput;
                         // Atualiza o nome da guia se o novo nome não for nulo ou vazio
@@ -589,13 +576,13 @@ namespace JupiterBrowser
                     {
                         clickedItem.isRenamed = false;
                     }
-                    
-                    
 
-                    
+
+
+
                 }
 
-                
+
             }
         }
         private TabItem GetClickedTabItem(MouseButtonEventArgs e)
@@ -618,7 +605,7 @@ namespace JupiterBrowser
         private async Task UpdateTabTitlesAsync()
         {
 
-            if(tabMenuIsOpen == false)
+            if (tabMenuIsOpen == false)
             {
                 try
                 {
@@ -642,12 +629,12 @@ namespace JupiterBrowser
 
                                 if (!string.IsNullOrEmpty(title) && title != tab.FullTabName)
                                 {
-                                    if(tab.isRenamed == false)
+                                    if (tab.isRenamed == false)
                                     {
                                         tab.FullTabName = title;
                                         tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
                                     }
-                                    
+
                                 }
                             }
                             catch (Exception ex)
@@ -688,7 +675,7 @@ namespace JupiterBrowser
             {
                 ToastWindow.Show("Select a tab for this.");
             }
-            
+
         }
 
         private void ColorPicker_OnColorsSelected(SiteTheme siteTheme)
@@ -748,10 +735,10 @@ namespace JupiterBrowser
         }
 
 
-        private void JupiterCard_Click(object sender,  RoutedEventArgs e)
+        private void JupiterCard_Click(object sender, RoutedEventArgs e)
         {
             JupiterCard jupiterCard = new JupiterCard();
-            if(jupiterCard.ShowDialog() == true)
+            if (jupiterCard.ShowDialog() == true)
             {
 
             }
@@ -762,7 +749,7 @@ namespace JupiterBrowser
             e.Cancel = true;
 
             // Perform the asynchronous operation
-            
+
             SaveTabsBeforeClose();
             await SyncOnClose();
             e.Cancel = false;
@@ -854,8 +841,8 @@ namespace JupiterBrowser
                     }
                 }
             }
-            
-            
+
+
         }
 
         private void SaveTabsBeforeClose()
@@ -879,7 +866,7 @@ namespace JupiterBrowser
                         {
                             try
                             {
-                               
+
                                 var JsonFilePath = "closedtabs.json";
                                 string jsonContent = JsonConvert.SerializeObject(Tabs, Formatting.Indented);
                                 File.WriteAllText(JsonFilePath, jsonContent);
@@ -888,17 +875,17 @@ namespace JupiterBrowser
                             {
                                 // Lida com o erro de IO ao salvar o arquivo
                                 ToastWindow.Show("Error: " + ex.Message);
-                                
+
                             }
 
                         }
-                        
+
                     }
                 }
             }
         }
 
-        
+
 
         private void LoadPinneds()
         {
@@ -919,7 +906,7 @@ namespace JupiterBrowser
                             // Verifica se o TabName já existe na coleção PinnedTabs
                             if (!PinnedTabs.Any(t => t.TabName == tab.TabName))
                             {
-                                
+
                                 PinnedTabs.Add(tab);
                             }
                         }
@@ -940,10 +927,10 @@ namespace JupiterBrowser
             }
         }
 
-        
-    
 
-    private void SavePinneds()
+
+
+        private void SavePinneds()
         {
             try
             {
@@ -959,7 +946,7 @@ namespace JupiterBrowser
 
         private void LoadSidebarColor()
         {
-          
+
 
             BackgroundPersist backgroundPersist = new BackgroundPersist();
             string color = backgroundPersist.GetColor();
@@ -1021,7 +1008,7 @@ namespace JupiterBrowser
         {
             if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
             {
-                if(selectedTab.adBlock == false)
+                if (selectedTab.adBlock == false)
                 {
                     selectedTab.adBlock = true;
                     ToastWindow.Show("Native AdBlock enabled.");
@@ -1078,12 +1065,12 @@ namespace JupiterBrowser
 
         private void OpenStartPage()
         {
-            if(TabListBox.Items.Count == 0)
+            if (TabListBox.Items.Count == 0)
             {
                 string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
                 OpenNewTabWithUrl(htmlFilePath);
             }
-            
+
         }
 
         private async void MusicTitleUpdateTimer_Tick(object sender, EventArgs e)
@@ -1105,7 +1092,7 @@ namespace JupiterBrowser
                         break;
                     }
                 }
-                if(existent == false)
+                if (existent == false)
                 {
                     if (selectedTab.isProtected == false)
                     {
@@ -1134,16 +1121,16 @@ namespace JupiterBrowser
                             }
                         }
                     }
-                    
+
                 }
                 else
                 {
 
                 }
-                
+
             }
             UpdateMiniPlayerVisibility();
-            
+
         }
 
         private void SelectTab(TabItem tab)
@@ -1169,7 +1156,7 @@ namespace JupiterBrowser
             // Define o foco para outro controle ou janela
             Janela.Focus();
         }
-        
+
         public void OpenNewTabWithUrl(string url, string tabName = null)
         {
             var newTab = new TabItem { TabName = "New Tab " + id };
@@ -1191,15 +1178,16 @@ namespace JupiterBrowser
             webView.NavigationCompleted += WebView_NavigationCompleted;
             webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
             webView.NavigationStarting += WebView2_NavigationStarting;
+
             newTab.WebView = webView;
-            if(tabName != null)
+            if (tabName != null)
             {
                 newTab.TabName = tabName;
             }
-            
+
 
             TabListBox.SelectedItem = newTab;
-            
+
             UpdateMiniPlayerVisibility();
         }
 
@@ -1247,7 +1235,7 @@ namespace JupiterBrowser
             string newUrl = e.Uri;
 
             // Abre uma nova aba com a URL
-            
+
             if (miniWindow.Equals("MiniWindowFalse"))
             {
                 OpenNewTabWithUrl(newUrl);
@@ -1257,7 +1245,7 @@ namespace JupiterBrowser
                 AppPreview appPreview = new AppPreview(this, newUrl, true);
                 appPreview.Show();
             }
-            
+
         }
 
         private async void Pin()
@@ -1270,10 +1258,10 @@ namespace JupiterBrowser
 
             // Suponha que você tenha um método para obter a URL atual do WebView
             var (currentUrl, currentLogo) = GetCurrentWebViewUrl();
-            if(string.IsNullOrEmpty(currentLogo) || currentLogo == "html.png")
+            if (string.IsNullOrEmpty(currentLogo) || currentLogo == "html.png")
             {
                 currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
-                if(currentUrl.IndexOf("openai.com") != -1 || currentUrl.IndexOf("chatgpt.com") != -1)
+                if (currentUrl.IndexOf("openai.com") != -1 || currentUrl.IndexOf("chatgpt.com") != -1)
                 {
                     currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chatgpt.png");
                 }
@@ -1283,7 +1271,7 @@ namespace JupiterBrowser
                 }
             }
 
-            
+
 
             // Verifique se o item já está nos PinnedTabs
             var existingTab = PinnedTabs.FirstOrDefault(tab => tab.url == currentUrl);
@@ -1308,9 +1296,9 @@ namespace JupiterBrowser
                         url = currentUrl
                     });
                     ToastWindow.Show("Pinned site: " + currentUrl);
-                    
+
                 }
-                    
+
             }
             SavePinneds();
         }
@@ -1466,7 +1454,7 @@ namespace JupiterBrowser
             OpenHistoric();
         }
 
-        
+
 
 
         private void OpenNewTab()
@@ -1479,7 +1467,8 @@ namespace JupiterBrowser
                 Tabs.Add(newTab);
                 id += 1;
 
-                if(Tabs.Count > 5) {
+                if (Tabs.Count > 5)
+                {
                     clearBtn.Visibility = Visibility.Visible;
                 }
                 else
@@ -1488,19 +1477,20 @@ namespace JupiterBrowser
                 }
 
                 var webView = new WebView2();
-                if(urlInputDialog.EnteredUrl.ToString().Equals("startpage"))
+                if (urlInputDialog.EnteredUrl.ToString().Equals("startpage"))
                 {
                     string htmlFilePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "startpage.html");
                     webView.Source = new System.Uri(htmlFilePath);
                     webView.NavigationCompleted += WebView_NavigationCompleted;
                     webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                     webView.NavigationStarting += WebView2_NavigationStarting;
-                    
+
+
                 }
                 else
                 {
                     string url = urlInputDialog.EnteredUrl;
-                    if(url.Contains("chatgpt "))
+                    if (url.Contains("chatgpt "))
                     {
                         prompt = url.Split("chatgpt ")[1];
 
@@ -1508,7 +1498,8 @@ namespace JupiterBrowser
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                         webView.NavigationStarting += WebView2_NavigationStarting;
-                        
+
+
                     }
                     else
                     {
@@ -1516,17 +1507,18 @@ namespace JupiterBrowser
                         webView.NavigationCompleted += WebView_NavigationCompleted;
                         webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
                         webView.NavigationStarting += WebView2_NavigationStarting;
-                        
-                    }
-                    
-                }
-                
-                
 
-           
+
+                    }
+
+                }
+
+
+
+
 
                 newTab.WebView = webView;
-               
+
 
                 TabListBox.SelectedItem = newTab;
                 UpdateMiniPlayerVisibility();
@@ -1599,13 +1591,13 @@ namespace JupiterBrowser
                     {
                         urlInputDialog = new UrlInputDialog(url);
                     }
-                    
-                    
+
+
                     if (urlInputDialog.ShowDialog() == true)
                     {
                         // Verifica se há uma guia selecionada
                         string newurl = urlInputDialog.EnteredUrl;
-                        if(newurl.Contains("chatgpt "))
+                        if (newurl.Contains("chatgpt "))
                         {
                             prompt = newurl.Split("chatgpt ")[1];
 
@@ -1617,7 +1609,7 @@ namespace JupiterBrowser
                         {
                             selectedTab.WebView.Source = new System.Uri(urlInputDialog.EnteredUrl);
                         }
-                        
+
                     }
 
 
@@ -1643,11 +1635,11 @@ namespace JupiterBrowser
             }
 
 
-            
+
             UpdateMiniPlayerVisibility();
         }
 
-        
+
 
         private async void CheckForUpdates_Click(object sender, RoutedEventArgs e)
         {
@@ -1660,7 +1652,7 @@ namespace JupiterBrowser
             {
                 ToastWindow.Show("You already have the latest version.");
             }
-            
+
         }
 
         private void NewTabButton_Click(object sender, RoutedEventArgs e)
@@ -1678,11 +1670,11 @@ namespace JupiterBrowser
             {
                 OpenNewTab();
             }
-            else if(e.Key == Key.L && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            else if (e.Key == Key.L && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 EditTabUrl();
             }
-            else if(e.Key == Key.H && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            else if (e.Key == Key.H && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 OpenHistoric();
             }
@@ -1690,7 +1682,7 @@ namespace JupiterBrowser
             {
                 Pin();
             }
-            else if(e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            else if (e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 SidebarToggle();
             }
@@ -1702,7 +1694,7 @@ namespace JupiterBrowser
             {
                 OpenFacebookApp();
             }
-            
+
             else if (e.Key == Key.X && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
             {
                 OpenXApp();
@@ -1717,13 +1709,13 @@ namespace JupiterBrowser
             }
             else if (e.Key == Key.W && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                CopyURL();   
+                CopyURL();
             }
-            else if(e.Key == Key.J && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            else if (e.Key == Key.J && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 Downloads();
             }
-            else if(e.Key == Key.F4 && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            else if (e.Key == Key.F4 && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 CloseTab();
             }
@@ -1732,7 +1724,7 @@ namespace JupiterBrowser
                 AnonymousWindow anonymousWindow = new AnonymousWindow();
                 anonymousWindow.Show();
             }
-            
+
         }
 
         private void CloseTab()
@@ -1765,7 +1757,7 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)\nCtrl + Shift + Y(open youtube app)\nCtrl + Shift + T(open tiktok app)\nCtrl + Shift + X(open X app) ",7000);
+            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)\nCtrl + Shift + Y(open youtube app)\nCtrl + Shift + T(open tiktok app)\nCtrl + Shift + X(open X app) ", 7000);
         }
 
         private void CopyURL()
@@ -1773,7 +1765,7 @@ namespace JupiterBrowser
             if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
             {
                 string url = selectedTab.WebView.Source.ToString();
-                if(url.IndexOf("http") != -1)
+                if (url.IndexOf("http") != -1)
                 {
                     Clipboard.SetText(url);
                     ToastWindow.Show("URL copied: " + url);
@@ -1782,7 +1774,7 @@ namespace JupiterBrowser
                 {
                     ToastWindow.Show("You cannot be on a file or startpage.");
                 }
-                
+
             }
             else
             {
@@ -1796,9 +1788,9 @@ namespace JupiterBrowser
             Grid.SetColumn(ContentBorder, 1);
             ContentBorder.Margin = new Thickness(10);
             ContentBorder.CornerRadius = new CornerRadius(10);
-            
+
             Sidebar.Visibility = Visibility.Visible;
-            
+
         }
 
         private void HideSideBar()
@@ -1809,7 +1801,7 @@ namespace JupiterBrowser
             ContentBorder.Margin = new Thickness(0);
             ContentBorder.CornerRadius = new CornerRadius(0);
             Sidebar.Visibility = Visibility.Collapsed;
-            
+
         }
 
         private void Window_MouseEnter(object sender, MouseEventArgs e)
@@ -1846,18 +1838,19 @@ namespace JupiterBrowser
             }
         }
 
-        private void Apps_Click(object sender, RoutedEventArgs e) {
+        private void Apps_Click(object sender, RoutedEventArgs e)
+        {
             Button button = sender as Button;
             ContextMenu menu = this.FindResource("AppsMenu") as ContextMenu;
             menu.PlacementTarget = button;
             menu.IsOpen = true;
-            
+
         }
 
         private void OpenBrowserMenu_Click(object sender, RoutedEventArgs e)
         {
 
-            
+
             Button button = sender as Button;
             ContextMenu menu = this.FindResource("BrowserMenu") as ContextMenu;
             menu.PlacementTarget = button;
@@ -1904,12 +1897,12 @@ namespace JupiterBrowser
                                 clickedItem.TabName = newName.Length > 18 ? newName.Substring(0, 18) : newName;
                                 clickedItem.FullTabName = newName;
                                 clickedItem.isRenamed = true;
-                                
+
                             }
                             else
                             {
                                 clickedItem.isRenamed = false;
-                                
+
                             }
                         }
                     }
@@ -1942,7 +1935,7 @@ namespace JupiterBrowser
                                     string password = promptWindow.UserInput;
 
 
-                                    if(clickedItem.isProtected == false)
+                                    if (clickedItem.isProtected == false)
                                     {
                                         string encryptedUrl = vault.Encrypt(clickedItem.url);
                                         clickedItem.url = encryptedUrl;
@@ -1984,21 +1977,21 @@ namespace JupiterBrowser
                                             }
                                         }
                                     }
-                                    
+
 
 
 
                                 }
                             }
 
-                            
+
 
 
                         }
                         else
                         {
-                            
-                            if(clickedItem.isProtected == false)
+
+                            if (clickedItem.isProtected == false)
                             {
                                 string encryptedUrl = vault.Encrypt(clickedItem.url);
 
@@ -2042,15 +2035,15 @@ namespace JupiterBrowser
 
 
 
-                        
+
                     }
                 }
             }
-        
 
 
-        
-            
+
+
+
         }
 
         private void PinnedItemMenu_Rename(object sender, RoutedEventArgs e)
@@ -2134,7 +2127,7 @@ namespace JupiterBrowser
                         ToastWindow.Show("Site unpinned: " + currentName);
                         PinnedTabs.Remove(clickedItem);
                         SavePinneds();
-                        
+
                     }
                 }
             }
@@ -2152,7 +2145,7 @@ namespace JupiterBrowser
                     if (clickedItem != null)
                     {
                         // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
-                        if(clickedItem.isProtected == false)
+                        if (clickedItem.isProtected == false)
                         {
                             string currentName = clickedItem.TabName;
                             string url = clickedItem.url;
@@ -2184,12 +2177,12 @@ namespace JupiterBrowser
 
                                     }
                                 }
-                                        
+
 
                             }
-                            
+
                         }
-                        
+
 
                     }
                 }
@@ -2207,7 +2200,7 @@ namespace JupiterBrowser
                     // Define o elemento como o alvo do menu de contexto e abre o menu
                     menu.PlacementTarget = element;
                     menu.IsOpen = true;
-                   
+
                 }
                 else
                 {
@@ -2289,7 +2282,7 @@ namespace JupiterBrowser
             // Subscribing to the OnColorSelected event
             themeColorPicker.OnColorSelected += (backgroundColor) =>
             {
-                
+
 
                 if (!string.IsNullOrEmpty(backgroundColor))
                 {
@@ -2373,7 +2366,7 @@ namespace JupiterBrowser
                 {
                     selectedTab.WebView.CoreWebView2.GoBack();
                 }
-                
+
             }
         }
         private void ForwardButton_Click(object sender, RoutedEventArgs e)
@@ -2384,7 +2377,7 @@ namespace JupiterBrowser
                 {
                     selectedTab.WebView.CoreWebView2.GoForward();
                 }
-                
+
             }
         }
 
@@ -2410,7 +2403,7 @@ namespace JupiterBrowser
             ExecuteMiniPlayerScript("if (document.querySelector('video')) { document.querySelector('video').pause(); } ");
         }
 
-        
+
 
         private void MiniPlayer_Previus_Click(object sender, RoutedEventArgs e)
         {
@@ -2448,7 +2441,7 @@ namespace JupiterBrowser
         {
             foreach (var tab in Tabs)
             {
-                if (tab.WebView != null && (tab.WebView.Source.ToString().Contains("youtube.com") ))
+                if (tab.WebView != null && (tab.WebView.Source.ToString().Contains("youtube.com")))
                 {
                     await tab.WebView.ExecuteScriptAsync(script);
                 }
@@ -2467,7 +2460,7 @@ namespace JupiterBrowser
 
         private void LogNavigationDetails(string url, string title, string favicon)
         {
-            
+
             if (!url.Contains("file:"))
             {
                 string logFilePath = "navigationLog.json";
@@ -2496,7 +2489,7 @@ namespace JupiterBrowser
                 string updatedLog = JsonConvert.SerializeObject(logEntries, Formatting.Indented);
                 File.WriteAllText(logFilePath, updatedLog);
             }
-            
+
         }
 
         private async void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -2509,17 +2502,17 @@ namespace JupiterBrowser
                         ads[i].style.display = 'none';
                     }
                 ";
-                if(webView.Source.ToString().IndexOf("youtube.com") == -1)
+                if (webView.Source.ToString().IndexOf("youtube.com") == -1)
                 {
-                    if(TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+                    if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
                     {
-                        if(selectedTab.adBlock == true)
+                        if (selectedTab.adBlock == true)
                         {
-                             await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
-                            
+                            await webView.CoreWebView2.ExecuteScriptAsync(adBlockScript);
+
                         }
                     }
-                    
+
                 }
 
                 var storyboard = (Storyboard)this.Resources["LoadingAnimation"];
@@ -2531,12 +2524,12 @@ namespace JupiterBrowser
                 //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
                 //string faviconUrl = $"{domain}/favicon.ico";
                 string faviconUrl = GetFaviconUrl(url);
-                LogNavigationDetails(url, title,faviconUrl);
+                LogNavigationDetails(url, title, faviconUrl);
 
                 if (string.IsNullOrEmpty(faviconUrl) || faviconUrl == "html.png")
                 {
                     faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
-                    if(url.IndexOf("openai.com") != -1 || url.IndexOf("chatgpt.com") != -1)
+                    if (url.IndexOf("openai.com") != -1 || url.IndexOf("chatgpt.com") != -1)
                     {
                         faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chatgpt.png");
                     }
@@ -2553,26 +2546,26 @@ namespace JupiterBrowser
                     tabItem.OnNavigationCompleted();
                     if (title.Length > 18)
                     {
-                        if(tabItem.isRenamed == false)
+                        if (tabItem.isRenamed == false)
                         {
                             tabItem.TabName = title.Substring(0, 18);
                         }
-                        
-                        
-                        
+
+
+
                     }
                     else
                     {
-                        if(tabItem.isRenamed == false)
+                        if (tabItem.isRenamed == false)
                         {
                             tabItem.TabName = title;
                         }
-                        
+
                     }
                     tabItem.LogoUrl = faviconUrl;
                     tabItem.FullTabName = title;
-                    
-                    if(url.IndexOf("http") != -1)
+
+                    if (url.IndexOf("http") != -1)
                     {
                         urlLabel.Text = url;
                     }
@@ -2580,7 +2573,7 @@ namespace JupiterBrowser
                     {
                         urlLabel.Text = "File or startpage";
                     }
-                    
+
                 }
 
                 // Refresh the ListBox to update the displayed tab name
@@ -2589,7 +2582,7 @@ namespace JupiterBrowser
                 TabListBox.ItemsSource = Tabs;
                 TabListBox.SelectedIndex = selectedIndex;
                 TabListBox.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
-                
+
 
 
                 UpdateMiniPlayerVisibility();
@@ -2617,7 +2610,7 @@ namespace JupiterBrowser
                         await webView.CoreWebView2.ExecuteScriptAsync(setColorScript);
                     }
                 }
-                
+
 
 
                 if (prompt.Length > 0)
@@ -2654,7 +2647,7 @@ namespace JupiterBrowser
                 }
 
 
-                
+
             }
         }
 
@@ -2704,10 +2697,10 @@ namespace JupiterBrowser
 
                         var musicTitle = await musicTab.WebView.CoreWebView2.ExecuteScriptAsync(script);
                         musicTitle = musicTitle.Trim('"'); // Remove the surrounding quotes
-                        if(musicTitle is not null)
+                        if (musicTitle is not null)
                         {
                             MusicTitle.Text = musicTitle;
-                            if(musicTitle.IndexOf(" - YouTube Music") != -1)
+                            if (musicTitle.IndexOf(" - YouTube Music") != -1)
                             {
                                 MiniPlayerPlayBtn.Visibility = Visibility.Collapsed;
                             }
@@ -2716,7 +2709,7 @@ namespace JupiterBrowser
                                 MiniPlayerPlayBtn.Visibility = Visibility.Visible;
                             }
                         }
-                        
+
                         _musicTitleUpdateTimer.Start();
                     }
                     catch (Exception ex)
@@ -2737,6 +2730,8 @@ namespace JupiterBrowser
             }
         }
 
+        
+
 
         private void TabListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -2751,7 +2746,7 @@ namespace JupiterBrowser
                 {
                     urlLabel.Text = "File or startpage";
                 }
-                
+
             }
             UpdateMiniPlayerVisibility();
         }
@@ -2917,8 +2912,8 @@ namespace JupiterBrowser
             }
             return null;
         }
-    
-    private void TabListBox_Drop(object sender, DragEventArgs e)
+
+        private void TabListBox_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TabItem)))
             {
@@ -2936,9 +2931,9 @@ namespace JupiterBrowser
                         {
                             Tabs.Move(removedIdx, targetIdx);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
-                            if(droppedData.isProtected == false)
+                            if (droppedData.isProtected == false)
                             {
                                 OpenNewTabWithUrl(droppedData.url);
                                 ToastWindow.Show("Opening tab.");
@@ -3003,11 +2998,11 @@ namespace JupiterBrowser
                             PinnedTabs.Move(removedIdx, targetIdx);
                             SavePinneds();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             droppedData.url = urlLabel.Text;
 
-                           
+
 
                             bool exists = false;
                             foreach (var tab in PinnedTabs)
@@ -3026,10 +3021,10 @@ namespace JupiterBrowser
                                 droppedData.WebView.Dispose();
                                 Tabs.Remove(droppedData);
                             }
-                            
+
                             return;
                         }
-                        
+
                     }
                 }
             }
