@@ -43,7 +43,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.26";
+        private string VERSION = "0.27";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -57,6 +57,7 @@ namespace JupiterBrowser
         
         private string languageT = "en";
         private string start = "Question";
+        private string miniWindow = "MiniWindowTrue";
 
         private bool tabMenuIsOpen = false;
         private TabItem selectedTabItemContextMenu;
@@ -535,6 +536,13 @@ namespace JupiterBrowser
                             "ReopenTabs" => "ReopenTabs",
                             "StartNewNavigation" => "StartNewNavigation",
                             _ => "Question"
+                        };
+
+                        miniWindow = settings.MiniWindow switch
+                        {
+                            "MiniWindowTrue" => "MiniWindowTrue",
+                            "MiniWindowFalse" => "MiniWindowFalse",
+                            _ => "MiniWindowTrue"
                         };
                     }
                 }
@@ -1239,7 +1247,17 @@ namespace JupiterBrowser
             string newUrl = e.Uri;
 
             // Abre uma nova aba com a URL
-            OpenNewTabWithUrl(newUrl);
+            
+            if (miniWindow.Equals("MiniWindowFalse"))
+            {
+                OpenNewTabWithUrl(newUrl);
+            }
+            else
+            {
+                AppPreview appPreview = new AppPreview(this, newUrl, true);
+                appPreview.Show();
+            }
+            
         }
 
         private async void Pin()
@@ -2257,6 +2275,10 @@ namespace JupiterBrowser
             if (settings.ShowDialog() == true)
             {
 
+            }
+            else
+            {
+                LoadSettings();
             }
         }
 

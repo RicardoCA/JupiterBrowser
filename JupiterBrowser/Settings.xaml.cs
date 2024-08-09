@@ -29,89 +29,11 @@ namespace JupiterBrowser
             InitializeComponent();
             LoadSettings();
 
-            //SetDefaultBrowser();
-            //TestOpenUrl();
+            
         }
 
-        private void SetDefaultBrowser()
-        {
-            string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            string escapedExePath = exePath.Replace("\\", "\\\\");
-            string scriptContent = $@"
-Windows Registry Editor Version 5.00
-
-[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser]
-@=""URL:JupiterBrowser Protocol""
-""URL Protocol""=""""
-""DefaultIcon""=""{escapedExePath},0""
-
-[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser\shell]
-
-[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser\shell\open]
-
-[HKEY_CURRENT_USER\Software\Classes\JupiterBrowser\shell\open\command]
-@=""\""{escapedExePath}\"" \""%1\""""
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice]
-""Progid""=""JupiterBrowser""
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice]
-""Progid""=""JupiterBrowser""
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\DefaultIcon]
-@=""{escapedExePath},0""
-
-[HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\DefaultIcon]
-@=""{escapedExePath},0""
-";
-
-            try
-            {
-                string scriptPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "register_jupiter_browser.reg");
-                File.WriteAllText(scriptPath, scriptContent);
-
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = "regedit.exe",
-                    Arguments = $"/s \"{scriptPath}\"",
-                    Verb = "runas",
-                    UseShellExecute = true,
-                    CreateNoWindow = true
-                };
-
-                using (Process regProcess = Process.Start(psi))
-                {
-                    regProcess.WaitForExit();
-                    if (regProcess.ExitCode == 0)
-                    {
-                        MessageBox.Show("O JupiterBrowser foi definido como navegador padrão com sucesso.", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Erro ao definir o JupiterBrowser como navegador padrão.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-
-                File.Delete(scriptPath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ocorreu um erro: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        public void TestOpenUrl()
-        {
-            string testUrl = "https://www.example.com";
-            try
-            {
-                Process.Start(new ProcessStartInfo(testUrl) { UseShellExecute = true });
-                MessageBox.Show($"Tentativa de abrir {testUrl}. Verifique se o JupiterBrowser foi aberto.", "Teste", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao abrir a URL: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+        
+       
         private void LoadSettings()
         {
             try
@@ -126,6 +48,7 @@ Windows Registry Editor Version 5.00
                         SetSelectedLanguage(settings.DefaultTranslateLanguage);
                         SetPreviousNavigation(settings.PreviousNavigation);
                         SetSearchEngine(settings.SearchEngine);
+                        SetMiniWindow(settings.MiniWindow);
                     }
                 }
             }
@@ -150,6 +73,22 @@ Windows Registry Editor Version 5.00
                     break;
                 default:
                     EnglishRadioButton.IsChecked = true;
+                    break;
+            }
+        }
+
+        private void SetMiniWindow(string miniWindow)
+        {
+            switch (miniWindow)
+            {
+                case "MiniWindowTrue":
+                    MiniWindowTrue.IsChecked = true;
+                    break;
+                case "MiniWindowFalse":
+                    MiniWindowFalse.IsChecked = true;
+                    break;
+                default:
+                    MiniWindowTrue.IsChecked = true;
                     break;
             }
         }
@@ -240,6 +179,7 @@ Windows Registry Editor Version 5.00
                 DefaultTranslateLanguage = GetSelectedLanguage(),
                 PreviousNavigation = GetPreviousNavigation(),
                 SearchEngine = GetSearchEngine(),
+                MiniWindow = GetMiniWindow(),
             };
 
             SaveSettings(settings);
@@ -247,6 +187,20 @@ Windows Registry Editor Version 5.00
 
 
             
+        }
+
+        private string GetMiniWindow()
+        {
+            if (MiniWindowTrue.IsChecked == true)
+            {
+                return "MiniWindowTrue";
+            }
+            if (MiniWindowFalse.IsChecked == true)
+            {
+                return "MiniWindowFalse";
+            }
+            return "MiniWindowTrue";
+
         }
 
         private string GetSearchEngine()
@@ -312,6 +266,8 @@ Windows Registry Editor Version 5.00
     {
         public string DefaultTranslateLanguage { get; set; }
         public string PreviousNavigation { get; set; }
+
+        public string MiniWindow { get; set; }
         
         public string SearchEngine { get; set; }
     }

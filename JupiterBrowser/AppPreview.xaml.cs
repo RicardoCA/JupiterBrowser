@@ -23,16 +23,26 @@ namespace JupiterBrowser
     {
         WebView2 webView = new WebView2();
         private MainWindow _mainWindow;
-        public AppPreview(MainWindow mainWindow, string url)
+        private bool isClosable = false;
+        public AppPreview(MainWindow mainWindow, string url, bool isClosable = false)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
+            this.isClosable = isClosable;
             start(url);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
+            if (isClosable == false)
+            {
+                this.Hide();
+            }
+            else
+            {
+                _mainWindow.UpdateIcon("Jupiter Browser");
+                this.Close();
+            }
         }
 
         private void NewTab_Click(object sender, RoutedEventArgs e)
