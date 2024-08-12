@@ -59,6 +59,21 @@ namespace JupiterBrowser
             webView.Source = new System.Uri(url);
             webView.CoreWebView2InitializationCompleted += (s, e) =>
             {
+
+                // Subscribe to the NewWindowRequested event
+                webView.CoreWebView2.NewWindowRequested += (sender, args) =>
+                {
+                    // Prevent the default new window action
+                    args.Handled = true;
+
+                    // Open the URL in a new tab in the main window
+                    _mainWindow.OpenNewTabWithUrl(args.Uri);
+
+                    // Optionally, hide the current window if needed
+                    this.Hide();
+                };
+
+
                 webView.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;
             };
             ContentArea.Content = webView;

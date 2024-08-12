@@ -28,7 +28,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "0.27";
+        private string VERSION = "1.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -1261,14 +1261,7 @@ namespace JupiterBrowser
             if (string.IsNullOrEmpty(currentLogo) || currentLogo == "html.png")
             {
                 currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
-                if (currentUrl.IndexOf("openai.com") != -1 || currentUrl.IndexOf("chatgpt.com") != -1)
-                {
-                    currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chatgpt.png");
-                }
-                else if (currentUrl.IndexOf("reddit.com") != -1)
-                {
-                    currentLogo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reddit.png");
-                }
+                
             }
 
 
@@ -1335,6 +1328,29 @@ namespace JupiterBrowser
         {
             try
             {
+                // Usa a URL do Google Favicon Service para obter o favicon
+                string favUrl = $"https://www.google.com/s2/favicons?sz=64&domain_url={url}";
+
+                // Verifica se a URL é acessível
+                if (IsUrlAccessible(favUrl))
+                {
+                    return favUrl; // Retorna a URL do favicon obtido
+                }
+            }
+            catch (Exception ex)
+            {
+                // Tratamento de erro ou log
+                Console.WriteLine($"Erro ao obter o favicon: {ex.Message}");
+            }
+
+            // Retorna um ícone padrão ou nulo se não encontrar o favicon
+            return "html.png";
+        }
+
+        /*private string GetFaviconUrl(string url)
+        {
+            try
+            {
                 // Tenta o caminho padrão para .ico
                 Uri uri = new Uri(url);
                 string domain = uri.GetLeftPart(UriPartial.Authority);
@@ -1373,7 +1389,7 @@ namespace JupiterBrowser
 
             // Retorna um ícone padrão ou nulo se não encontrar o favicon
             return "html.png";
-        }
+        }*/
 
         private bool IsUrlAccessible(string url)
         {
@@ -2523,20 +2539,14 @@ namespace JupiterBrowser
                 string url = webView.Source.ToString();
                 //string domain = new Uri(url).GetLeftPart(UriPartial.Authority); // Obtém o domínio da URL
                 //string faviconUrl = $"{domain}/favicon.ico";
+                //string favUrl = $"https://www.google.com/s2/favicons?sz=64&domain_url={url}";
                 string faviconUrl = GetFaviconUrl(url);
                 LogNavigationDetails(url, title, faviconUrl);
 
                 if (string.IsNullOrEmpty(faviconUrl) || faviconUrl == "html.png")
                 {
                     faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html.png");
-                    if (url.IndexOf("openai.com") != -1 || url.IndexOf("chatgpt.com") != -1)
-                    {
-                        faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chatgpt.png");
-                    }
-                    else if (url.IndexOf("reddit.com") != -1)
-                    {
-                        faviconUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reddit.png");
-                    }
+                    
                 }
 
 

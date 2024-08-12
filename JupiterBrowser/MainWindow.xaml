@@ -212,7 +212,7 @@
         </Style>
         <DataTemplate x:Key="PinnedTabTemplate">
             <StackPanel Orientation="Vertical" MouseRightButtonUp="PinnedItem_MouseRightButtonUp">
-                <Image ToolTip="{Binding TabName}" Source="{Binding LogoUrl}" Width="16" Height="16" Margin="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image ToolTip="{Binding TabName}" Source="{Binding LogoUrl}" Width="19" Height="19" Margin="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="TabItemTemplate">

@@ -1,6 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
+using File = System.IO.File;
 using System.Windows;
+using IWshRuntimeLibrary;
+using System.Reflection;
 
 namespace JupiterBrowser
 {
@@ -42,6 +45,41 @@ namespace JupiterBrowser
             catch (Exception ex)
             {
                 ToastWindow.Show($"Failed to load settings: {ex.Message}");
+            }
+        }
+
+        private void EnableDisableStartup(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string shortcutName = "Jupiter Browser.lnk"; // Nome do atalho
+                string startupFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+                string shortcutPath = Path.Combine(startupFolderPath, shortcutName);
+
+                // Obtém o caminho do executável (.exe)
+                string appPath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                string appDirectory = Path.GetDirectoryName(appPath); // Diretório do .exe
+
+                if (!System.IO.File.Exists(shortcutPath))
+                {
+                    WshShell shell = new WshShell();
+                    IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);
+                    shortcut.Description = "Jupiter Browser"; // Descrição do atalho
+                    shortcut.TargetPath = appPath;
+                    shortcut.WorkingDirectory = appDirectory; // Define o diretório de trabalho
+                    shortcut.Save();
+
+                    ToastWindow.Show("Jupiter Browser set to start with the operating system.");
+                }
+                else
+                {
+                    System.IO.File.Delete(shortcutPath);
+                    ToastWindow.Show("Jupiter Browser set to not start with the operating system.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ToastWindow.Show("Error: " + ex.Message);
             }
         }
 

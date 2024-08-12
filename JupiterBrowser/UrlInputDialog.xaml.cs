@@ -113,18 +113,7 @@ namespace JupiterBrowser
                         entry.UrlIco = Path.Combine(exePath, "html.png");
                     }
                     
-                    if (entry.Url.Contains("reddit.com", StringComparison.OrdinalIgnoreCase))
-                    {
-                        entry.UrlIco = Path.Combine(exePath, "reddit.png");
-                    }
-                    else if(entry.Url.Contains("chatgpt.com", StringComparison.OrdinalIgnoreCase))
-                    {
-                        entry.UrlIco = Path.Combine(exePath, "chatgpt.png");
-                    }
-                    else if (entry.Url.Contains("openai.com", StringComparison.OrdinalIgnoreCase))
-                    {
-                        entry.UrlIco = Path.Combine(exePath, "chatgpt.png");
-                    }
+                    
 
                     suggestions.Add(entry);
                 }
