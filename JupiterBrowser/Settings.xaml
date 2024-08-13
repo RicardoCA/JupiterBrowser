@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
-        Title="Settings" Height="650" Width="800"
+        Title="Settings" Height="450" Width="800"
         Background="Black"
         Foreground="White"
         WindowStyle="None" 
@@ -14,71 +14,99 @@
         Topmost="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="SlimScrollBar" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Width" Value="6" />
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid>
+                            <Track Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Background="Black" BorderBrush="Black" Width="6"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource SlimScrollBar}"/>
+            </ScrollViewer.Resources>
+            <StackPanel>
+                <StackPanel>
 
-            <TextBlock Text="Default Translate language" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Sets the default language for the 'Translate' option of the open tab." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
-                <RadioButton x:Name="EnglishRadioButton" Content="English" GroupName="Language" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
-                <RadioButton x:Name="PortugueseRadioButton" Content="Português" GroupName="Language" Foreground="White" Margin="5,5,0,0"/>
-                <RadioButton x:Name="SpanishRadioButton" Content="Español" GroupName="Language" Foreground="White" Margin="5,5,0,0"/>
+                    <TextBlock Text="Default Translate language" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Sets the default language for the 'Translate' option of the open tab." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
+                        <RadioButton x:Name="EnglishRadioButton" Content="English" GroupName="Language" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
+                        <RadioButton x:Name="PortugueseRadioButton" Content="Português" GroupName="Language" Foreground="White" Margin="5,5,0,0"/>
+                        <RadioButton x:Name="SpanishRadioButton" Content="Español" GroupName="Language" Foreground="White" Margin="5,5,0,0"/>
+                    </StackPanel>
+                    <Border Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
+
+                    <TextBlock Text="Previous navigation" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Sets your preference when opening the browser, whether you want to open closed tabs again, or start browsing a new one." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
+                        <RadioButton x:Name="QuestionRadioButton" Content="Question (default)" GroupName="startBrowser" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
+                        <RadioButton x:Name="ReopenTabsRadioButton" Content="Reopen tabs" GroupName="startBrowser" Foreground="White" Margin="5,5,0,0"/>
+                        <RadioButton x:Name="StartNewNavigationRadioButton" Content="Start New Navigation" GroupName="startBrowser" Foreground="White" Margin="5,5,0,0"/>
+                    </StackPanel>
+                    <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
+                    <TextBlock Text="Default Search Engine" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Set your default search engine preference." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
+                        <RadioButton x:Name="Google" Content="Google (default)" GroupName="searchEngine" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
+                        <RadioButton x:Name="Bing" Content="Bing" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
+                        <RadioButton x:Name="Duckduckgo" Content="Duckduckgo" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
+                        <RadioButton x:Name="Perplexity" Content="Perplexity" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
+                        <RadioButton x:Name="Morphic" Content="Morphic" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
+                    </StackPanel>
+                    <Border x:Name="WhiteBarSettings" Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
+                    <TextBlock Text="Mini Window" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Select your preference, whether you want to open new tabs in mini window or in new tab" Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
+                        <RadioButton x:Name="MiniWindowTrue" Content="Enabled (default)" GroupName="MiniWindow" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
+                        <RadioButton x:Name="MiniWindowFalse" Content="Disabled" GroupName="MiniWindow" Foreground="White" Margin="5,5,0,0"/>
+
+                    </StackPanel>
+                    <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
+                    <TextBlock Text="Startup with Windows" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Enable or disable startup with Windows." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <Button Click="EnableDisableStartup" Content="Enable/Disable" Width="100" HorizontalAlignment="Left" Background="Transparent" Foreground="White" Margin="5,0,0,0" />
+
+                    <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
+                    <TextBlock Text="Default Settings" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Restores the browser's default settings, this includes deleting all configuration parameters." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <Button Click="RestaureBrowser" Content="Restaure" Width="100" HorizontalAlignment="Left" Background="Transparent" Foreground="White" Margin="5,0,0,0" />
+
+                    <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
+
+                    <TextBlock Text="Delete Site Recomendations" Foreground="White" FontSize="24" Margin="5,0,0,0" />
+                    <TextBlock Text="Only delete the Ctrl+T and Ctrl+L website recommendation file" Foreground="White" FontSize="12" Margin="5,0,0,0"  />
+                    <Button Click="DeleteRecomendations" Content="Delete Recomendations" Width="150" HorizontalAlignment="Left" Background="Transparent" Foreground="White" Margin="5,0,0,0" />
+
+
+
+
+
+                </StackPanel>
+
+
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20">
+                    <Button Content="Apply" Width="100" Height="30" Click="ApplyClick" Background="Transparent" Foreground="White"/>
+
+                    <Button Content="Close" Width="100" Height="30" Click="CancelClick" Background="Transparent" Foreground="White"/>
+                </StackPanel>
             </StackPanel>
-            <Border Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
-
-            <TextBlock Text="Previous navigation" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Sets your preference when opening the browser, whether you want to open closed tabs again, or start browsing a new one." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
-                <RadioButton x:Name="QuestionRadioButton" Content="Question (default)" GroupName="startBrowser" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
-                <RadioButton x:Name="ReopenTabsRadioButton" Content="Reopen tabs" GroupName="startBrowser" Foreground="White" Margin="5,5,0,0"/>
-                <RadioButton x:Name="StartNewNavigationRadioButton" Content="Start New Navigation" GroupName="startBrowser" Foreground="White" Margin="5,5,0,0"/>
-            </StackPanel>
-            <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
-            <TextBlock Text="Default Search Engine" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Set your default search engine preference." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
-                <RadioButton x:Name="Google" Content="Google (default)" GroupName="searchEngine" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
-                <RadioButton x:Name="Bing" Content="Bing" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
-                <RadioButton x:Name="Duckduckgo" Content="Duckduckgo" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
-                <RadioButton x:Name="Perplexity" Content="Perplexity" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
-                <RadioButton x:Name="Morphic" Content="Morphic" GroupName="searchEngine" Foreground="White" Margin="5,5,0,0"/>
-            </StackPanel>
-            <Border x:Name="WhiteBarSettings" Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
-            <TextBlock Text="Mini Window" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Select your preference, whether you want to open new tabs in mini window or in new tab" Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
-                <RadioButton x:Name="MiniWindowTrue" Content="Enabled (default)" GroupName="MiniWindow" Foreground="White" Margin="5,0,0,0" IsChecked="True"/>
-                <RadioButton x:Name="MiniWindowFalse" Content="Disabled" GroupName="MiniWindow" Foreground="White" Margin="5,5,0,0"/>
-                
-            </StackPanel>
-            <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
-            <TextBlock Text="Startup with Windows" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Enable or disable startup with Windows." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <Button Click="EnableDisableStartup" Content="Enable/Disable" Width="100" HorizontalAlignment="Left" Background="Transparent" Foreground="White" Margin="5,0,0,0" />
-            
-            <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
-            <TextBlock Text="Default Settings" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Restores the browser's default settings, this includes deleting all configuration parameters." Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <Button Click="RestaureBrowser" Content="Restaure" Width="100" HorizontalAlignment="Left" Background="Transparent" Foreground="White" Margin="5,0,0,0" />
-
-            <Border  Background="White" Height="2" VerticalAlignment="Top" Margin="0,10,1,2"/>
-
-            <TextBlock Text="Delete Site Recomendations" Foreground="White" FontSize="24" Margin="5,0,0,0" />
-            <TextBlock Text="Only delete the Ctrl+T and Ctrl+L website recommendation file" Foreground="White" FontSize="12" Margin="5,0,0,0"  />
-            <Button Click="DeleteRecomendations" Content="Delete Recomendations" Width="150" HorizontalAlignment="Left" Background="Transparent" Foreground="White" Margin="5,0,0,0" />
-            
-            
-            
-            
-
-        </StackPanel>
-        
-
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20">
-            <Button Content="Apply" Width="100" Height="30" Click="ApplyClick" Background="Transparent" Foreground="White"/>
-
-            <Button Content="Close" Width="100" Height="30" Click="CancelClick" Background="Transparent" Foreground="White"/>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

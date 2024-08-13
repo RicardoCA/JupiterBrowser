@@ -27,9 +27,29 @@ namespace JupiterBrowser
         public AppPreview(MainWindow mainWindow, string url, bool isClosable = false)
         {
             InitializeComponent();
+            if(isClosable is false)
+            {
+                copyUrlBtn.Visibility = Visibility.Collapsed;
+            }
+
             _mainWindow = mainWindow;
             this.isClosable = isClosable;
             start(url);
+        }
+
+        private void CopyUrl_Click(object sender, RoutedEventArgs e)
+        {
+            if (webView.Source != null)
+            {
+                // Copia a URL para a área de transferência
+                string url = webView.Source.ToString();
+                Clipboard.SetText(url);
+                ToastWindow.Show($"Url copied.");
+            }
+            else
+            {
+                ToastWindow.Show("No Url available to copy.");
+            }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -55,6 +75,7 @@ namespace JupiterBrowser
 
         public void start(string url)
         {
+
             
             webView.Source = new System.Uri(url);
             webView.CoreWebView2InitializationCompleted += (s, e) =>
@@ -77,6 +98,8 @@ namespace JupiterBrowser
                 webView.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;
             };
             ContentArea.Content = webView;
+            
+
         }
         private void CoreWebView2_DocumentTitleChanged(object sender, object e)
         {

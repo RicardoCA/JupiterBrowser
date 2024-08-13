@@ -28,7 +28,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "1.0";
+        private string VERSION = "2.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -129,7 +129,7 @@ namespace JupiterBrowser
             OpenStartPage();
         }
 
-
+       
 
         private void CheckForUpdatesTimer_Tick(object sender, EventArgs e)
         {
@@ -179,10 +179,12 @@ namespace JupiterBrowser
             {
                 appX = new AppPreview(this, "https://x.com");
                 appX.Show();
+                UpdateIcon("Jupiter Browser");
             }
             else
             {
                 appX.Show();
+                UpdateIcon("Jupiter Browser");
             }
         }
 
@@ -192,10 +194,12 @@ namespace JupiterBrowser
             {
                 appTiktok = new AppPreview(this, "https://tiktok.com");
                 appTiktok.Show();
+                UpdateIcon("Jupiter Browser");
             }
             else
             {
                 appTiktok.Show();
+                UpdateIcon("Jupiter Browser");
             }
         }
 
@@ -205,10 +209,12 @@ namespace JupiterBrowser
             {
                 appYoutube = new AppPreview(this, "https://youtube.com");
                 appYoutube.Show();
+                UpdateIcon("Jupiter Browser");
             }
             else
             {
                 appYoutube.Show();
+                UpdateIcon("Jupiter Browser");
             }
         }
 
@@ -218,10 +224,12 @@ namespace JupiterBrowser
             {
                 appWhatsapp = new AppPreview(this, "https://web.whatsapp.com");
                 appWhatsapp.Show();
+                UpdateIcon("Jupiter Browser");
             }
             else
             {
                 appWhatsapp.Show();
+                UpdateIcon("Jupiter Browser");
             }
         }
 
@@ -231,10 +239,12 @@ namespace JupiterBrowser
             {
                 appFacebook = new AppPreview(this, "https://facebook.com");
                 appFacebook.Show();
+                UpdateIcon("Jupiter Browser");
             }
             else
             {
                 appFacebook.Show();
+                UpdateIcon("Jupiter Browser");
             }
         }
 
@@ -244,10 +254,12 @@ namespace JupiterBrowser
             {
                 appInstagram = new AppPreview(this, "https://instagram.com");
                 appInstagram.Show();
+                UpdateIcon("Jupiter Browser");
             }
             else
             {
                 appInstagram.Show();
+                UpdateIcon("Jupiter Browser");
             }
         }
 
@@ -1784,7 +1796,7 @@ namespace JupiterBrowser
                 if (url.IndexOf("http") != -1)
                 {
                     Clipboard.SetText(url);
-                    ToastWindow.Show("URL copied: " + url);
+                    ToastWindow.Show("Url copied.");
                 }
                 else
                 {
@@ -1794,7 +1806,7 @@ namespace JupiterBrowser
             }
             else
             {
-                ToastWindow.Show("No tab selected or no URL available.");
+                ToastWindow.Show("No tab selected or no url available.");
             }
         }
 

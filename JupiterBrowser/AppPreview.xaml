@@ -21,10 +21,13 @@
         </Grid.ColumnDefinitions>
 
         <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" x:Name="ContentBorder" Grid.Column="0">
-            <ContentControl Name="ContentArea"/>
+            <Grid>
+                <ContentControl Name="ContentArea"/>
+            </Grid>
         </Border>
 
         <Button Background="Black" Foreground="White" Content="Close" Width="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" Grid.Column="1" Click="CloseButton_Click"/>
         <Button Background="Black" Foreground="White" Content="Expand" Width="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,70,0,0" Grid.Column="1" Click="NewTab_Click"/>
+        <Button x:Name="copyUrlBtn" Background="Black" Foreground="White" Content="Copy Url" Width="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0" Grid.Column="1" Click="CopyUrl_Click"/>
     </Grid>
 </Window>

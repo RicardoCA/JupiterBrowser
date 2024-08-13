@@ -259,6 +259,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Menu Lateral -->
+            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
             <Grid Background="#FF2D2D30" Grid.Column="0" x:Name="Sidebar" MouseLeave="Window_MouseLeave" Cursor="">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -284,7 +285,7 @@
                                 DragOver="PinnedListBox_DragOver"
                                 Drop="PinnedListBox_Drop"
                                 AllowDrop="True"
-                                 >
+                                >
                             
                         </ListBox>
                     </ScrollViewer>
@@ -460,6 +461,7 @@
                 </Button>
 
             </Grid>
+            </ScrollViewer>
 
             <!-- Área de Conteúdo -->
             <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="1" x:Name="ContentBorder">
