@@ -98,6 +98,8 @@ namespace JupiterBrowser
             _updateCheckerTimer.Tick += CheckForUpdatesTimer_Tick;
             _updateCheckerTimer.Start();
 
+           
+
 
             // Chama o método de inicialização assíncrono
             if (email.Length > 0 && password.Length > 0)
@@ -116,7 +118,17 @@ namespace JupiterBrowser
                 CheckForUpdatesTimer();
             }
 
+
+            
+            
+            
+
         }
+
+        
+        
+
+
         private async Task InitializeAsync()
         {
             await SyncOnStart();
