@@ -26,9 +26,10 @@ namespace JupiterBrowser
     public partial class AccountCreate : Window
     {
 
-        private const string ApiKey = "AIzaSyDiVnDzUepc8yHBYxxUMgY163D-TnA40e0";
-        private const string ProjectId = "jupiterbrowser-8f6b2";
-        private const string DatabaseUrl = "https://jupiterbrowser-8f6b2-default-rtdb.firebaseio.com";
+        private static readonly string ApiKey = Environment.GetEnvironmentVariable("JUPITER_KEY");
+
+        private static readonly string ProjectId = Environment.GetEnvironmentVariable("JUPITER_ID");
+        private static readonly string DatabaseUrl = Environment.GetEnvironmentVariable("JUPITER_URL");
         private const string loggedFile = "account.json";
 
         private FirebaseAuthClient authClient;
