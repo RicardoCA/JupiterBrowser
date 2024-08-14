@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JupiterBrowser", "JupiterBrowser\JupiterBrowser.csproj", "{921BA971-7946-4037-B228-8054C8A8AC8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{9124A5A2-9004-4DA2-A90A-B6EE7AFEEC3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{9124A5A2-9004-4DA2-A90A-B6EE7AFEEC3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup\Setup.csproj", "{5E0A498B-F962-440C-94D5-C8584ED8235D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9124A5A2-9004-4DA2-A90A-B6EE7AFEEC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9124A5A2-9004-4DA2-A90A-B6EE7AFEEC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9124A5A2-9004-4DA2-A90A-B6EE7AFEEC3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E0A498B-F962-440C-94D5-C8584ED8235D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E0A498B-F962-440C-94D5-C8584ED8235D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E0A498B-F962-440C-94D5-C8584ED8235D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E0A498B-F962-440C-94D5-C8584ED8235D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
