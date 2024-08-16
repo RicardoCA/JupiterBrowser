@@ -28,7 +28,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "2.1";
+        private string VERSION = "2.2";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -74,6 +74,7 @@ namespace JupiterBrowser
 
         public MainWindow()
         {
+            AmbienteCheck();
             InitializeComponent();
             RestoreAccount();
             InitializeFirebase();
@@ -126,9 +127,33 @@ namespace JupiterBrowser
 
         }
 
-        
-        
 
+
+        private void AmbienteCheck()
+        {
+            if (string.IsNullOrEmpty(ApiKey) || string.IsNullOrEmpty(ProjectId) || string.IsNullOrEmpty(DatabaseUrl))
+            {
+                ExecutarSetup();
+            }
+        }
+
+        private void ExecutarSetup()
+        {
+            string setupPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Setup.exe");
+
+            if (File.Exists(setupPath))
+            {
+                try
+                {
+                    // Executa o Setup.exe
+                    Process.Start(setupPath);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
 
         private async Task InitializeAsync()
         {

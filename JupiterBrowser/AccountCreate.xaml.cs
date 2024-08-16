@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using Firebase.Database.Query;
 using System.IO;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace JupiterBrowser
 {
@@ -37,9 +38,37 @@ namespace JupiterBrowser
 
         public AccountCreate()
         {
+
+            AmbienteCheck();
             InitializeComponent();
             InitializeFirebase();
             IsLogged();
+        }
+
+        private void AmbienteCheck()
+        {
+            if (string.IsNullOrEmpty(ApiKey) || string.IsNullOrEmpty(ProjectId) || string.IsNullOrEmpty(DatabaseUrl))
+            {
+                ExecutarSetup();
+            }
+        }
+
+        private void ExecutarSetup()
+        {
+            string setupPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Setup.exe");
+
+            if (File.Exists(setupPath))
+            {
+                try
+                {
+                    // Executa o Setup.exe
+                    Process.Start(setupPath);
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
         }
 
         private void IsLogged()
