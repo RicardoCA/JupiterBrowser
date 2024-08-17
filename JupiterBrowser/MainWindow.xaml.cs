@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -28,7 +29,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "2.2";
+        private string VERSION = "3.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -163,7 +164,9 @@ namespace JupiterBrowser
             CleanUpdates();
             LoadSidebarColor();
             LoadPinneds();
+            LoadPinnedsMobile();
             LoadTabsClosed();
+            LoadTabsClosedMobile();
             OpenStartPage();
         }
 
@@ -437,6 +440,8 @@ namespace JupiterBrowser
                 string[] uploadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json" };
                 var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
 
+                
+
                 foreach (var file in uploadFiles)
                 {
                     try
@@ -481,7 +486,7 @@ namespace JupiterBrowser
             bool accountExists = await AccountExistsAsync(email, password);
             if (accountExists)
             {
-                string[] downloadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json" };
+                string[] downloadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json","pinnedsMobile.json","closedtabsMobile.json" };
                 var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
 
                 foreach (var file in downloadFiles)
@@ -818,6 +823,76 @@ namespace JupiterBrowser
             PlayerTitle.Visibility = Visibility.Collapsed;
         }
 
+        private async void LoadTabsClosedMobile()
+        {
+            string jsonFilePath = "closedtabsMobile.json";
+            if (File.Exists(jsonFilePath))
+            {
+                if (start.Equals("Question"))
+                {
+                    string jsonContent = File.ReadAllText(jsonFilePath);
+                    if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                    {
+                        try
+                        {
+
+                            ConfirmDialog confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                            if (confirmDialog.ShowDialog() == true)
+                            {
+                                var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
+                                foreach (var tab in loadedTabs)
+                                {
+                                    OpenNewTabWithUrl(tab.url, tab.TabName);
+
+                                }
+                            }
+
+
+
+
+
+
+
+                        }
+                        catch (JsonException ex)
+                        {
+                            // Lida com o erro de desserialização
+
+                        }
+                    }
+                }
+                else if (start.Equals("ReopenTabs"))
+                {
+                    string jsonContent = File.ReadAllText(jsonFilePath);
+                    if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                    {
+                        var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
+                        foreach (var tab in loadedTabs)
+                        {
+                            OpenNewTabWithUrl(tab.url, tab.TabName);
+
+                        }
+                    }
+                    
+                }
+
+                File.Delete(jsonFilePath);
+                var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
+                
+                try
+                {
+                    await storage.Child(email).Child(jsonFilePath).DeleteAsync();
+                }
+                catch (Exception ex)
+                {
+                    return;
+                }
+
+            }
+
+            
+        }
+
         private void LoadTabsClosed()
         {
             if (start.Equals("Question"))
@@ -935,11 +1010,77 @@ namespace JupiterBrowser
             }
         }
 
+        private async void LoadPinnedsMobile()
+        {
+            var JsonFilePath = "pinnedsMobile.json";
+
+            if (File.Exists(JsonFilePath))
+            {
+                string jsonContent = File.ReadAllText(JsonFilePath);
+                if (!string.IsNullOrWhiteSpace(jsonContent) && jsonContent != "{ }")
+                {
+                    try
+                    {
+                        var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
+
+                        if (loadedTabs != null)
+                        {
+                            // Remove os itens que não estão listados no JSON apenas se isProtected for false
+                            for (int i = PinnedTabs.Count - 1; i >= 0; i--)
+                            {
+                                var existingTab = PinnedTabs[i];
+                                if (!existingTab.isProtected && !loadedTabs.Any(t => t.TabName == existingTab.TabName))
+                                {
+                                    PinnedTabs.RemoveAt(i);
+                                }
+                            }
+
+                            // Renomeia ou troca o link dos itens existentes
+                            foreach (var tab in loadedTabs)
+                            {
+                                var existingTab = PinnedTabs.FirstOrDefault(t => t.TabName == tab.TabName);
+                                if (existingTab != null)
+                                {
+                                    existingTab.TabName = tab.TabName;
+                                    existingTab.url = tab.url;
+                                }
+                                else
+                                {
+                                    PinnedTabs.Add(tab);
+                                }
+                            }
+
+                            // Atualiza a fonte de itens do ListBox
+                            PinnedTabsListBox.ItemsSource = PinnedTabs;
+                            var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
+                            File.Delete(JsonFilePath);
+                            try
+                            {
+                                await storage.Child(email).Child(JsonFilePath).DeleteAsync();
+                            }
+                            catch(Exception ex)
+                            {
+                                return;
+                            }
+                            
+
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        // Lida com o erro de desserialização
+                        MessageBox.Show("Erro ao carregar as abas fixas " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            
+        }
 
 
         private void LoadPinneds()
         {
             var JsonFilePath = "pinneds.json";
+            
             if (File.Exists(JsonFilePath))
             {
                 string jsonContent = File.ReadAllText(JsonFilePath);
