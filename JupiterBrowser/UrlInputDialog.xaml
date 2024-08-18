@@ -37,7 +37,7 @@
         <DataTemplate x:Key="SuggestionItemTemplate">
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Image Source="{Binding UrlIco}" Width="16" Height="16" Margin="0,0,5,0"/>
-                <TextBlock Text="{Binding Url}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Url}" FontSize="16" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
@@ -50,11 +50,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Enter URL, Search or Press Esc:" VerticalAlignment="Center" Grid.Row="0"/>
+            <TextBlock FontSize="16" Text="Enter URL, Search or Press Esc:" VerticalAlignment="Center" Grid.Row="0"/>
 
             <Grid Grid.Row="1" Margin="0,10,0,0">
-                <TextBox Name="UrlTextBox" Background="Black" Foreground="White" TextChanged="UrlTextBox_TextChanged" VerticalAlignment="Center" KeyDown="UrlTextBox_KeyDown"/>
-                <TextBlock Name="SearchIcon" Text="🔍" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-3,12,0" Visibility="Collapsed" Foreground="White" FontSize="16" Height="18" Width="20"/>
+                <TextBox Name="UrlTextBox"  Background="Black" Foreground="White" TextChanged="UrlTextBox_TextChanged" Height="24" FontSize="16" VerticalAlignment="Center" KeyDown="UrlTextBox_KeyDown"/>
+                <TextBlock Name="SearchIcon" Text="🔍" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-3,12,0" Visibility="Collapsed" Foreground="White" FontSize="17" Height="24" Width="20"/>
             </Grid>
 
             <ListBox Name="SuggestionsListBox" Grid.Row="2" Margin="10,0,10,10" Visibility="Collapsed"

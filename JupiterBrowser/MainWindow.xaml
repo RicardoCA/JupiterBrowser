@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
-        Title="Jupiter Browser" Height="450" Width="800" WindowState="Maximized"
+        Title="Jupiter Browser" Height="450" Width="800"
         Background="#FF2D2D30"
-        x:Name="Janela">
+        x:Name="Janela"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
+    </WindowChrome.WindowChrome>
+    
     <Window.Resources>
         <Storyboard x:Key="LoadingAnimation" RepeatBehavior="Forever">
             <ColorAnimation From="White" To="Black" Duration="0:0:0.5"
@@ -209,20 +215,26 @@
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Content" Value="X"/>
+            
         </Style>
         <DataTemplate x:Key="PinnedTabTemplate">
-            <StackPanel Orientation="Vertical" MouseRightButtonUp="PinnedItem_MouseRightButtonUp">
+            <StackPanel Margin="0,0,0,0" Orientation="Vertical" MouseRightButtonUp="PinnedItem_MouseRightButtonUp">
                 <Image ToolTip="{Binding TabName}" Source="{Binding LogoUrl}" Width="19" Height="19" Margin="10"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="TabItemTemplate">
-            <StackPanel Orientation="Horizontal" MouseRightButtonUp="TabItem_MouseRightButtonUp">
-                <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="0,0,5,0" Stretch="Uniform" SnapsToDevicePixels="True"/>
-                <TextBlock Text="{Binding TabName}" ToolTip="{Binding FullTabName}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <Button Style="{StaticResource CloseButtonStyle}" 
-                        Click="CloseTabButton_Click"/>
-                
-            </StackPanel>
+        <DataTemplate x:Key="TabItemTemplate" >
+            <Grid >
+                <StackPanel   Height="30" Orientation="Horizontal" MouseRightButtonUp="TabItem_MouseRightButtonUp" >
+                    <Image Source="{Binding LogoUrl}" Width="24" Height="24" Margin="0,0,5,0" Stretch="Uniform" SnapsToDevicePixels="True"/>
+                    <TextBlock FontSize="16" Text="{Binding TabName}" ToolTip="{Binding FullTabName}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Button Style="{StaticResource CloseButtonStyle}" 
+                            Click="CloseTabButton_Click"
+                            Visibility="Collapsed"
+                            x:Name="CloseTabButton"
+                            />
+
+                </StackPanel>
+            </Grid>
         </DataTemplate>
         <!-- Define the ItemsPanelTemplate for the PinnedTabsListBox -->
         <ItemsPanelTemplate x:Key="PinnedTabsItemsPanelTemplate">
@@ -237,240 +249,465 @@
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
     </Window.Resources>
-
+    
 
     <Grid>
+        
         <Grid.ColumnDefinitions>
+            
             <ColumnDefinition Width="1"/>
             <!-- Coluna para o ThinBar -->
             <ColumnDefinition Width="*"/>
             
             <!-- Coluna para o conteúdo principal -->
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- ThinBar sempre visível -->
-        <Border x:Name="ThinBar" Style="{StaticResource ThinBarStyle}" MouseEnter="Window_MouseEnter" Background="Black" Cursor="Hand"/>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Grid.Row="0" Background="#FF2D2D30" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" x:Name="CustomBarWindow">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <!-- Largura do Sidebar -->
                 <ColumnDefinition Width="*"/>
-                <!-- Largura do ContentBorder -->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Menu Lateral -->
-            
-            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-            <Grid Background="#FF2D2D30" Grid.Column="0" x:Name="Sidebar" MouseLeave="Window_MouseLeave" Cursor="">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0">
-                    
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                                  VerticalScrollBarVisibility="Disabled">
-                        
-                        <ListBox Name="PinnedTabsListBox"
-                                 ItemTemplate="{StaticResource PinnedTabTemplate}"
-                                 ItemsPanel="{StaticResource PinnedTabsItemsPanelTemplate}"
-                                 Background="Transparent" BorderThickness="0" 
-                                 MouseDoubleClick="PinnedTabsListBox_MouseDoubleClick"
-                                 Margin="10" HorizontalAlignment="Stretch"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 MouseLeave="PinMouseLeave"
-                                 
-                                 PreviewMouseLeftButtonDown="PinnedListBox_PreviewMouseLeftButtonDown"
-                                PreviewMouseMove="PinnedListBox_PreviewMouseMove"
-                                PreviewMouseDown="PinnedListBox_PreviewMouseDown"
-                                DragOver="PinnedListBox_DragOver"
-                                Drop="PinnedListBox_Drop"
-                                AllowDrop="True"
-                                >
-                            
-                        </ListBox>
-                    </ScrollViewer>
-                    <DockPanel>
+            <TextBlock Text="Jupiter Browser" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
-                        <Button x:Name="newTabBtn" Content="+ New Tab" Click="NewTabButton_Click" ToolTip="New Tab" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5"/>
-                        
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
-                            <Button Margin="5" Width="40" Height="40" Click="BackButton_Click" ToolTip="Back">
-                                <Button.Content>
-                                    <Image Source="/BackIcon.png" Width="24" Height="24" Stretch="Uniform"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Margin="5" Width="40" Height="40" Click="ForwardButton_Click" ToolTip="Forward">
-                                <Button.Content>
-                                    <Image Source="/ForwardIcon.png" Width="24" Height="24" Stretch="Uniform"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Margin="5" Width="40" Height="40" Click="ReloadButton_Click" ToolTip="Reload">
-                                <Button.Content>
-                                    <Image Source="/RefreshIcon.png" Width="24" Height="24" Stretch="Uniform"/>
-                                </Button.Content>
-                            </Button>
-                            <Button Click="adBlock_Click"  Margin="5" Width="40" Height="40" ToolTip="Enable/Disable native ad block">
-                                <Button.Content>
-                                    <Image Source="/ShieldIcon.png" Width="24" Height="24" Stretch="Uniform"/>
-                                </Button.Content>
-                            </Button>
-                            
-                        </StackPanel>
-                    </DockPanel>
-                    <TextBox x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" />
-
-                    <Border x:Name="WhiteBar" Background="White" Height="1" VerticalAlignment="Top" Margin="0,10,1,2"/>
-
-                    <Button Content="Clear" x:Name="clearBtn"
-                        Background="Transparent" Foreground="White"
-                        HorizontalAlignment="Center" Margin="0,0,0,0" Width="Auto"
-                        ToolTip="Clear Tabs" Visibility="Collapsed" Click="ClearBtn_Click">
-                        <Button.Style>
-                            <Style TargetType="Button">
+            <Button Margin="-1000,0,0,0" Width="40" Height="40" Click="BackButton_Click" ToolTip="Back">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="BorderBrush" Value="Transparent"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Cursor" Value="Hand"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <!-- Certifique-se de que o conteúdo do botão ainda seja visível -->
+                <Button.Content>
+                    <Image Source="/BackIcon.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
+
+            <Button Margin="-900,0,0,0" Width="40" Height="40" Click="ForwardButton_Click" ToolTip="Forward">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="/ForwardIcon.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
+            <Button Margin="-800,0,0,0" Width="40" Height="40" Click="ReloadButton_Click" ToolTip="Reload">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="/RefreshIcon.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
+            <Button Margin="-700,0,0,0" Width="40" Height="40" ToolTip="Enable/Disable native ad block">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="/ShieldIcon.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
+
+            <TextBox Margin="150,0,0,0" Width="150" x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" TextAlignment="Center" />
+            <Border x:Name="WhiteBar" Background="White" Height="3" Width="150" VerticalAlignment="Top" Margin="150,35,0,0" CornerRadius="5"/>
+            
+            <Button Grid.Column="1" Content="─" Click="MinimizeButton_Click" Width="45" Height="30"
+                Background="Transparent" Foreground="White" BorderThickness="0" Margin="10,0,0,10"/>
+            <Button Grid.Column="2" Content="☐" Click="MaximizeRestoreButton_Click" Width="45" Height="30"
+                Background="Transparent" Foreground="White" BorderThickness="0" Margin="10,0,0,10"/>
+            <Button Grid.Column="3" Content="✕" Click="CloseButton_Click" Width="45" Height="30"
+                Background="Transparent" Foreground="White" BorderThickness="0" Margin="10,0,0,10"/>
+        </Grid>
+
+
+        <Grid Grid.Column="1" Grid.Row="1">
+
+
+            <!-- ThinBar sempre visível -->
+            <Border x:Name="ThinBar" Style="{StaticResource ThinBarStyle}" MouseEnter="Window_MouseEnter" Background="Black" Cursor="Hand"/>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <!-- Largura do Sidebar -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Largura do ContentBorder -->
+                </Grid.ColumnDefinitions>
+
+
+                <!-- Menu Lateral -->
+
+                <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                    <Grid Background="#FF2D2D30" Grid.Column="0" x:Name="Sidebar" MouseLeave="Window_MouseLeave" Cursor="">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0">
+
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Disabled">
+
+                                <ListBox Name="PinnedTabsListBox"
+                                     ItemTemplate="{StaticResource PinnedTabTemplate}"
+                                     ItemsPanel="{StaticResource PinnedTabsItemsPanelTemplate}"
+                                     Background="Transparent" BorderThickness="0" 
+                                     MouseDoubleClick="PinnedTabsListBox_MouseDoubleClick"
+                                     Margin="30,0,0,0" HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     MouseLeave="PinMouseLeave"
+                                 
+                                     PreviewMouseLeftButtonDown="PinnedListBox_PreviewMouseLeftButtonDown"
+                                    PreviewMouseMove="PinnedListBox_PreviewMouseMove"
+                                    PreviewMouseDown="PinnedListBox_PreviewMouseDown"
+                                    DragOver="PinnedListBox_DragOver"
+                                    Drop="PinnedListBox_Drop"
+                                    AllowDrop="True"
+                                    >
+
+                                </ListBox>
+                            </ScrollViewer>
+                            <DockPanel>
+
+                                <Button x:Name="newTabBtn" Content="+ New Tab" Click="NewTabButton_Click" ToolTip="New Tab" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <!-- Definindo o fundo e borda padrão -->
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+
+                            </DockPanel>
+                            
+
+                            
+
+                            <Button Content="Clear" x:Name="clearBtn"
+                            Background="Transparent" Foreground="White"
+                            HorizontalAlignment="Center" Margin="0,0,0,0" Width="Auto"
+                            ToolTip="Clear Tabs" Visibility="Collapsed" Click="ClearBtn_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button">
                                         <Setter Property="Background" Value="Transparent"/>
                                         <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="BorderBrush" Value="Transparent"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    <!-- ListBox para as guias -->
-                    <ListBox Name="TabListBox" 
-                             ItemTemplate="{StaticResource TabItemTemplate}" 
-                             SelectionChanged="TabListBox_SelectionChanged"
-                             PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
-                             PreviewMouseMove="TabListBox_PreviewMouseMove"
-                             PreviewMouseDown="TabListBox_PreviewMouseDown"
-                             DragOver="TabListBox_DragOver"
-                             Drop="TabListBox_Drop"
-                             AllowDrop="True"
-                             MouseDoubleClick="TabListRename_Click"
-                             />
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            <!-- ListBox para as guias -->
+                            <ListBox Name="TabListBox" 
+                                 ItemTemplate="{StaticResource TabItemTemplate}" 
+                                 SelectionChanged="TabListBox_SelectionChanged"
+                                 PreviewMouseLeftButtonDown="TabListBox_PreviewMouseLeftButtonDown"
+                                 PreviewMouseMove="TabListBox_PreviewMouseMove"
+                                 PreviewMouseDown="TabListBox_PreviewMouseDown"
+                                 DragOver="TabListBox_DragOver"
+                                 Drop="TabListBox_Drop"
+                                 AllowDrop="True"
+                                 MouseDoubleClick="TabListRename_Click"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 MouseEnter="TabListBox_MouseEnter"
+                                 MouseLeave="TabListBox_MouseLeave"
+                                     />
 
-                    <Border MouseLeftButtonUp="ClickBannerWhats" x:Name="BannerWhats" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
-                        <StackPanel x:Name="StackBannerWhats">
+                            <Border MouseLeftButtonUp="ClickBannerWhats" x:Name="BannerWhats" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+                                <StackPanel x:Name="StackBannerWhats">
 
-                            <TextBlock x:Name="BannerWhatsTitle" Text="Whatsapp" Visibility="Visible" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock x:Name="BannerWhatsText" Visibility="Visible" Text="Click to view new messages" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                    <TextBlock x:Name="BannerWhatsTitle" Text="Whatsapp" Visibility="Visible" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                    <TextBlock x:Name="BannerWhatsText" Visibility="Visible" Text="Click to view new messages" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                </StackPanel>
+                            </Border>
+
+
+                            <Border MouseLeftButtonUp="ClickBannerAtt" x:Name="BannerAtt" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+                                <StackPanel x:Name="StackBannerAtt">
+
+                                    <TextBlock x:Name="BannerAttTitle" Text="Update Availble" Visibility="Visible" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                    <TextBlock x:Name="BannerAttText" Visibility="Visible" Text="Click to Update" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                </StackPanel>
+                            </Border>
+
+
+                            <Border MouseEnter="MiniPlayer_Enter" MouseLeave="MiniPlayer_Leave" x:Name="MiniPlayer" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
+
+                                <StackPanel x:Name="StackMiniPlayer">
+
+                                    <TextBlock x:Name="PlayerTitle" Text="Mini Player" Visibility="Collapsed" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                    <TextBlock x:Name="MusicTitle" Visibility="Collapsed" Text="Title" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                        <Canvas x:Name="MiniPlayerPlayBtn"  MouseLeftButtonDown="MiniPlayer_Play_Click" Width="32" Height="37" Margin="0,0,5,0">
+                                            <Canvas.RenderTransform>
+                                                <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                            </Canvas.RenderTransform>
+                                            <Path Fill="White" Data="M4.993,2.496C4.516,2.223,4,2.45,4,3v26c0,0.55,0.516,0.777,0.993,0.504l22.826-13.008c0.478-0.273,0.446-0.719-0.031-0.992L4.993,2.496z"/>
+                                            <Path Fill="White" Data="M4.585,30.62L4.585,30.62C3.681,30.62,3,29.923,3,29V3c0-0.923,0.681-1.62,1.585-1.62c0.309,0,0.621,0.085,0.904,0.248l22.794,13.007c0.559,0.319,0.878,0.823,0.878,1.382c0,0.548-0.309,1.039-0.847,1.347L5.488,30.373C5.206,30.534,4.894,30.62,4.585,30.62z M5,3.651v24.698l21.655-12.34L5,3.651z"/>
+                                        </Canvas>
+
+                                        <Canvas MouseLeftButtonDown="MiniPlayer_Pause_Click" Width="33" Height="37" Margin="0,0,5,0">
+                                            <Canvas.RenderTransform>
+                                                <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                            </Canvas.RenderTransform>
+                                            <Path Fill="White" Data="M6,4C5.45,4,5,4.45,5,5v22c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1V5c0-0.55-0.45-1-1-1H6z"/>
+                                            <Path Fill="White" Data="M9,29H6c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C11,28.103,10.103,29,9,29z M9,27v1V27L9,27 L9,27z M6,5v22h2.997L9,5H6z"/>
+
+                                            <Path Fill="White" Data="M23,4c-0.55,0-1,0.45-1,1v22c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1V5c0-0.55-0.45-1-1-1H23z"/>
+                                            <Path Fill="White" Data="M26,29h-3c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C28,28.103,27.103,29,26,29z M26,27v1V27 L26,27L26,27z M23,5v22h2.997L26,5H23z"/>
+                                        </Canvas>
+
+                                        <Canvas MouseLeftButtonDown="MiniPlayer_Previus_Click" Width="35" Height="38" Margin="0,0,5,0">
+                                            <Canvas.RenderTransform>
+                                                <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                            </Canvas.RenderTransform>
+                                            <Path Fill="White" Data="M27.136,3.736C27.508,3.332,28,3.45,28,4v24c0,0.55-0.492,0.668-0.864,0.264L16.449,16.736c-0.372-0.405-0.325-1.068,0.047-1.473L27.136,3.736z"/>
+                                            <Path Fill="White" Data="M27.602,29.504c-0.441,0-0.868-0.2-1.202-0.563L15.715,17.416c-0.718-0.781-0.697-2.022,0.044-2.829L26.401,3.058c0.333-0.362,0.76-0.562,1.201-0.562C28.399,2.496,29,3.143,29,4v24C29,28.857,28.399,29.504,27.602,29.504z M27,5.358l-9.77,10.584c-0.036,0.04-0.044,0.109-0.036,0.132L27,26.646V5.358z"/>
+
+                                            <Path Fill="White" Data="M14.297,3.736C14.669,3.332,15,3.45,15,4v24c0,0.55-0.331,0.668-0.703,0.264L3.69,16.736c-0.372-0.405-0.365-1.068,0.007-1.473L14.297,3.736z"/>
+                                            <Path Fill="White" Data="M14.706,29.504c-0.286,0-0.717-0.098-1.146-0.563L2.954,17.414c-0.727-0.791-0.724-2.032,0.006-2.827l10.6-11.527c0.428-0.466,0.859-0.563,1.146-0.563C15.329,2.496,16,2.967,16,4v24C16,29.033,15.329,29.504,14.706,29.504z M14,5.538L4.433,15.94c-0.025,0.027-0.023,0.102-0.006,0.119L14,26.463V5.538z"/>
+                                        </Canvas>
+
+                                        <Canvas MouseLeftButtonDown="MiniPlayer_Next_Click" Width="32" Height="37" Margin="0,0,5,0">
+                                            <Canvas.RenderTransform>
+                                                <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                            </Canvas.RenderTransform>
+                                            <Path Fill="White" Data="M4.561,3.728C4.184,3.328,4,3.45,4,4v24c0,0.55,0.184,0.672,0.561,0.272l10.816-11.544c0.377-0.4,0.408-1.056,0.031-1.456L4.561,3.728z"/>
+                                            <Path Fill="White" Data="M4.202,29.507L4.202,29.507C4.079,29.507,3,29.465,3,28V4c0-1.465,1.079-1.507,1.202-1.507c0.568,0,0.958,0.414,1.087,0.55l10.848,11.545c0.725,0.77,0.711,2.038-0.031,2.826L5.29,28.956C5.16,29.094,4.771,29.507,4.202,29.507z M5.004,5.66L5,26.337l9.674-10.389L5.004,5.66z"/>
+
+                                            <Path Fill="White" Data="M17.561,3.728C17.184,3.328,17,3.45,17,4v24c0,0.55,0.184,0.672,0.561,0.272l10.816-11.544c0.377-0.4,0.408-1.056,0.031-1.456L17.561,3.728z"/>
+                                            <Path Fill="White" Data="M17.202,29.507L17.202,29.507C17.079,29.507,16,29.465,16,28V4c0-1.465,1.079-1.507,1.202-1.507c0.568,0,0.958,0.414,1.087,0.55l10.848,11.545c0.725,0.77,0.711,2.038-0.031,2.826L18.29,28.956C18.16,29.094,17.771,29.507,17.202,29.507z M18.004,5.66L18,26.337l9.674-10.389L18.004,5.66z"/>
+                                        </Canvas>
+
+                                    </StackPanel>
+
+                                </StackPanel>
+
+                            </Border>
+
+
                         </StackPanel>
-                    </Border>
+                        <!-- Botão no final -->
 
+                        <Button Grid.Row="1" Margin="-130,10,0,10" Click="HistoricButton_Click" Width="50" ToolTip="Historic">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <!-- Definindo o fundo e borda padrão -->
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Button.Content>
+                                <Path Data="M 4 1 L 6 1 L 6 0 L 10 0 L 10 1 L 12 1 L 12 3 L 2 3 L 2 1 Z
+                                        M 3 3 L 11 3 L 10 12 L 4 12 Z
+                                        M 5 5 L 5 10
+                                        M 7 5 L 7 10
+                                        M 9 5 L 9 10"
+                                        Fill="Transparent"
+                                        Stroke="White"
+                                        StrokeThickness="1"
+                                        Stretch="Uniform" />
+                            </Button.Content>
+                        </Button>
+                        <Button Click="Apps_Click" Grid.Row="1" Margin="10,10,0,10" Width="40" Height="40" ToolTip="Apps">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <!-- Definindo o fundo e borda padrão -->
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Button.Content>
+                                <Image Source="/apps.png" Width="24" Height="24" Stretch="Uniform"/>
+                            </Button.Content>
+                        </Button>
 
-                    <Border MouseLeftButtonUp="ClickBannerAtt" x:Name="BannerAtt" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
-                        <StackPanel x:Name="StackBannerAtt">
+                        <Button Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50" ToolTip="Jupiter Menu">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <!-- Definindo o fundo e borda padrão -->
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Path Data="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0zm-6.75 0a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0z"
+                            Fill="Transparent"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            Stretch="Uniform" />
+                        </Button>
 
-                            <TextBlock x:Name="BannerAttTitle" Text="Update Availble" Visibility="Visible" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock x:Name="BannerAttText" Visibility="Visible" Text="Click to Update" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                        </StackPanel>
-                    </Border>
-                    
-                    
-                    <Border MouseEnter="MiniPlayer_Enter" MouseLeave="MiniPlayer_Leave" x:Name="MiniPlayer" Visibility="Collapsed" Background="Black" Margin="5" Padding="10" CornerRadius="10">
-                        
-                        <StackPanel x:Name="StackMiniPlayer">
-                            
-                            <TextBlock x:Name="PlayerTitle" Text="Mini Player" Visibility="Collapsed" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock x:Name="MusicTitle" Visibility="Collapsed" Text="Title" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    </Grid>
+                </ScrollViewer>
 
-                                <Canvas x:Name="MiniPlayerPlayBtn"  MouseLeftButtonDown="MiniPlayer_Play_Click" Width="32" Height="37" Margin="0,0,5,0">
-                                    <Canvas.RenderTransform>
-                                        <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
-                                    </Canvas.RenderTransform>
-                                    <Path Fill="White" Data="M4.993,2.496C4.516,2.223,4,2.45,4,3v26c0,0.55,0.516,0.777,0.993,0.504l22.826-13.008c0.478-0.273,0.446-0.719-0.031-0.992L4.993,2.496z"/>
-                                    <Path Fill="White" Data="M4.585,30.62L4.585,30.62C3.681,30.62,3,29.923,3,29V3c0-0.923,0.681-1.62,1.585-1.62c0.309,0,0.621,0.085,0.904,0.248l22.794,13.007c0.559,0.319,0.878,0.823,0.878,1.382c0,0.548-0.309,1.039-0.847,1.347L5.488,30.373C5.206,30.534,4.894,30.62,4.585,30.62z M5,3.651v24.698l21.655-12.34L5,3.651z"/>
-                                </Canvas>
+                <!-- Área de Conteúdo -->
 
-                                <Canvas MouseLeftButtonDown="MiniPlayer_Pause_Click" Width="33" Height="37" Margin="0,0,5,0">
-                                    <Canvas.RenderTransform>
-                                        <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
-                                    </Canvas.RenderTransform>
-                                    <Path Fill="White" Data="M6,4C5.45,4,5,4.45,5,5v22c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1V5c0-0.55-0.45-1-1-1H6z"/>
-                                    <Path Fill="White" Data="M9,29H6c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C11,28.103,10.103,29,9,29z M9,27v1V27L9,27 L9,27z M6,5v22h2.997L9,5H6z"/>
+                <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="2" x:Name="ContentBorder">
+                    <ContentControl Name="ContentArea"/>
 
-                                    <Path Fill="White" Data="M23,4c-0.55,0-1,0.45-1,1v22c0,0.55,0.45,1,1,1h3c0.55,0,1-0.45,1-1V5c0-0.55-0.45-1-1-1H23z"/>
-                                    <Path Fill="White" Data="M26,29h-3c-1.103,0-2-0.897-2-2V5c0-1.103,0.897-2,2-2h3c1.103,0,2,0.897,2,2v22C28,28.103,27.103,29,26,29z M26,27v1V27 L26,27L26,27z M23,5v22h2.997L26,5H23z"/>
-                                </Canvas>
-
-                                <Canvas MouseLeftButtonDown="MiniPlayer_Previus_Click" Width="35" Height="38" Margin="0,0,5,0">
-                                    <Canvas.RenderTransform>
-                                        <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
-                                    </Canvas.RenderTransform>
-                                    <Path Fill="White" Data="M27.136,3.736C27.508,3.332,28,3.45,28,4v24c0,0.55-0.492,0.668-0.864,0.264L16.449,16.736c-0.372-0.405-0.325-1.068,0.047-1.473L27.136,3.736z"/>
-                                    <Path Fill="White" Data="M27.602,29.504c-0.441,0-0.868-0.2-1.202-0.563L15.715,17.416c-0.718-0.781-0.697-2.022,0.044-2.829L26.401,3.058c0.333-0.362,0.76-0.562,1.201-0.562C28.399,2.496,29,3.143,29,4v24C29,28.857,28.399,29.504,27.602,29.504z M27,5.358l-9.77,10.584c-0.036,0.04-0.044,0.109-0.036,0.132L27,26.646V5.358z"/>
-
-                                    <Path Fill="White" Data="M14.297,3.736C14.669,3.332,15,3.45,15,4v24c0,0.55-0.331,0.668-0.703,0.264L3.69,16.736c-0.372-0.405-0.365-1.068,0.007-1.473L14.297,3.736z"/>
-                                    <Path Fill="White" Data="M14.706,29.504c-0.286,0-0.717-0.098-1.146-0.563L2.954,17.414c-0.727-0.791-0.724-2.032,0.006-2.827l10.6-11.527c0.428-0.466,0.859-0.563,1.146-0.563C15.329,2.496,16,2.967,16,4v24C16,29.033,15.329,29.504,14.706,29.504z M14,5.538L4.433,15.94c-0.025,0.027-0.023,0.102-0.006,0.119L14,26.463V5.538z"/>
-                                </Canvas>
-
-                                <Canvas MouseLeftButtonDown="MiniPlayer_Next_Click" Width="32" Height="37" Margin="0,0,5,0">
-                                    <Canvas.RenderTransform>
-                                        <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
-                                    </Canvas.RenderTransform>
-                                    <Path Fill="White" Data="M4.561,3.728C4.184,3.328,4,3.45,4,4v24c0,0.55,0.184,0.672,0.561,0.272l10.816-11.544c0.377-0.4,0.408-1.056,0.031-1.456L4.561,3.728z"/>
-                                    <Path Fill="White" Data="M4.202,29.507L4.202,29.507C4.079,29.507,3,29.465,3,28V4c0-1.465,1.079-1.507,1.202-1.507c0.568,0,0.958,0.414,1.087,0.55l10.848,11.545c0.725,0.77,0.711,2.038-0.031,2.826L5.29,28.956C5.16,29.094,4.771,29.507,4.202,29.507z M5.004,5.66L5,26.337l9.674-10.389L5.004,5.66z"/>
-
-                                    <Path Fill="White" Data="M17.561,3.728C17.184,3.328,17,3.45,17,4v24c0,0.55,0.184,0.672,0.561,0.272l10.816-11.544c0.377-0.4,0.408-1.056,0.031-1.456L17.561,3.728z"/>
-                                    <Path Fill="White" Data="M17.202,29.507L17.202,29.507C17.079,29.507,16,29.465,16,28V4c0-1.465,1.079-1.507,1.202-1.507c0.568,0,0.958,0.414,1.087,0.55l10.848,11.545c0.725,0.77,0.711,2.038-0.031,2.826L18.29,28.956C18.16,29.094,17.771,29.507,17.202,29.507z M18.004,5.66L18,26.337l9.674-10.389L18.004,5.66z"/>
-                                </Canvas>
-
-                            </StackPanel>
-                            
-                        </StackPanel>
-                        
-                    </Border>
-
-
-                </StackPanel>
-                <!-- Botão no final -->
-
-                <Button Grid.Row="1" Margin="10" Click="HistoricButton_Click" Width="50" ToolTip="Historic">
-                    <Button.Content>
-                        <Path Data="M 4 1 L 6 1 L 6 0 L 10 0 L 10 1 L 12 1 L 12 3 L 2 3 L 2 1 Z
-                                    M 3 3 L 11 3 L 10 12 L 4 12 Z
-                                    M 5 5 L 5 10
-                                    M 7 5 L 7 10
-                                    M 9 5 L 9 10"
-                                    Fill="Transparent"
-                                    Stroke="White"
-                                    StrokeThickness="1"
-                                    Stretch="Uniform" />
-                    </Button.Content>
-                </Button>
-                <Button Click="Apps_Click" Grid.Row="1" Margin="80,10,0,10" Width="40" Height="40" ToolTip="Apps">
-                    <Button.Content>
-                        <Image Source="/apps.png" Width="24" Height="24" Stretch="Uniform"/>
-                    </Button.Content>
-                </Button>
-
-                <Button Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50" ToolTip="Jupiter Menu">
-                    <Path Data="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0zm-6.75 0a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0z"
-                        Fill="Transparent"
-                        Stroke="White"
-                        StrokeThickness="1"
-                        Stretch="Uniform" />
-                </Button>
-
+                </Border>
             </Grid>
-            </ScrollViewer>
-
-            <!-- Área de Conteúdo -->
-            
-            <Border Background="#FFF0F0F0" CornerRadius="10" Margin="10" Grid.Column="2" x:Name="ContentBorder">
-                <ContentControl Name="ContentArea"/>
-                
-            </Border>
         </Grid>
+        
     </Grid>
 </Window>
 

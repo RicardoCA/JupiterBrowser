@@ -12,15 +12,18 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Wpf.Ui.Interop.WinDef;
 using MessageBox = System.Windows.MessageBox;
 
 //using Wpf.Ui.Controls; // Para as cores do WPF
@@ -29,7 +32,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "3.0";
+        private string VERSION = "4.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -73,6 +76,8 @@ namespace JupiterBrowser
         private string password = "";
 
 
+
+
         public MainWindow()
         {
             AmbienteCheck();
@@ -84,6 +89,9 @@ namespace JupiterBrowser
             this.DataContext = this;
             this.KeyDown += Window_KeyDown;
             this.Closing += MainWindow_Closing;
+            this.MaxHeight = (SystemParameters.WorkArea.Height + SystemParameters.WindowCaptionHeight) - 15;
+            this.MaxWidth = SystemParameters.WorkArea.Width + 10;
+            this.WindowState = WindowState.Maximized;
 
             // Inicializa o timer
             _musicTitleUpdateTimer = new DispatcherTimer();
@@ -126,6 +134,44 @@ namespace JupiterBrowser
             
             
 
+        }
+
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                MaximizeRestoreButton_Click(sender, e);
+            }
+            else
+            {
+                this.DragMove();
+            }
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                
+                this.WindowState = WindowState.Maximized;
+            }
+            
+        }
+
+        
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
 
@@ -657,9 +703,77 @@ namespace JupiterBrowser
             return null;
         }
 
+        private void TabListBox_MouseEnter(object sender, MouseEventArgs e)
+        {
+            foreach (var item in TabListBox.Items)
+            {
+                // Encontra o ListBoxItem correspondente
+                var listBoxItem = TabListBox.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                if (listBoxItem != null)
+                {
+                    var closeButton = FindChild<Button>(listBoxItem, "CloseTabButton");
+                    if (closeButton != null)
+                    {
+                        closeButton.Visibility = Visibility.Visible;
+                    }
+                }
+            }
+        }
+
+        private void TabListBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+            foreach (var item in TabListBox.Items)
+            {
+                // Encontra o ListBoxItem correspondente
+                var listBoxItem = TabListBox.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                if (listBoxItem != null)
+                {
+                    var closeButton = FindChild<Button>(listBoxItem, "CloseTabButton");
+                    if (closeButton != null)
+                    {
+                        closeButton.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
+        public static T FindChild<T>(DependencyObject parent, string childName) where T : DependencyObject
+        {
+            // Busca direta
+            if (parent == null) return null;
+
+            T foundChild = null;
+
+            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                // Se o tipo filho não é o alvo
+                if (child is not T childType)
+                {
+                    foundChild = FindChild<T>(child, childName);
+                    if (foundChild != null) break;
+                }
+                else if (!string.IsNullOrEmpty(childName))
+                {
+                    // Busca o nome do filho
+                    if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)
+                    {
+                        foundChild = (T)child;
+                        break;
+                    }
+                }
+                else
+                {
+                    foundChild = (T)child;
+                    break;
+                }
+            }
+
+            return foundChild;
+        }
+
         private async Task UpdateTabTitlesAsync()
         {
-
             if (tabMenuIsOpen == false)
             {
                 try
@@ -687,9 +801,19 @@ namespace JupiterBrowser
                                     if (tab.isRenamed == false)
                                     {
                                         tab.FullTabName = title;
-                                        tab.TabName = title.Length > 18 ? title.Substring(0, 18) : title;
-                                    }
+                                        tab.TabName = title.Length > 13 ? title.Substring(0, 13) : title;
 
+                                        // Atualiza o item no ListBox sem recriar todos os itens
+                                        var listBoxItem = TabListBox.ItemContainerGenerator.ContainerFromItem(tab) as ListBoxItem;
+                                        if (listBoxItem != null)
+                                        {
+                                            var textBlock = FindVisualChild<TextBlock>(listBoxItem);
+                                            if (textBlock != null)
+                                            {
+                                                textBlock.Text = tab.TabName;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -699,12 +823,6 @@ namespace JupiterBrowser
                             }
                         }
                     }
-
-                    // Atualiza a interface para refletir as mudanças nos títulos
-                    var selectedIndex = TabListBox.SelectedIndex;
-                    TabListBox.ItemsSource = null;
-                    TabListBox.ItemsSource = Tabs;
-                    TabListBox.SelectedIndex = selectedIndex;
                 }
                 catch (Exception ex)
                 {
@@ -714,6 +832,22 @@ namespace JupiterBrowser
             }
         }
 
+        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child != null && child is T)
+                    return (T)child;
+                else
+                {
+                    var childOfChild = FindVisualChild<T>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
 
         private void SiteThemeMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -1144,6 +1278,8 @@ namespace JupiterBrowser
             Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            CustomBarWindow.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+
             var contextMenu = (ContextMenu)FindResource("BrowserMenu");
             contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             foreach (var item in contextMenu.Items)
@@ -2497,7 +2633,7 @@ namespace JupiterBrowser
                     Sidebar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
-
+                    CustomBarWindow.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     var contextMenu = (ContextMenu)FindResource("BrowserMenu");
                     contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     foreach (var item in contextMenu.Items)
@@ -2658,6 +2794,7 @@ namespace JupiterBrowser
         private void WebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
             // Start animation when navigation starts
+            WhiteBar.Visibility = Visibility.Visible;
             var storyboard = (Storyboard)this.Resources["LoadingAnimation"];
             storyboard.Begin();
 
@@ -2703,6 +2840,7 @@ namespace JupiterBrowser
         {
             if (sender is WebView2 webView)
             {
+                
                 string adBlockScript = @"
                     var ads = document.querySelectorAll('[id^=ad], [class*=ad], [class*=banner]');
                     for (var i = 0; i < ads.length; i++) {
@@ -2721,10 +2859,10 @@ namespace JupiterBrowser
                     }
 
                 }
-
+                
                 var storyboard = (Storyboard)this.Resources["LoadingAnimation"];
                 storyboard.Stop();
-
+                WhiteBar.Visibility = Visibility.Collapsed;
                 var title = await webView.CoreWebView2.ExecuteScriptAsync("document.title");
                 title = title.Trim('"'); // Remove the surrounding quotes
                 string url = webView.Source.ToString();
@@ -2745,11 +2883,11 @@ namespace JupiterBrowser
                 if (tabItem != null)
                 {
                     tabItem.OnNavigationCompleted();
-                    if (title.Length > 18)
+                    if (title.Length > 13)
                     {
                         if (tabItem.isRenamed == false)
                         {
-                            tabItem.TabName = title.Substring(0, 18);
+                            tabItem.TabName = title.Substring(0, 13);
                         }
 
 
