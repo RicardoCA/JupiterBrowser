@@ -100,6 +100,11 @@
                     <Image Source="/downloads.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Header="Historic" Click="HistoricButton_Click">
+                <MenuItem.Icon>
+                    <Image Source="/trash.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem> 
             <MenuItem Header="Jupiter Card" Click="JupiterCard_Click">
                 <MenuItem.Icon>
                     <Image Source="/card.png" Width="16" Height="16" Margin="0"/>
@@ -245,14 +250,7 @@
         <ItemsPanelTemplate x:Key="PinnedTabsItemsPanelTemplate">
             <WrapPanel Orientation="Horizontal" ItemWidth="50" ItemHeight="50"/>
         </ItemsPanelTemplate>
-        <Style x:Key="ThinBarStyle" TargetType="Border">
-            <Setter Property="Background" Value="#FF2D2D30"/>
-            <Setter Property="Width" Value="100"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
+        
     </Window.Resources>
     
 
@@ -279,8 +277,39 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Jupiter Browser" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
-            <Button Click="SidebarToggle_Click" MouseEnter="SidebarToggle_Enter" HorizontalAlignment="Left" Margin="100,0,0,0" Width="40" Height="40" ToolTip="Toggle Sidebar">
+            
+            <Button HorizontalAlignment="Left" Margin="10,0,0,0" Width="16" Height="16" x:Name="jupiterMenuBtn" Click="OpenBrowserMenu_Click" ToolTip="Jupiter Menu">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Path Data="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0zm-6.75 0a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0z"
+    Fill="Transparent"
+    Stroke="White"
+    StrokeThickness="1"
+    Stretch="Uniform" />
+            </Button>
+
+            <Button Click="SidebarToggle_Click" MouseEnter="SidebarToggle_Enter" HorizontalAlignment="Left" Margin="60,0,0,0" Width="40" Height="40" ToolTip="Toggle Sidebar">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -429,7 +458,67 @@
 
             <TextBox Margin="150,0,0,0" Width="150" x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" TextAlignment="Center" />
             <Border x:Name="WhiteBar" Background="White" Height="3" Width="150" VerticalAlignment="Top" Margin="150,35,0,0" CornerRadius="5"/>
-            
+
+
+            <Button Click="CopyUrl_Click" HorizontalAlignment="Center" Margin="350,0,0,0" Width="40" Height="40" ToolTip="Copy Url">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="/link.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
+            <Button Click="Apps_Click" HorizontalAlignment="Center" Margin="400,0,0,0" Width="40" Height="40" ToolTip="Mini Apps">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="/apps.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
+
+
+
             <Button Grid.Column="1" Content="─" Click="MinimizeButton_Click" Width="45" Height="30"
                 Background="Transparent" Foreground="White" BorderThickness="0" Margin="10,0,0,10"/>
             <Button Grid.Column="2" Content="☐" Click="MaximizeRestoreButton_Click" Width="45" Height="30"
@@ -443,7 +532,7 @@
 
 
             <!-- ThinBar sempre visível -->
-            <Border x:Name="ThinBar" Style="{StaticResource ThinBarStyle}" MouseEnter="Window_MouseEnter" Background="Black" Cursor="Hand"/>
+            
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
@@ -455,7 +544,7 @@
 
                 <!-- Menu Lateral -->
 
-                <ScrollViewer MouseEnter="BtnsVisible_SidebarEnter" MouseLeave="BtnsVisible_SidebarLeave" CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
                     <Grid Background="#FF2D2D30" Grid.Column="0" x:Name="Sidebar" MouseLeave="Window_MouseLeave" Cursor="">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -636,101 +725,10 @@
                         </StackPanel>
                         <!-- Botão no final -->
 
-                        <Button Visibility="Collapsed" x:Name="historicBtn" Grid.Row="1" Margin="-130,10,0,10" Click="HistoricButton_Click" Width="50" ToolTip="Historic">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <!-- Definindo o fundo e borda padrão -->
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="BorderBrush" Value="Transparent"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                            <Button.Content>
-                                <Path Data="M 4 1 L 6 1 L 6 0 L 10 0 L 10 1 L 12 1 L 12 3 L 2 3 L 2 1 Z
-                                        M 3 3 L 11 3 L 10 12 L 4 12 Z
-                                        M 5 5 L 5 10
-                                        M 7 5 L 7 10
-                                        M 9 5 L 9 10"
-                                        Fill="Transparent"
-                                        Stroke="White"
-                                        StrokeThickness="1"
-                                        Stretch="Uniform" />
-                            </Button.Content>
-                        </Button>
-                        <Button Visibility="Collapsed" x:Name="miniappsBtn" Click="Apps_Click" Grid.Row="1" Margin="10,10,0,10" Width="40" Height="40" ToolTip="Apps">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <!-- Definindo o fundo e borda padrão -->
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="BorderBrush" Value="Transparent"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                            <Button.Content>
-                                <Image Source="/apps.png" Width="24" Height="24" Stretch="Uniform"/>
-                            </Button.Content>
-                        </Button>
+                        
+                        
 
-                        <Button Visibility="Collapsed" x:Name="jupiterMenuBtn" Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50" ToolTip="Jupiter Menu">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <!-- Definindo o fundo e borda padrão -->
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="BorderBrush" Value="Transparent"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                            <Path Data="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0zm-6.75 0a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0z"
-                            Fill="Transparent"
-                            Stroke="White"
-                            StrokeThickness="1"
-                            Stretch="Uniform" />
-                        </Button>
+                        
 
                     </Grid>
                 </ScrollViewer>

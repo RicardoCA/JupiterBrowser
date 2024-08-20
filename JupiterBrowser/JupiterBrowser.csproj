@@ -23,6 +23,7 @@
     <None Remove="keep.png" />
     <None Remove="keep_off.png" />
     <None Remove="key.png" />
+    <None Remove="link.png" />
     <None Remove="lock.png" />
     <None Remove="open_newTab.png" />
     <None Remove="quit.png" />
@@ -33,6 +34,7 @@
     <None Remove="sidebar.png" />
     <None Remove="sitetheme.png" />
     <None Remove="theme.png" />
+    <None Remove="trash.png" />
     <None Remove="update.png" />
   </ItemGroup>
 
@@ -80,6 +82,7 @@
     <Resource Include="keep.png" />
     <Resource Include="keep_off.png" />
     <Resource Include="key.png" />
+    <Resource Include="link.png" />
     <Resource Include="lock.png" />
     <Resource Include="open_newTab.png" />
     <Resource Include="quit.png" />
@@ -90,6 +93,7 @@
     <Resource Include="sidebar.png" />
     <Resource Include="sitetheme.png" />
     <Resource Include="theme.png" />
+    <Resource Include="trash.png" />
     <Resource Include="update.png" />
   </ItemGroup>
 

@@ -167,7 +167,13 @@ namespace JupiterBrowser
             
         }
 
-        
+
+        private void CopyUrl_Click(object sender, RoutedEventArgs e)
+        {
+            CopyURL();
+        }
+
+
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -179,19 +185,7 @@ namespace JupiterBrowser
             OpenNewTabWithUrl("edge://downloads");
         }
 
-        private void BtnsVisible_SidebarEnter(object sender, MouseEventArgs e)
-        {
-            historicBtn.Visibility = Visibility.Visible;
-            jupiterMenuBtn.Visibility = Visibility.Visible;
-            miniappsBtn.Visibility = Visibility.Visible;
-        }
-
-        private void BtnsVisible_SidebarLeave(object sender, MouseEventArgs e)
-        {
-            historicBtn.Visibility = Visibility.Collapsed;
-            jupiterMenuBtn.Visibility = Visibility.Collapsed;
-            miniappsBtn.Visibility = Visibility.Collapsed;
-        }
+        
 
 
         private void AmbienteCheck()
@@ -2159,20 +2153,13 @@ namespace JupiterBrowser
             // Fazer o Border ocupar a tela toda
             Grid.SetColumn(ContentBorder, 0);
             Grid.SetColumnSpan(ContentBorder, 2);
-            ContentBorder.Margin = new Thickness(0);
-            ContentBorder.CornerRadius = new CornerRadius(0);
+            ContentBorder.Margin = new Thickness(20);
+            ContentBorder.CornerRadius = new CornerRadius(10);
             Sidebar.Visibility = Visibility.Collapsed;
 
         }
 
-        private void Window_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (isFullScreen)
-            {
-                // Mostra o sidebar temporariamente
-                ShowSideBar();
-            }
-        }
+        
 
         // Evento que detecta quando o mouse sai da borda da tela
         private void Window_MouseLeave(object sender, MouseEventArgs e)
