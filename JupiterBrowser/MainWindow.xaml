@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
-        Title="Jupiter Browser" Height="450" Width="800"
+        Title="Jupiter Browser" Height="450" Width="1100" MinWidth="1100" MinHeight="450"
         Background="#FF2D2D30"
         x:Name="Janela"
         WindowStyle="None"
@@ -93,6 +93,11 @@
             <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click">
                 <MenuItem.Icon>
                     <Image Source="/contact.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Downloads" Click="Downloads_Click">
+                <MenuItem.Icon>
+                    <Image Source="/downloads.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Jupiter Card" Click="JupiterCard_Click">
@@ -275,8 +280,38 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Jupiter Browser" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <Button Click="SidebarToggle_Click" MouseEnter="SidebarToggle_Enter" HorizontalAlignment="Left" Margin="100,0,0,0" Width="40" Height="40" ToolTip="Toggle Sidebar">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <!-- Definindo o fundo e borda padrão -->
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Remover apenas a mudança de fundo e borda ao passar o mouse -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="/sidebar.png" Width="16" Height="16" Stretch="Uniform"/>
+                </Button.Content>
+            </Button>
 
-            <Button Margin="-1000,0,0,0" Width="40" Height="40" Click="BackButton_Click" ToolTip="Back">
+
+
+            <Button HorizontalAlignment="Left" Margin="200,0,0,0" Width="40" Height="40" Click="BackButton_Click" ToolTip="Back">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -306,7 +341,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Margin="-900,0,0,0" Width="40" Height="40" Click="ForwardButton_Click" ToolTip="Forward">
+            <Button HorizontalAlignment="Left" Margin="250,0,0,0" Width="40" Height="40" Click="ForwardButton_Click" ToolTip="Forward">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -334,7 +369,7 @@
                     <Image Source="/ForwardIcon.png" Width="16" Height="16" Stretch="Uniform"/>
                 </Button.Content>
             </Button>
-            <Button Margin="-800,0,0,0" Width="40" Height="40" Click="ReloadButton_Click" ToolTip="Reload">
+            <Button HorizontalAlignment="Left" Margin="300,0,0,0" Width="40" Height="40" Click="ReloadButton_Click" ToolTip="Reload">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -362,7 +397,7 @@
                     <Image Source="/RefreshIcon.png" Width="16" Height="16" Stretch="Uniform"/>
                 </Button.Content>
             </Button>
-            <Button Margin="-700,0,0,0" Width="40" Height="40" ToolTip="Enable/Disable native ad block">
+            <Button Click="adBlock_Click" HorizontalAlignment="Left" Margin="350,0,0,0" Width="40" Height="40" ToolTip="Enable/Disable native ad block">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -390,6 +425,7 @@
                     <Image Source="/ShieldIcon.png" Width="16" Height="16" Stretch="Uniform"/>
                 </Button.Content>
             </Button>
+            
 
             <TextBox Margin="150,0,0,0" Width="150" x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" TextAlignment="Center" />
             <Border x:Name="WhiteBar" Background="White" Height="3" Width="150" VerticalAlignment="Top" Margin="150,35,0,0" CornerRadius="5"/>
@@ -419,7 +455,7 @@
 
                 <!-- Menu Lateral -->
 
-                <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                <ScrollViewer MouseEnter="BtnsVisible_SidebarEnter" MouseLeave="BtnsVisible_SidebarLeave" CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
                     <Grid Background="#FF2D2D30" Grid.Column="0" x:Name="Sidebar" MouseLeave="Window_MouseLeave" Cursor="">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -600,7 +636,7 @@
                         </StackPanel>
                         <!-- Botão no final -->
 
-                        <Button Grid.Row="1" Margin="-130,10,0,10" Click="HistoricButton_Click" Width="50" ToolTip="Historic">
+                        <Button Visibility="Collapsed" x:Name="historicBtn" Grid.Row="1" Margin="-130,10,0,10" Click="HistoricButton_Click" Width="50" ToolTip="Historic">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <!-- Definindo o fundo e borda padrão -->
@@ -636,7 +672,7 @@
                                         Stretch="Uniform" />
                             </Button.Content>
                         </Button>
-                        <Button Click="Apps_Click" Grid.Row="1" Margin="10,10,0,10" Width="40" Height="40" ToolTip="Apps">
+                        <Button Visibility="Collapsed" x:Name="miniappsBtn" Click="Apps_Click" Grid.Row="1" Margin="10,10,0,10" Width="40" Height="40" ToolTip="Apps">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <!-- Definindo o fundo e borda padrão -->
@@ -665,7 +701,7 @@
                             </Button.Content>
                         </Button>
 
-                        <Button Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50" ToolTip="Jupiter Menu">
+                        <Button Visibility="Collapsed" x:Name="jupiterMenuBtn" Grid.Row="1" Margin="140,10,0,10" Click="OpenBrowserMenu_Click" Width="50" ToolTip="Jupiter Menu">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <!-- Definindo o fundo e borda padrão -->

@@ -32,7 +32,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "4.0";
+        private string VERSION = "5.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -174,6 +174,24 @@ namespace JupiterBrowser
             this.Close();
         }
 
+        private void Downloads_Click(object sender, RoutedEventArgs e)
+        {
+            OpenNewTabWithUrl("edge://downloads");
+        }
+
+        private void BtnsVisible_SidebarEnter(object sender, MouseEventArgs e)
+        {
+            historicBtn.Visibility = Visibility.Visible;
+            jupiterMenuBtn.Visibility = Visibility.Visible;
+            miniappsBtn.Visibility = Visibility.Visible;
+        }
+
+        private void BtnsVisible_SidebarLeave(object sender, MouseEventArgs e)
+        {
+            historicBtn.Visibility = Visibility.Collapsed;
+            jupiterMenuBtn.Visibility = Visibility.Collapsed;
+            miniappsBtn.Visibility = Visibility.Collapsed;
+        }
 
 
         private void AmbienteCheck()
@@ -2164,6 +2182,19 @@ namespace JupiterBrowser
                 // Esconde o sidebar novamente
                 HideSideBar();
             }
+        }
+
+        private void SidebarToggle_Enter(object sender, MouseEventArgs e)
+        {
+            if (isFullScreen)
+            {
+                ShowSideBar();
+            }
+        }
+
+        private void SidebarToggle_Click(object sender, RoutedEventArgs e)
+        {
+            SidebarToggle();
         }
 
         private void SidebarToggle()

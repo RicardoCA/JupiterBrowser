@@ -15,6 +15,7 @@
     <None Remove="BackIcon.png" />
     <None Remove="card.png" />
     <None Remove="contact.png" />
+    <None Remove="downloads.png" />
     <None Remove="edit.png" />
     <None Remove="ForwardIcon.png" />
     <None Remove="FullscreenIcon.png" />
@@ -29,6 +30,7 @@
     <None Remove="settings.png" />
     <None Remove="ShieldIcon.png" />
     <None Remove="shortcuts.png" />
+    <None Remove="sidebar.png" />
     <None Remove="sitetheme.png" />
     <None Remove="theme.png" />
     <None Remove="update.png" />
@@ -70,6 +72,7 @@
     <Resource Include="BackIcon.png" />
     <Resource Include="card.png" />
     <Resource Include="contact.png" />
+    <Resource Include="downloads.png" />
     <Resource Include="edit.png" />
     <Resource Include="ForwardIcon.png" />
     <Resource Include="FullscreenIcon.png" />
@@ -84,6 +87,7 @@
     <Resource Include="settings.png" />
     <Resource Include="ShieldIcon.png" />
     <Resource Include="shortcuts.png" />
+    <Resource Include="sidebar.png" />
     <Resource Include="sitetheme.png" />
     <Resource Include="theme.png" />
     <Resource Include="update.png" />
