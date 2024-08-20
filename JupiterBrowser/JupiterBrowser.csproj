@@ -11,10 +11,12 @@
 
   <ItemGroup>
     <None Remove="account.png" />
+    <None Remove="add.png" />
     <None Remove="apps.png" />
     <None Remove="BackIcon.png" />
     <None Remove="card.png" />
     <None Remove="contact.png" />
+    <None Remove="delete.png" />
     <None Remove="downloads.png" />
     <None Remove="edit.png" />
     <None Remove="ForwardIcon.png" />
@@ -27,6 +29,7 @@
     <None Remove="lock.png" />
     <None Remove="open_newTab.png" />
     <None Remove="quit.png" />
+    <None Remove="recicle.png" />
     <None Remove="RefreshIcon.png" />
     <None Remove="settings.png" />
     <None Remove="ShieldIcon.png" />
@@ -70,10 +73,12 @@
 
   <ItemGroup>
     <Resource Include="account.png" />
+    <Resource Include="add.png" />
     <Resource Include="apps.png" />
     <Resource Include="BackIcon.png" />
     <Resource Include="card.png" />
     <Resource Include="contact.png" />
+    <Resource Include="delete.png" />
     <Resource Include="downloads.png" />
     <Resource Include="edit.png" />
     <Resource Include="ForwardIcon.png" />
@@ -86,6 +91,7 @@
     <Resource Include="lock.png" />
     <Resource Include="open_newTab.png" />
     <Resource Include="quit.png" />
+    <Resource Include="recicle.png" />
     <Resource Include="RefreshIcon.png" />
     <Resource Include="settings.png" />
     <Resource Include="ShieldIcon.png" />

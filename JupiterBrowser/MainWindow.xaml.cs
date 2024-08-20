@@ -1503,14 +1503,7 @@ namespace JupiterBrowser
             Tabs.Add(newTab);
             id += 1;
 
-            if (Tabs.Count > 5)
-            {
-                clearBtn.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                clearBtn.Visibility = Visibility.Collapsed;
-            }
+            
 
             var webView = new WebView2();
             webView.Source = new System.Uri(url);
@@ -1822,14 +1815,7 @@ namespace JupiterBrowser
                 Tabs.Add(newTab);
                 id += 1;
 
-                if (Tabs.Count > 5)
-                {
-                    clearBtn.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    clearBtn.Visibility = Visibility.Collapsed;
-                }
+                
 
                 var webView = new WebView2();
                 if (urlInputDialog.EnteredUrl.ToString().Equals("startpage"))
@@ -2091,14 +2077,7 @@ namespace JupiterBrowser
                     selectedTab.WebView?.Dispose();
                     Tabs.Remove(selectedTab);
                     ToastWindow.Show("Tab closed.");
-                    if (Tabs.Count > 5)
-                    {
-                        clearBtn.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        clearBtn.Visibility = Visibility.Collapsed;
-                    }
+                    
                 }
 
             }
@@ -3110,19 +3089,24 @@ namespace JupiterBrowser
 
         private void ClearBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var tabItem in Tabs.ToList())
+            ConfirmDialog confirmDialog = new ConfirmDialog("Do you want to close all open tabs?");
+            if(confirmDialog.ShowDialog() == true)
             {
-                // Dispose of the WebView2 control
-                tabItem.WebView?.Dispose();
+                foreach (var tabItem in Tabs.ToList())
+                {
+                    // Dispose of the WebView2 control
+                    tabItem.WebView?.Dispose();
+                }
+
+                // Clear all tabs
+                Tabs.Clear();
+
+
+
+                UpdateMiniPlayerVisibility();
             }
 
-            // Clear all tabs
-            Tabs.Clear();
-
-            // Update the visibility of the clear button
-            clearBtn.Visibility = Visibility.Collapsed;
-
-            UpdateMiniPlayerVisibility();
+            
         }
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
@@ -3136,14 +3120,7 @@ namespace JupiterBrowser
                 tabItem.WebView?.Dispose();
 
                 Tabs.Remove(tabItem);
-                if (Tabs.Count > 5)
-                {
-                    clearBtn.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    clearBtn.Visibility = Visibility.Collapsed;
-                }
+                
             }
             UpdateMiniPlayerVisibility();
         }
