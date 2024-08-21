@@ -84,11 +84,19 @@
 
 
         <ContextMenu x:Key="RemoveFolderMenu" x:Name="RemoveFolderMenu" Closed="ContextMenu_Closed">
-            <MenuItem Header="Remove Folder" Click="RemoveFolder_Click"/>
+            <MenuItem Header="Remove Folder" Click="RemoveFolder_Click">
+                <MenuItem.Icon>
+                    <Image Source="/trash.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
 
         <ContextMenu x:Key="RemoveSiteFolderMenu" x:Name="RemoveSiteFolderMenu" Closed="ContextMenu_Closed">
-            <MenuItem Header="Remove Site" Click="RemoveSiteFolder_Click"/>
+            <MenuItem Header="Remove Site" Click="RemoveSiteFolder_Click">
+                <MenuItem.Icon>
+                    <Image Source="/trash.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
 
 
@@ -102,73 +110,73 @@
         </ContextMenu>
 
 
-        <ContextMenu x:Key="BrowserMenu" x:Name="BrowserMenu">
-            <MenuItem Header="Account" Click="Account_Click">
+        <ContextMenu x:Key="BrowserMenu" x:Name="BrowserMenu" >
+            <MenuItem Header="Account" Click="Account_Click" FontSize="18">
                 <MenuItem.Icon>
-                    <Image Source="/account.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/account.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Incognito Window" Click="Anonymous_Click">
+            <MenuItem Header="Incognito Window" Click="Anonymous_Click" FontSize="18">
                 <MenuItem.Icon>
-                    <Image Source="/key.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/key.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click">
+            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click" FontSize="18">
                 <MenuItem.Icon>
-                    <Image Source="/update.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/update.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click">
+            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click" FontSize="18">
                 <MenuItem.Icon>
-                    <Image Source="/contact.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-
-            <MenuItem Header="Create Folder" Click="CreateFolder_Click">
-                <MenuItem.Icon>
-                    <Image Source="/folder.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            
-            <MenuItem Header="Downloads" Click="Downloads_Click">
-                <MenuItem.Icon>
-                    <Image Source="/downloads.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Historic" Click="HistoricButton_Click">
-                <MenuItem.Icon>
-                    <Image Source="/trash.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem> 
-            <MenuItem Header="Jupiter Card" Click="JupiterCard_Click">
-                <MenuItem.Icon>
-                    <Image Source="/card.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Settings" Click="Settings_Click">
-                <MenuItem.Icon>
-                    <Image Source="/settings.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Shortcuts" Click="ShortCuts_Click">
-                <MenuItem.Icon>
-                    <Image Source="/shortcuts.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click">
-                <MenuItem.Icon>
-                    <Image Source="/theme.png" Width="16" Height="16" Margin="0"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Site Theme" Click="SiteThemeMenu_Click">
-                <MenuItem.Icon>
-                    <Image Source="/sitetheme.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/contact.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
 
-            <MenuItem Header="Quit" Click="QuitMenu_Click">
+            <MenuItem Header="Create Folder" Click="CreateFolder_Click" FontSize="18">
                 <MenuItem.Icon>
-                    <Image Source="/quit.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/new_folder.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem Header="Downloads" Click="Downloads_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/downloads.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Historic" Click="HistoricButton_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/trash.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Jupiter Card" Click="JupiterCard_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/card.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Settings" Click="Settings_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/settings.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Shortcuts" Click="ShortCuts_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/shortcuts.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/theme.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Site Theme" Click="SiteThemeMenu_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/sitetheme.png" Width="18" Height="18" Margin="0"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem Header="Quit" Click="QuitMenu_Click" FontSize="18">
+                <MenuItem.Icon>
+                    <Image Source="/quit.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>
@@ -176,7 +184,7 @@
         <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu" Closed="ContextMenu_Closed">
             <MenuItem Header="Add to selected folder" Click="AddFolder_Click">
                 <MenuItem.Icon>
-                    <Image Source="/keep.png" Width="16" Height="16" Margin="0"/>
+                    <Image Source="/folder.png" Width="16" Height="16" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Pin/Unpin" Click="TabMenuItem_Pin">
@@ -529,7 +537,7 @@
 
 
             <TextBox Margin="150,0,0,0" Width="150" x:Name="urlLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="startpage"  Background="Transparent" Foreground="White" PreviewMouseLeftButtonDown="Url_Click" BorderBrush="Transparent" TextAlignment="Center" />
-            <Border x:Name="WhiteBar" Background="White" Height="3" Width="250" VerticalAlignment="Top" Margin="230,35,0,0" CornerRadius="5"/>
+            <Border x:Name="WhiteBar" Background="White" Height="3" Width="150" VerticalAlignment="Top" Margin="230,35,0,0" CornerRadius="5"/>
 
 
             <Button Click="CopyUrl_Click" HorizontalAlignment="Center" Margin="350,0,0,0" Width="40" Height="40" ToolTip="Copy Url">
@@ -683,11 +691,11 @@
                             </DockPanel>
 
 
-                            <TreeView Margin="5,0,0,0" Foreground="White" Name="FoldersTreeView" SelectedItemChanged="FoldersTreeView_SelectedItemChanged">
+                            <TreeView Margin="15,0,0,0" Foreground="White" Name="FoldersTreeView" SelectedItemChanged="FoldersTreeView_SelectedItemChanged">
                                 <TreeView.Style>
                                     <Style TargetType="TreeView">
                                         <Setter Property="BorderThickness" Value="0" />
-                                        <Setter Property="FontSize" Value="18" />
+                                        <Setter Property="FontSize" Value="16" />
                                     </Style>
                                 </TreeView.Style>
                                 <TreeView.ItemContainerStyle>
@@ -737,7 +745,7 @@
                                 </TreeView.ItemContainerStyle>
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate ItemsSource="{Binding sites}">
-                                        <TextBlock Text="{Binding folderName}" FontWeight="Bold" Foreground="White" MouseRightButtonUp="Folder_MouseRightButtonDown"/>
+                                        <TextBlock Text="{Binding folderName}" Foreground="White" MouseRightButtonUp="Folder_MouseRightButtonDown"/>
                                         <HierarchicalDataTemplate.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal" MouseLeftButtonDown="Site_MouseLeftButtonDown" MouseRightButtonUp="Site_MouseRightButtonDown">

@@ -28,6 +28,7 @@
     <None Remove="key.png" />
     <None Remove="link.png" />
     <None Remove="lock.png" />
+    <None Remove="new_folder.png" />
     <None Remove="open_newTab.png" />
     <None Remove="quit.png" />
     <None Remove="recicle.png" />
@@ -91,6 +92,7 @@
     <Resource Include="key.png" />
     <Resource Include="link.png" />
     <Resource Include="lock.png" />
+    <Resource Include="new_folder.png" />
     <Resource Include="open_newTab.png" />
     <Resource Include="quit.png" />
     <Resource Include="recicle.png" />

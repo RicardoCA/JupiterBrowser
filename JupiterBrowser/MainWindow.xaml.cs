@@ -32,7 +32,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "6.0";
+        private string VERSION = "7.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -498,7 +498,7 @@ namespace JupiterBrowser
             if (accountExists)
             {
                 ToastWindow.Show("Synchronizing browser...");
-                string[] uploadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json" };
+                string[] uploadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json","folders.json" };
                 var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
 
                 
@@ -547,7 +547,7 @@ namespace JupiterBrowser
             bool accountExists = await AccountExistsAsync(email, password);
             if (accountExists)
             {
-                string[] downloadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json","pinnedsMobile.json","closedtabsMobile.json" };
+                string[] downloadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json","pinnedsMobile.json","closedtabsMobile.json","folders.json" };
                 var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
 
                 foreach (var file in downloadFiles)
