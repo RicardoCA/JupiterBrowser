@@ -127,6 +127,8 @@ namespace JupiterBrowser
                 LoadTabsClosed();
                 OpenStartPage();
                 CheckForUpdatesTimer();
+                LoadFolders();
+                
             }
 
 
@@ -226,6 +228,7 @@ namespace JupiterBrowser
             LoadTabsClosed();
             LoadTabsClosedMobile();
             OpenStartPage();
+            LoadFolders();
         }
 
        
@@ -1291,6 +1294,7 @@ namespace JupiterBrowser
             TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             CustomBarWindow.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            FoldersTreeView.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
 
             var contextMenu = (ContextMenu)FindResource("BrowserMenu");
             contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
@@ -2631,6 +2635,7 @@ namespace JupiterBrowser
                     TabListBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     Janela.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     CustomBarWindow.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    FoldersTreeView.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     var contextMenu = (ContextMenu)FindResource("BrowserMenu");
                     contextMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     foreach (var item in contextMenu.Items)
@@ -3379,6 +3384,270 @@ namespace JupiterBrowser
         {
 
         }
+
+        #region FOLDERS
+
+        private void AddFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
+            {
+                var selectedItem = FoldersTreeView.SelectedItem;
+                if (selectedItem is Folder selectedFolder)
+                {
+                    Site newSite = new Site
+                    {
+                        TabName = selectedTab.TabName,
+                        FullTabName = selectedTab.FullTabName,
+                        LogoUrl = selectedTab.LogoUrl,
+                        url = selectedTab.url
+                    };
+                    selectedFolder.sites.Add(newSite);
+                    FoldersTreeView.Items.Refresh();
+                    SaveFolders();
+                }
+            }
+        }
+
+        private void FoldersTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            var selectedItem = FoldersTreeView.SelectedItem;
+
+            if (selectedItem is Folder selectedFolder)
+            {
+                // O item selecionado é um Folder
+                MessageBox.Show($"Folder selecionado: {selectedFolder.folderName}");
+            }
+            else if (selectedItem is Site selectedSite)
+            {
+                // O item selecionado é um Site
+                MessageBox.Show($"Site selecionado: {selectedSite.TabName}");
+            }
+            else
+            {
+                // Nenhum item ou outro tipo de item selecionado
+                MessageBox.Show("Nenhum item selecionado ou tipo desconhecido.");
+            }
+        }
+
+
+        private void RemoveSiteFolder_Click(object sender, RoutedEventArgs e)
+        {
+            // Get the current site from the context menu's DataContext
+            var site = (e.Source as MenuItem)?.DataContext as Site;
+            if (site != null)
+            {
+                // Remove the site from the collection of sites
+                RemoveSite(site);
+            }
+        }
+
+
+
+        private void RemoveSite(Site site)
+        {
+            var folders = FoldersTreeView.ItemsSource as List<Folder>;
+            if (folders != null)
+            {
+                foreach (var folder in folders)
+                {
+                    if (folder.sites.Contains(site))
+                    {
+                        folder.sites.Remove(site);
+                        FoldersTreeView.Items.Refresh();
+                        SaveFolders();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void RemoveFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (FoldersTreeView.SelectedItem is Folder selectedFolder)
+            {
+                var folders = FoldersTreeView.ItemsSource as List<Folder>;
+                if (folders != null)
+                {
+                    folders.Remove(selectedFolder);
+                    FoldersTreeView.Items.Refresh();
+                }
+            }
+            SaveFolders();
+        }
+
+        private void CreateFolder_Click(object sender, RoutedEventArgs e)
+        {
+            addFolder();
+        }
+
+        private void addFolder()
+        {
+            PromptWindow promptWindow = new PromptWindow("","Folder name:");
+            if (promptWindow.ShowDialog() == true)
+            {
+                string name = promptWindow.UserInput;
+                if (!string.IsNullOrEmpty(name))
+                {
+                    Folder newFolder = new Folder
+                    {
+                        folderName = name,
+                        sites = new List<Site>()
+                    };
+
+                    var folders = FoldersTreeView.ItemsSource as List<Folder>;
+                    if (folders == null)
+                    {
+                        // Se estiver vazia ou nula, cria uma nova lista de pastas
+                        folders = new List<Folder>();
+                        FoldersTreeView.ItemsSource = folders;
+                    }
+
+                    // Adiciona a nova pasta à lista
+                    folders.Add(newFolder);
+                    FoldersTreeView.Items.Refresh();
+                    SaveFolders();
+
+                }
+            }
+        }
+
+        private void SaveFolders()
+        {
+            // Obtém a lista de pastas do TreeView
+            var folders = FoldersTreeView.ItemsSource as List<Folder>;
+
+            if (folders != null)
+            {
+                // Serializa a lista de pastas para JSON
+                string json = JsonConvert.SerializeObject(folders, Formatting.Indented);
+
+                // Obtém o diretório onde o executável está sendo executado
+                string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                // Combina o diretório do executável com o nome do arquivo JSON
+                string jsonFilePath = Path.Combine(exeDirectory, "folders.json");
+
+                // Grava o JSON no arquivo
+                File.WriteAllText(jsonFilePath, json);
+            }
+        }
+
+        private void Folder_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var stackPanel = sender as TextBlock;
+            if (stackPanel != null)
+            {
+                var folder = stackPanel.DataContext as Folder;
+                if (folder != null)
+                {
+                    // Find the context menu
+                    ContextMenu removeFolderMenu = this.FindResource("RemoveFolderMenu") as ContextMenu;
+                    if (removeFolderMenu != null)
+                    {
+                        // Set the current site as the context menu's DataContext
+                        removeFolderMenu.DataContext = folder;
+                        // Display the context menu on the StackPanel
+                        removeFolderMenu.PlacementTarget = stackPanel;
+                        removeFolderMenu.IsOpen = true;
+                    }
+                    // Mark the event as handled to prevent propagation
+                    e.Handled = true;
+                }
+            }
+        }
+
+
+        private void Site_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var stackPanel = sender as StackPanel;
+            if (stackPanel != null)
+            {
+                var site = stackPanel.DataContext as Site;
+                if (site != null)
+                {
+                    // Find the context menu
+                    ContextMenu removeSiteFolderMenu = this.FindResource("RemoveSiteFolderMenu") as ContextMenu;
+                    if (removeSiteFolderMenu != null)
+                    {
+                        // Set the current site as the context menu's DataContext
+                        removeSiteFolderMenu.DataContext = site;
+                        // Display the context menu on the StackPanel
+                        removeSiteFolderMenu.PlacementTarget = stackPanel;
+                        removeSiteFolderMenu.IsOpen = true;
+                    }
+                    // Mark the event as handled to prevent propagation
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private const int DoubleClickTime = 300;
+        private DateTime _lastClickTime;
+        private void Site_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var currentTime = DateTime.Now;
+            var timeSinceLastClick = currentTime - _lastClickTime;
+
+            if (timeSinceLastClick.TotalMilliseconds <= DoubleClickTime)
+            {
+                // É um duplo clique
+                var stackPanel = sender as StackPanel;
+                if (stackPanel != null)
+                {
+                    var site = stackPanel.DataContext as Site;
+                    if (site != null)
+                    {
+                        OpenNewTabWithUrl(site.url, site.TabName);
+                    }
+                }
+
+                e.Handled = true;
+            }
+
+            _lastClickTime = currentTime;
+        }
+
+
+
+        private void LoadFolders()
+        {
+            // Obtém o diretório onde o executável está sendo executado
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Combina o diretório do executável com o nome do arquivo JSON
+            string jsonFilePath = Path.Combine(exeDirectory, "folders.json");
+            if (File.Exists(jsonFilePath))
+            {
+                // Lê o conteúdo do arquivo JSON
+                string json = File.ReadAllText(jsonFilePath);
+
+                // Desserializa o JSON para uma lista de objetos Folder
+                var folders = JsonConvert.DeserializeObject<List<Folder>>(json);
+
+                // Define o ItemsSource do TreeView para a lista de pastas
+                FoldersTreeView.ItemsSource = folders;
+            }
+
+            
+            
+        }
+
+        #endregion
+
+    }
+
+    public class Site
+    {
+        public string TabName { get; set; }
+        public string FullTabName { get; set; }
+        public string LogoUrl { get; set; }
+        public string url { get; set; }
+    }
+
+    public class Folder
+    {
+        public string folderName { get; set; }
+        public List<Site> sites { get; set; }
     }
 
     public class NavigationLogEntry
