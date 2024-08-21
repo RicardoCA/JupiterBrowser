@@ -1340,6 +1340,28 @@ namespace JupiterBrowser
                 }
             }
 
+            var contextRemoveFolderMenu = (ContextMenu)FindResource("RemoveFolderMenu");
+            contextRemoveFolderMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            foreach (var item in contextRemoveFolderMenu.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+                    menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                }
+            }
+
+            var contextRemoveSiteFolderMenu = (ContextMenu)FindResource("RemoveSiteFolderMenu");
+            contextRemoveSiteFolderMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+            foreach (var item in contextRemoveSiteFolderMenu.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+                    menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                }
+            }
+
         }
 
         private void ContactJupiter_Click(object sender, RoutedEventArgs e)
@@ -2707,6 +2729,27 @@ namespace JupiterBrowser
                     var contextMenuApps = (ContextMenu)FindResource("AppsMenu");
                     contextMenuApps.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
                     foreach (var item in contextMenuApps.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                        {
+                            menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                            menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                        }
+                    }
+
+                    var contextRemoveSiteFolderMenu = (ContextMenu)FindResource("RemoveSiteFolderMenu");
+                    contextRemoveSiteFolderMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    foreach (var item in contextRemoveSiteFolderMenu.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                        {
+                            menuItem.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                            menuItem.Foreground = new SolidColorBrush(Colors.White); // Cor do texto branco
+                        }
+                    }
+                    var contextRemoveFolderMenu = (ContextMenu)FindResource("RemoveFolderMenu");
+                    contextRemoveFolderMenu.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor));
+                    foreach (var item in contextRemoveFolderMenu.Items)
                     {
                         if (item is MenuItem menuItem)
                         {
