@@ -672,7 +672,7 @@
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal" MouseLeftButtonDown="Site_MouseLeftButtonDown" MouseRightButtonUp="Site_MouseRightButtonDown">
                                                     <Image Source="{Binding LogoUrl}" Width="16" Height="16" Margin="5,0"/>
-                                                    <TextBlock Text="{Binding TabName}" Foreground="White"/>
+                                                    <TextBlock Text="{Binding TabName}" ToolTip="{Binding FullTabName}" Foreground="White"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </HierarchicalDataTemplate.ItemTemplate>

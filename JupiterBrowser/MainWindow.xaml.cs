@@ -3399,34 +3399,22 @@ namespace JupiterBrowser
                         TabName = selectedTab.TabName,
                         FullTabName = selectedTab.FullTabName,
                         LogoUrl = selectedTab.LogoUrl,
-                        url = selectedTab.url
+                        url = selectedTab.WebView.Source.ToString()
                     };
                     selectedFolder.sites.Add(newSite);
                     FoldersTreeView.Items.Refresh();
                     SaveFolders();
+                }
+                else
+                {
+                    ToastWindow.Show("Select a folder.");
                 }
             }
         }
 
         private void FoldersTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            var selectedItem = FoldersTreeView.SelectedItem;
-
-            if (selectedItem is Folder selectedFolder)
-            {
-                // O item selecionado é um Folder
-                MessageBox.Show($"Folder selecionado: {selectedFolder.folderName}");
-            }
-            else if (selectedItem is Site selectedSite)
-            {
-                // O item selecionado é um Site
-                MessageBox.Show($"Site selecionado: {selectedSite.TabName}");
-            }
-            else
-            {
-                // Nenhum item ou outro tipo de item selecionado
-                MessageBox.Show("Nenhum item selecionado ou tipo desconhecido.");
-            }
+            
         }
 
 
