@@ -15,6 +15,23 @@
     </WindowChrome.WindowChrome>
     
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Style x:Key="ExpanderToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <local:ExpandCollapseIconConverter x:Key="ExpandCollapseIconConverter" />
+
+
         <Storyboard x:Key="LoadingAnimation" RepeatBehavior="Forever">
             <ColorAnimation From="White" To="Black" Duration="0:0:0.5"
                             Storyboard.TargetName="WhiteBar"
@@ -64,13 +81,13 @@
             </Setter>
         </Style>
 
-        
 
-        <ContextMenu x:Key="RemoveFolderMenu" x:Name="RemoveFolderMenu">
+
+        <ContextMenu x:Key="RemoveFolderMenu" x:Name="RemoveFolderMenu" Closed="ContextMenu_Closed">
             <MenuItem Header="Remove Folder" Click="RemoveFolder_Click"/>
         </ContextMenu>
 
-        <ContextMenu x:Key="RemoveSiteFolderMenu" x:Name="RemoveSiteFolderMenu">
+        <ContextMenu x:Key="RemoveSiteFolderMenu" x:Name="RemoveSiteFolderMenu" Closed="ContextMenu_Closed">
             <MenuItem Header="Remove Site" Click="RemoveSiteFolder_Click"/>
         </ContextMenu>
 
@@ -108,7 +125,9 @@
             </MenuItem>
 
             <MenuItem Header="Create Folder" Click="CreateFolder_Click">
-                
+                <MenuItem.Icon>
+                    <Image Source="/folder.png" Width="16" Height="16" Margin="0"/>
+                </MenuItem.Icon>
             </MenuItem>
             
             <MenuItem Header="Downloads" Click="Downloads_Click">
@@ -154,7 +173,7 @@
             </MenuItem>
         </ContextMenu>
 
-        <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu">
+        <ContextMenu x:Key="TabItemMenu" x:Name="TabItemMenu" Closed="ContextMenu_Closed">
             <MenuItem Header="Add to selected folder" Click="AddFolder_Click">
                 <MenuItem.Icon>
                     <Image Source="/keep.png" Width="16" Height="16" Margin="0"/>
@@ -664,7 +683,58 @@
                             </DockPanel>
 
 
-                            <TreeView Foreground="White" Name="FoldersTreeView" SelectedItemChanged="FoldersTreeView_SelectedItemChanged">
+                            <TreeView Margin="5,0,0,0" Foreground="White" Name="FoldersTreeView" SelectedItemChanged="FoldersTreeView_SelectedItemChanged">
+                                <TreeView.Style>
+                                    <Style TargetType="TreeView">
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="FontSize" Value="18" />
+                                    </Style>
+                                </TreeView.Style>
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="TreeViewItem">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Margin" Value="2" />
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TreeViewItem">
+                                                    <StackPanel>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <ToggleButton 
+                                    x:Name="Expander"
+                                    Style="{StaticResource ExpanderToggleButtonStyle}"
+                                    IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
+                                    ClickMode="Press">
+                                                                <ToggleButton.Content>
+                                                                    <Image Source="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}" 
+                                               Width="16" Height="16"/>
+                                                                </ToggleButton.Content>
+                                                            </ToggleButton>
+                                                            <Border x:Name="Bd" 
+                                        Grid.Column="1"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                                <ContentPresenter x:Name="PART_Header" 
+                                                      ContentSource="Header" 
+                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                            </Border>
+                                                        </Grid>
+                                                        <ItemsPresenter 
+                                Margin="19,0,0,0"
+                                Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" />
+                                                    </StackPanel>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate ItemsSource="{Binding sites}">
                                         <TextBlock Text="{Binding folderName}" FontWeight="Bold" Foreground="White" MouseRightButtonUp="Folder_MouseRightButtonDown"/>
@@ -679,6 +749,11 @@
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
                             </TreeView>
+
+
+
+
+
 
 
                             <!-- ListBox para as guias -->

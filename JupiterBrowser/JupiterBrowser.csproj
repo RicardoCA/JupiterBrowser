@@ -19,6 +19,7 @@
     <None Remove="delete.png" />
     <None Remove="downloads.png" />
     <None Remove="edit.png" />
+    <None Remove="folder.png" />
     <None Remove="ForwardIcon.png" />
     <None Remove="FullscreenIcon.png" />
     <None Remove="g_translate.png" />
@@ -81,6 +82,7 @@
     <Resource Include="delete.png" />
     <Resource Include="downloads.png" />
     <Resource Include="edit.png" />
+    <Resource Include="folder.png" />
     <Resource Include="ForwardIcon.png" />
     <Resource Include="FullscreenIcon.png" />
     <Resource Include="g_translate.png" />

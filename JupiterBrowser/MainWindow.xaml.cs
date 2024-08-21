@@ -2141,12 +2141,44 @@ namespace JupiterBrowser
             Sidebar.Visibility = Visibility.Collapsed;
 
         }
+        private bool _isContextMenuOpen = false;
+        private void ClearTreeViewSelection(ItemsControl itemsControl)
+        {
+            if(_isContextMenuOpen is false)
+            {
+                foreach (var item in itemsControl.Items)
+                {
+                    TreeViewItem treeViewItem = itemsControl.ItemContainerGenerator.ContainerFromItem(item) as TreeViewItem;
 
-        
+                    if (treeViewItem != null && treeViewItem.IsSelected)
+                    {
+                        treeViewItem.IsSelected = false;
+                    }
+
+                    if (treeViewItem != null && treeViewItem.Items.Count > 0)
+                    {
+                        ClearTreeViewSelection(treeViewItem);
+                    }
+                }
+            }
+            
+        }
+
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            _isContextMenuOpen = false;
+        }
 
         // Evento que detecta quando o mouse sai da borda da tela
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
+            if(FoldersTreeView.SelectedItem != null)
+            {
+                jupiterMenuBtn.Focus();
+                ClearTreeViewSelection(FoldersTreeView);
+            }
+            
+
             if (isFullScreen)
             {
                 // Esconde o sidebar novamente
@@ -2567,6 +2599,7 @@ namespace JupiterBrowser
                 // Tenta encontrar o recurso ContextMenu com a chave "TabItemMenu"
                 if (FindResource("TabItemMenu") is ContextMenu menu)
                 {
+                    _isContextMenuOpen = true;
                     selectedTabItemContextMenu = (TabItem)element.DataContext;
                     // Define o elemento como o alvo do menu de contexto e abre o menu
                     menu.PlacementTarget = element;
@@ -2586,6 +2619,8 @@ namespace JupiterBrowser
                 Console.WriteLine("O sender não é do tipo esperado (FrameworkElement).");
             }
         }
+
+        
 
         private void TabMenu_Closed(object sender, RoutedEventArgs e)
         {
@@ -3414,7 +3449,15 @@ namespace JupiterBrowser
 
         private void FoldersTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            
+            var selectedItem = FoldersTreeView.SelectedItem;
+            if(selectedItem is not null)
+            {
+                if(selectedItem is Folder folder)
+                {
+                    ToastWindow.Show("Folder: "+folder.folderName + " selected");
+                }
+                
+            }
         }
 
 
@@ -3532,6 +3575,7 @@ namespace JupiterBrowser
                     ContextMenu removeFolderMenu = this.FindResource("RemoveFolderMenu") as ContextMenu;
                     if (removeFolderMenu != null)
                     {
+                        _isContextMenuOpen = true;
                         // Set the current site as the context menu's DataContext
                         removeFolderMenu.DataContext = folder;
                         // Display the context menu on the StackPanel
@@ -3557,6 +3601,7 @@ namespace JupiterBrowser
                     ContextMenu removeSiteFolderMenu = this.FindResource("RemoveSiteFolderMenu") as ContextMenu;
                     if (removeSiteFolderMenu != null)
                     {
+                        _isContextMenuOpen = true;
                         // Set the current site as the context menu's DataContext
                         removeSiteFolderMenu.DataContext = site;
                         // Display the context menu on the StackPanel
@@ -3650,6 +3695,28 @@ namespace JupiterBrowser
     class FirebaseStorageResponse
     {
         public List<FirebaseStorageItem> Items { get; set; }
+    }
+
+    public class ExpandCollapseIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            bool isExpanded = (bool)value;
+            string basePath = AppDomain.CurrentDomain.BaseDirectory; // Caminho da pasta onde o executável está
+            if (isExpanded)
+            {
+                return new BitmapImage(new Uri(System.IO.Path.Combine(basePath, "Icons", "folder_open.png")));
+            }
+            else
+            {
+                return new BitmapImage(new Uri(System.IO.Path.Combine(basePath, "Icons", "folder.png")));
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     class FirebaseStorageItem
