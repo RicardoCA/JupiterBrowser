@@ -9,9 +9,14 @@ namespace JupiterBrowser
     /// </summary>
     public partial class App : Application
     {
+        public static TranslationService Translator { get; private set; }
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            Translator = new TranslationService();
+            Translator.LoadLanguage("en-US");
+
 
             MainWindow mainWindow = new MainWindow();
 

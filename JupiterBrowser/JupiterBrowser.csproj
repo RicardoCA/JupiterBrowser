@@ -107,6 +107,36 @@
     <Resource Include="update.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>en-US.json</DependentUpon>
+    </Compile>
+    <Compile Update="pt-BR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>pt-BR.json</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="en-US.json">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>en-US.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="pt-BR.json">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>pt-BR.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
 	
 
 </Project>

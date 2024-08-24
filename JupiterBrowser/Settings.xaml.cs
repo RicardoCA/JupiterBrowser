@@ -39,6 +39,7 @@ namespace JupiterBrowser
                         SetPreviousNavigation(settings.PreviousNavigation);
                         SetSearchEngine(settings.SearchEngine);
                         SetMiniWindow(settings.MiniWindow);
+                        SetSelectedInterfaceLanguage(settings.Language);
                     }
                 }
             }
@@ -80,6 +81,25 @@ namespace JupiterBrowser
             catch (Exception ex)
             {
                 ToastWindow.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void SetSelectedInterfaceLanguage(string language)
+        {
+            switch (language)
+            {
+                case "en-US":
+                    enUSBtn.IsChecked = true;
+                    break;
+                case "pt-BR":
+                    ptBRBtn.IsChecked = true;
+                    break;
+                case "ES":
+                    esBtn.IsChecked= true;
+                    break;
+                default:
+                    enUSBtn.IsChecked = true;
+                    break;
             }
         }
 
@@ -205,6 +225,7 @@ namespace JupiterBrowser
                 PreviousNavigation = GetPreviousNavigation(),
                 SearchEngine = GetSearchEngine(),
                 MiniWindow = GetMiniWindow(),
+                Language = GetSelectedInterfaceLanguage(),
             };
 
             SaveSettings(settings);
@@ -242,6 +263,23 @@ namespace JupiterBrowser
                 return "Morphic";
 
             return "Google"; // Default
+        }
+
+        private string GetSelectedInterfaceLanguage()
+        {
+            if(enUSBtn.IsChecked == true)
+            {
+                return "en-US";
+            }
+            if(ptBRBtn.IsChecked == true)
+            {
+                return "pt-BR";
+            }
+            if(esBtn.IsChecked == true)
+            {
+                return "ES";
+            }
+            return "en-US";
         }
 
         private string GetSelectedLanguage()
@@ -295,5 +333,7 @@ namespace JupiterBrowser
         public string MiniWindow { get; set; }
 
         public string SearchEngine { get; set; }
+
+        public string Language { get; set; }
     }
 }

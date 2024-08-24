@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JupiterBrowser"
+        xmlns:properties="clr-namespace:JupiterBrowser"
         mc:Ignorable="d"
         Title="Jupiter Browser" Height="450" Width="1100" MinWidth="1100" MinHeight="450"
         Background="#FF2D2D30"
@@ -30,6 +31,7 @@
         </Style>
 
         <local:ExpandCollapseIconConverter x:Key="ExpandCollapseIconConverter" />
+        <local:TranslationConverter x:Key="Translator"/>
 
 
         <Storyboard x:Key="LoadingAnimation" RepeatBehavior="Forever">
@@ -358,7 +360,7 @@
     Stretch="Uniform" />
             </Button>
 
-            <Button Click="SidebarToggle_Click" MouseEnter="SidebarToggle_Enter" HorizontalAlignment="Left" Margin="60,0,0,0" Width="40" Height="40" ToolTip="Toggle Sidebar">
+            <Button Click="SidebarToggle_Click" MouseEnter="SidebarToggle_Enter" HorizontalAlignment="Left" Margin="60,0,0,0" Width="40" Height="40" ToolTip="{Binding Path=ToggleSidebar, Converter={StaticResource Translator}}" Name="ToggleSidebarBtn">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -387,10 +389,10 @@
                 </Button.Content>
             </Button>
 
-            
 
 
-            <Button HorizontalAlignment="Left" Margin="200,0,0,0" Width="40" Height="40" Click="BackButton_Click" ToolTip="Back">
+
+            <Button HorizontalAlignment="Left" Margin="200,0,0,0" Width="40" Height="40" Click="BackButton_Click" ToolTip="{Binding Path=Back, Converter={StaticResource Translator}}" Name="BackBtn">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -420,7 +422,7 @@
                 </Button.Content>
             </Button>
 
-            <Button HorizontalAlignment="Left" Margin="250,0,0,0" Width="40" Height="40" Click="ForwardButton_Click" ToolTip="Forward">
+            <Button HorizontalAlignment="Left" Margin="250,0,0,0" Width="40" Height="40" Click="ForwardButton_Click" ToolTip="{Binding Path=Forward, Converter={StaticResource Translator}}" Name="ForwardBtn">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -448,7 +450,7 @@
                     <Image Source="/ForwardIcon.png" Width="16" Height="16" Stretch="Uniform"/>
                 </Button.Content>
             </Button>
-            <Button HorizontalAlignment="Left" Margin="300,0,0,0" Width="40" Height="40" Click="ReloadButton_Click" ToolTip="Reload">
+            <Button HorizontalAlignment="Left" Margin="300,0,0,0" Width="40" Height="40" Click="ReloadButton_Click" ToolTip="{Binding Path=Reload, Converter={StaticResource Translator}}" Name="ReloadBtn">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -476,7 +478,7 @@
                     <Image Source="/RefreshIcon.png" Width="16" Height="16" Stretch="Uniform"/>
                 </Button.Content>
             </Button>
-            <Button Click="adBlock_Click" HorizontalAlignment="Left" Margin="350,0,0,0" Width="40" Height="40" ToolTip="Enable/Disable native ad block">
+            <Button Click="adBlock_Click" HorizontalAlignment="Left" Margin="350,0,0,0" Width="40" Height="40" ToolTip="{Binding Path=adBlock, Converter={StaticResource Translator}}" Name="AdBlockBtn">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -505,7 +507,7 @@
                 </Button.Content>
             </Button>
 
-            <Button x:Name="newTabBtn" Width="40" Height="40" Click="NewTabButton_Click" ToolTip="New Tab" HorizontalAlignment="Left" Margin="400,0,0,0">
+            <Button x:Name="newTabBtn" Width="40" Height="40" Click="NewTabButton_Click" ToolTip="{Binding Path=NewTab, Converter={StaticResource Translator}}" HorizontalAlignment="Left" Margin="400,0,0,0">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -541,7 +543,7 @@
             <Border x:Name="WhiteBar" Background="White" Height="3" Width="150" VerticalAlignment="Top" Margin="235,35,0,0" CornerRadius="5"/>
 
 
-            <Button Click="CopyUrl_Click" HorizontalAlignment="Center" Margin="350,0,0,0" Width="40" Height="40" ToolTip="Copy Url">
+            <Button Click="CopyUrl_Click" HorizontalAlignment="Center" Margin="350,0,0,0" Width="40" Height="40" ToolTip="{Binding Path=CopyUrl, Converter={StaticResource Translator}}" Name="CopyUrlBtn">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->
@@ -598,7 +600,7 @@
                 </Button.Content>
             </Button>
 
-            <Button x:Name="clearBtn" Click="ClearBtn_Click" HorizontalAlignment="Center" Margin="450,0,0,0" Width="40" Height="40" ToolTip="Close Tabs">
+            <Button x:Name="clearBtn" Click="ClearBtn_Click" HorizontalAlignment="Center" Margin="450,0,0,0" Width="40" Height="40" ToolTip="{Binding Path=CloseTabs, Converter={StaticResource Translator}}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <!-- Definindo o fundo e borda padrão -->

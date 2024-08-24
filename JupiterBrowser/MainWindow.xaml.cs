@@ -74,7 +74,7 @@ namespace JupiterBrowser
         static readonly HttpClient client = new HttpClient();
         private string email = "";
         private string password = "";
-
+        public string langCode = "en-US";
 
 
 
@@ -109,7 +109,8 @@ namespace JupiterBrowser
             _updateCheckerTimer.Tick += CheckForUpdatesTimer_Tick;
             _updateCheckerTimer.Start();
 
-           
+
+            
 
 
             // Chama o método de inicialização assíncrono
@@ -117,6 +118,7 @@ namespace JupiterBrowser
             {
                 _ = InitializeAsync();
                 CheckForUpdatesTimer();
+                ChangeLanguage(langCode);
             }
             else
             {
@@ -128,7 +130,8 @@ namespace JupiterBrowser
                 OpenStartPage();
                 CheckForUpdatesTimer();
                 LoadFolders();
-                
+                ChangeLanguage(langCode);
+
             }
 
 
@@ -137,6 +140,26 @@ namespace JupiterBrowser
             
 
         }
+
+        private void ChangeLanguage(string langCode)
+        {
+            App.Translator.LoadLanguage(langCode);
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
+            BackBtn.ToolTip = App.Translator.GetString("BackBtn");
+            ForwardBtn.ToolTip = App.Translator.GetString("NextBtn");
+            ReloadBtn.ToolTip = App.Translator.GetString("ReloadBtn");
+            AdBlockBtn.ToolTip = App.Translator.GetString("adblockBtn");
+            newTabBtn.ToolTip = App.Translator.GetString("newTabBtn");
+            CopyUrlBtn.ToolTip = App.Translator.GetString("copyUrlBtn");
+            clearBtn.ToolTip = App.Translator.GetString("closeTabsBtn");
+            ToggleSidebarBtn.ToolTip = App.Translator.GetString("toggleSidebarBtn");
+        }
+
+
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -646,6 +669,14 @@ namespace JupiterBrowser
                             "MiniWindowTrue" => "MiniWindowTrue",
                             "MiniWindowFalse" => "MiniWindowFalse",
                             _ => "MiniWindowTrue"
+                        };
+
+                        langCode = settings.Language switch
+                        {
+                            "en-US" => "en-US",
+                            "pt-BR" => "pt-BR",
+                            "ES" => "ES",
+                            _ => "en-US"
                         };
                     }
                 }
@@ -3710,6 +3741,19 @@ namespace JupiterBrowser
 
         #endregion
 
+    }
+
+    public class TranslationConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return App.Translator.GetString(value.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Site

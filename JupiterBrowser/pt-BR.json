@@ -1,0 +1,10 @@
+﻿{
+  "BackBtn": "Voltar",
+  "NextBtn": "Avançar",
+  "ReloadBtn": "Recarregar",
+  "adblockBtn": "Ativar/Desativar ad block nativo",
+  "newTabBtn": "Nova guia",
+  "copyUrlBtn": "Copiar Url",
+  "closeTabsBtn": "Fechar guias",
+  "toggleSidebarBtn": "Alternar Barra Lateral"
+}

@@ -1,0 +1,10 @@
+﻿{
+  "BackBtn": "Back",
+  "NextBtn": "Next",
+  "ReloadBtn": "Reload",
+  "adblockBtn": "Enable/Disable native ad block",
+  "newTabBtn": "New tab",
+  "copyUrlBtn": "Copy Url",
+  "closeTabsBtn": "Clear Tabs",
+  "toggleSidebarBtn": "Toggle Sidebar"
+}

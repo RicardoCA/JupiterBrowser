@@ -1,0 +1,10 @@
+﻿{
+  "BackBtn": "Volver",
+  "NextBtn": "Avanzar",
+  "ReloadBtn": "Recargar",
+  "adblockBtn": "Activar/Desactivar bloqueo de anuncios nativo",
+  "newTabBtn": "Nueva pestaña",
+  "copyUrlBtn": "Copiar URL",
+  "closeTabsBtn": "Cerrar pestañas",
+  "toggleSidebarBtn": "Alternar Barra Lateral"
+}
