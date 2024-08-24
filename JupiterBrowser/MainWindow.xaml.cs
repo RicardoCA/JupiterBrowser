@@ -3877,7 +3877,12 @@ namespace JupiterBrowser
         private void addFolder()
         {
             PromptWindow promptWindow = null;
-            promptWindow = new PromptWindow("","Folder name:", langCode);
+            if(langCode.Equals("en-US"))
+                promptWindow = new PromptWindow("","Folder name:", langCode);
+            if (langCode.Equals("pt-BR"))
+                promptWindow = new PromptWindow("", "Nome da pasta:", langCode);
+            if (langCode.Equals("ES"))
+                promptWindow = new PromptWindow("", "Nombre de la carpeta:", langCode);
             if (promptWindow.ShowDialog() == true)
             {
                 string name = promptWindow.UserInput;
