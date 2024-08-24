@@ -25,5 +25,7 @@
   "addToFolderBtn": "Add to selected folder",
   "pinUnpinBtn": "Pin/Unpin",
   "translateBtn": "Translate",
-  "closeBtn": "Close"
+  "closeBtn": "Close",
+  "removeFolderBtn": "Remove Folder",
+  "removeSiteBtn": "Remove site"
 }

@@ -14,6 +14,7 @@ namespace JupiterBrowser
     {
         private string[] restaureFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "account.json", "closedtabs.json","folders.json" };
         private const string SettingsFilePath = "settings.json";
+        private string language = "en-US";
         public Settings()
         {
             InitializeComponent();
@@ -40,6 +41,8 @@ namespace JupiterBrowser
                         SetSearchEngine(settings.SearchEngine);
                         SetMiniWindow(settings.MiniWindow);
                         SetSelectedInterfaceLanguage(settings.Language);
+                        language = settings.Language;
+                        UpdateUI();
                     }
                 }
             }
@@ -90,16 +93,106 @@ namespace JupiterBrowser
             {
                 case "en-US":
                     enUSBtn.IsChecked = true;
+                    language = "en-US";
+                    UpdateUI();
                     break;
                 case "pt-BR":
                     ptBRBtn.IsChecked = true;
+                    language = "pt-BR";
+                    UpdateUI();
                     break;
                 case "ES":
                     esBtn.IsChecked= true;
+                    language = "ES";
+                    UpdateUI();
                     break;
                 default:
                     enUSBtn.IsChecked = true;
+                    language = "en-US";
+                    UpdateUI();
                     break;
+            }
+        }
+
+        private void UpdateUI()
+        {
+            if(language == "en-US")
+            {
+                translateTitle.Text = "Default Translate language";
+                translateLabel.Text = "Sets the default language for the 'Translate' option of the open tab.";
+                PreviusNavigationTitle.Text = "Previous navigation";
+                PreviusNavigationLabel.Text = "Sets your preference when opening the browser, whether you want to open closed tabs again, or start browsing a new one.";
+                SearchEngineTitle.Text = "Default Search Engine";
+                SearchEngineLabel.Text = "Set your default search engine preference.";
+                MiniWindowTitle.Text = "Mini Window";
+                MiniWindowLabel.Text = "Select your preference, whether you want to open new tabs in mini window or in new tab.";
+                LanguageTitle.Text = "Language";
+                LanguageLabel.Text = "Set your language, and restart browser.";
+                StartupTitle.Text = "Startup with Windows";
+                StartupLabel.Text = "Enable or disable startup with Windows.";
+                DefaultSettingsTitle.Text = "Default Settings";
+                DefaultSettingsLabel.Text = "Restores the browser's default settings, this includes deleting all configuration parameters.";
+                DeleteRecomendationsTitle.Text = "Delete Site Recomendations";
+                DeleteRecomendationsLabel.Text = "Only delete the Ctrl+T and Ctrl+L website recommendation file";
+                ApplyBtn.Content = "Apply";
+                CloseBtn.Content = "Close";
+                DeleteRecomendationsBtn.Content = "Delete Recomendations";
+                DefaultSettingsBtn.Content = "Restaure";
+                StartupBtn.Content = "Enable/Disable";
+                MiniWindowTrue.Content = "Enabled (default)";
+                MiniWindowFalse.Content = "Disabled";
+            }
+            if(language == "pt-BR")
+            {
+                translateTitle.Text = "Idioma padrão da tradução";
+                translateLabel.Text = "Define o idioma padrão para a opção \"Traduzir\" da aba aberta.";
+                PreviusNavigationTitle.Text = "Navegação anterior";
+                PreviusNavigationLabel.Text = "Define sua preferência ao abrir o navegador, se você deseja abrir abas fechadas novamente ou começar a navegar em uma nova.";
+                SearchEngineTitle.Text = "Motor de busca padrão";
+                SearchEngineLabel.Text = "Defina sua preferência de mecanismo de busca padrão.";
+                MiniWindowTitle.Text = "Mini janela";
+                MiniWindowLabel.Text = "Selecione sua preferência, se deseja abrir novas abas em mini janela ou em nova aba.";
+                LanguageTitle.Text = "Linguagem";
+                LanguageLabel.Text = "Defina seu idioma e reinicie o navegador.";
+                StartupTitle.Text = "Inicialização com Windows";
+                StartupLabel.Text = "Habilite ou desabilite a inicialização com Windows.";
+                DefaultSettingsTitle.Text = "Configurações padrão";
+                DefaultSettingsLabel.Text = "Restaura as configurações padrão do navegador, o que inclui a exclusão de todos os parâmetros de configuração.";
+                DeleteRecomendationsTitle.Text = "Excluir Recomendações de Site";
+                DeleteRecomendationsLabel.Text = "Exclua apenas o arquivo de recomendação do site Ctrl+T e Ctrl+L";
+                ApplyBtn.Content = "Aplicar";
+                CloseBtn.Content = "Fechar";
+                DeleteRecomendationsBtn.Content = "Excluir Recomendações";
+                DefaultSettingsBtn.Content = "Restaurar";
+                StartupBtn.Content = "Ativar/Desativar";
+                MiniWindowTrue.Content = "Ativado (default)";
+                MiniWindowFalse.Content = "Desativado";
+            }
+            if(language == "ES")
+            {
+                translateTitle.Text = "Idioma de traducción predeterminado";
+                translateLabel.Text = "Establece el idioma predeterminado para la opción 'Traducir' de la pestaña abierta.";
+                PreviusNavigationTitle.Text = "Navegación anterior";
+                PreviusNavigationLabel.Text = "Establece su preferencia al abrir el navegador, si desea volver a abrir las pestañas cerradas o comenzar a navegar por una nueva.";
+                SearchEngineTitle.Text = "Motor de búsqueda predeterminado";
+                SearchEngineLabel.Text = "Establezca su preferencia de motor de búsqueda predeterminado.";
+                MiniWindowTitle.Text = "Mini ventana";
+                MiniWindowLabel.Text = "Seleccione su preferencia, si desea abrir nuevas pestañas en mini ventana o en nueva pestaña.";
+                LanguageTitle.Text = "Lenguaje";
+                LanguageLabel.Text = "Defina su idioma y reinicie el navegador.";
+                StartupTitle.Text = "Inicio con Windows";
+                StartupLabel.Text = "Habilite o deshabilite el inicio con Windows.";
+                DefaultSettingsTitle.Text = "Configuración predeterminada";
+                DefaultSettingsLabel.Text = "Restaura la configuración predeterminada del navegador, lo que incluye la eliminación de todos los parámetros de configuración.";
+                DeleteRecomendationsTitle.Text = "Eliminar recomendaciones de sitios";
+                DeleteRecomendationsLabel.Text = "Elimine únicamente el archivo de recomendaciones de sitios web con Ctrl+T y Ctrl+L";
+                ApplyBtn.Content = "Aplicar";
+                CloseBtn.Content = "Cerrar";
+                DeleteRecomendationsBtn.Content = "Eliminar recomendaciones";
+                DefaultSettingsBtn.Content = "Restaurar";
+                StartupBtn.Content = "Habilitar/Deshabilitar";
+                MiniWindowTrue.Content = "Activado (default)";
+                MiniWindowFalse.Content = "Desactivado";
             }
         }
 
@@ -269,16 +362,20 @@ namespace JupiterBrowser
         {
             if(enUSBtn.IsChecked == true)
             {
+                UpdateUI();
                 return "en-US";
             }
             if(ptBRBtn.IsChecked == true)
             {
+                UpdateUI();
                 return "pt-BR";
             }
             if(esBtn.IsChecked == true)
             {
+                UpdateUI();
                 return "ES";
             }
+            UpdateUI();
             return "en-US";
         }
 

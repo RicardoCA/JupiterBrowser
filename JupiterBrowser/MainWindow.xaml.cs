@@ -162,6 +162,27 @@ namespace JupiterBrowser
             var jupiterMenu = this.Resources["BrowserMenu"] as ContextMenu;
             var pinsMenu = this.Resources["PinnedItemMenu"] as ContextMenu;
             var tabMenu = this.Resources["TabItemMenu"] as ContextMenu;
+            var folderMenu = this.Resources["RemoveFolderMenu"] as ContextMenu;
+            var siteMenu = this.Resources["RemoveSiteFolderMenu"] as ContextMenu;
+
+            if(siteMenu != null)
+            {
+                foreach(var item in siteMenu.Items.OfType<MenuItem>())
+                {
+                    if (item.Header.ToString() == "Remove Site")
+                        item.Header = App.Translator.GetString("removeSiteBtn");
+                }
+            }
+
+            if(folderMenu != null)
+            {
+                foreach(var item in folderMenu.Items.OfType<MenuItem>())
+                {
+                    if (item.Header.ToString() == "Remove Folder")
+                        item.Header = App.Translator.GetString("removeFolderBtn");
+                }
+            }
+
             if(tabMenu != null)
             {
                 foreach(var item in tabMenu.Items.OfType<MenuItem>())

@@ -25,5 +25,7 @@
   "addToFolderBtn": "Añadir a carpeta seleccionada",
   "pinUnpinBtn": "Fijar/Desfijar",
   "translateBtn": "Traducir",
-  "closeBtn": "Cerrar"
+  "closeBtn": "Cerrar",
+  "removeFolderBtn": "Eliminar carpeta",
+  "removeSiteBtn": "Eliminar sitio web"
 }

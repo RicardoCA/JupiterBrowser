@@ -25,5 +25,7 @@
   "addToFolderBtn": "Adicionar a pasta selecionada",
   "pinUnpinBtn": "Fixar/Desafixar",
   "translateBtn": "Traduzir",
-  "closeBtn": "Fechar"
+  "closeBtn": "Fechar",
+  "removeFolderBtn": "Apagar pasta",
+  "removeSiteBtn": "Apagar site"
 }
