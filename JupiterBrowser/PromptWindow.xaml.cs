@@ -28,6 +28,21 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
             textPrompt.Focus();
             this.language = language;
+            if(language == "en-US")
+            {
+                OkBtn.Content = "Ok";
+                CloseBtn.Content = "Close";
+            }
+            if(language == "pt-BR")
+            {
+                OkBtn.Content = "Ok";
+                CloseBtn.Content = "Fechar";
+            }
+            if(language == "ES")
+            {
+                OkBtn.Content = "Ok";
+                CloseBtn.Content = "Cerrar";
+            }
         }
 
         public PromptWindow(string text, string title = null, string language = "en-US")
@@ -36,6 +51,21 @@ namespace JupiterBrowser
             this.KeyDown += Window_KeyDown;
             textPrompt.Focus();
             this.language = language;
+            if (language == "en-US")
+            {
+                OkBtn.Content = "Ok";
+                CloseBtn.Content = "Close";
+            }
+            if (language == "pt-BR")
+            {
+                OkBtn.Content = "Ok";
+                CloseBtn.Content = "Fechar";
+            }
+            if (language == "ES")
+            {
+                OkBtn.Content = "Ok";
+                CloseBtn.Content = "Cerrar";
+            }
             if (textPrompt.Text != null)
             {
                 textPrompt.Text = text;
