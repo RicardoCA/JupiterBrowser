@@ -157,6 +157,72 @@ namespace JupiterBrowser
             CopyUrlBtn.ToolTip = App.Translator.GetString("copyUrlBtn");
             clearBtn.ToolTip = App.Translator.GetString("closeTabsBtn");
             ToggleSidebarBtn.ToolTip = App.Translator.GetString("toggleSidebarBtn");
+            
+            var jupiterMenu = this.Resources["BrowserMenu"] as ContextMenu;
+            var pinsMenu = this.Resources["PinnedItemMenu"] as ContextMenu;
+            var tabMenu = this.Resources["TabItemMenu"] as ContextMenu;
+            if(tabMenu != null)
+            {
+                foreach(var item in tabMenu.Items.OfType<MenuItem>())
+                {
+                    if (item.Header.ToString() == "Add to selected folder")
+                        item.Header = App.Translator.GetString("addToFolderBtn");
+                    if (item.Header.ToString() == "Pin/Unpin")
+                        item.Header = App.Translator.GetString("pinUnpinBtn");
+                    if (item.Header.ToString() == "Rename")
+                        item.Header = App.Translator.GetString("renameBtn");
+                    if (item.Header.ToString() == "Translate")
+                        item.Header = App.Translator.GetString("translateBtn");
+                    if (item.Header.ToString() == "Close")
+                        item.Header = App.Translator.GetString("closeBtn");
+                }
+            }
+
+            if(pinsMenu != null)
+            {
+                foreach(var item in pinsMenu.Items.OfType<MenuItem>())
+                {
+                    if (item.Header.ToString() == "Open")
+                        item.Header = App.Translator.GetString("openBtn");
+                    if (item.Header.ToString() == "Protect")
+                        item.Header = App.Translator.GetString("protectBtn");
+                    if (item.Header.ToString() == "Rename")
+                        item.Header = App.Translator.GetString("renameBtn");
+                    if (item.Header.ToString() == "Unpin")
+                        item.Header = App.Translator.GetString("unpinBtn");
+                }
+            }
+
+            if (jupiterMenu != null)
+            {
+                foreach (var item in jupiterMenu.Items.OfType<MenuItem>())
+                {
+                    
+                    if (item.Header.ToString() == "Account")
+                        item.Header = App.Translator.GetString("accountBtn");
+                    if (item.Header.ToString() == "Incognito Window")
+                        item.Header = App.Translator.GetString("AnonymousBtn");
+                    if (item.Header.ToString() == "Check for Updates")
+                        item.Header = App.Translator.GetString("CheckForUpdatesBtn");
+                    if (item.Header.ToString() == "Contact Jupiter")
+                        item.Header = App.Translator.GetString("ContactJupiterBtn");
+                    if (item.Header.ToString() == "Create Folder")
+                        item.Header = App.Translator.GetString("CreateFolderBtn");
+                    if (item.Header.ToString() == "Historic")
+                        item.Header = App.Translator.GetString("HistoricBtn");
+                    if (item.Header.ToString() == "Settings")
+                        item.Header = App.Translator.GetString("SettingsBtn");
+                    if (item.Header.ToString() == "Shortcuts")
+                        item.Header = App.Translator.GetString("ShortcutsBtn");
+                    if (item.Header.ToString() == "Sidebar Theme")
+                        item.Header = App.Translator.GetString("SidebarThemeBtn");
+                    if (item.Header.ToString() == "Site Theme")
+                        item.Header = App.Translator.GetString("SiteThemeBtn");
+                    if (item.Header.ToString() == "Quit")
+                        item.Header = App.Translator.GetString("QuitBtn");
+
+                }
+            }
         }
 
 

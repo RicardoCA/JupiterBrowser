@@ -114,70 +114,70 @@
 
 
         <ContextMenu x:Key="BrowserMenu" x:Name="BrowserMenu" >
-            <MenuItem Header="Account" Click="Account_Click" FontSize="18">
+            <MenuItem Header="Account" Click="Account_Click" FontSize="18" x:Name="AccountBtn">
                 <MenuItem.Icon>
                     <Image Source="/account.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Incognito Window" Click="Anonymous_Click" FontSize="18">
+            <MenuItem Header="Incognito Window" Click="Anonymous_Click" FontSize="18" Name="AnonymousBtn">
                 <MenuItem.Icon>
                     <Image Source="/key.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click" FontSize="18">
+            <MenuItem Header="Check for Updates" Click="CheckForUpdates_Click" FontSize="18" Name="CheckForUpdatesBtn">
                 <MenuItem.Icon>
                     <Image Source="/update.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click" FontSize="18">
+            <MenuItem Header="Contact Jupiter" Click="ContactJupiter_Click" FontSize="18" Name="ContactJupiterBtn">
                 <MenuItem.Icon>
                     <Image Source="/contact.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
 
-            <MenuItem Header="Create Folder" Click="CreateFolder_Click" FontSize="18">
+            <MenuItem Header="Create Folder" Click="CreateFolder_Click" FontSize="18" Name="CreateFolderBtn">
                 <MenuItem.Icon>
                     <Image Source="/new_folder.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
 
-            <MenuItem Header="Downloads" Click="Downloads_Click" FontSize="18">
+            <MenuItem Header="Downloads" Click="Downloads_Click" FontSize="18" Name="DownloadsBtn">
                 <MenuItem.Icon>
                     <Image Source="/downloads.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Historic" Click="HistoricButton_Click" FontSize="18">
+            <MenuItem Header="Historic" Click="HistoricButton_Click" FontSize="18" Name="HistoricBtn">
                 <MenuItem.Icon>
                     <Image Source="/trash.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Jupiter Card" Click="JupiterCard_Click" FontSize="18">
+            <MenuItem Header="Jupiter Card" Click="JupiterCard_Click" FontSize="18" Name="JupiterCardBtn">
                 <MenuItem.Icon>
                     <Image Source="/card.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Settings" Click="Settings_Click" FontSize="18">
+            <MenuItem Header="Settings" Click="Settings_Click" FontSize="18" Name="SettingsBtn">
                 <MenuItem.Icon>
                     <Image Source="/settings.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Shortcuts" Click="ShortCuts_Click" FontSize="18">
+            <MenuItem Header="Shortcuts" Click="ShortCuts_Click" FontSize="18" Name="ShortcutsBtn">
                 <MenuItem.Icon>
                     <Image Source="/shortcuts.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click" FontSize="18">
+            <MenuItem Header="Sidebar Theme" Click="SidebarThemeMenu_Click" FontSize="18" Name="SidebarThemeBtn">
                 <MenuItem.Icon>
                     <Image Source="/theme.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Site Theme" Click="SiteThemeMenu_Click" FontSize="18">
+            <MenuItem Header="Site Theme" Click="SiteThemeMenu_Click" FontSize="18" Name="SiteThemeBtn">
                 <MenuItem.Icon>
                     <Image Source="/sitetheme.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
 
-            <MenuItem Header="Quit" Click="QuitMenu_Click" FontSize="18">
+            <MenuItem Header="Quit" Click="QuitMenu_Click" FontSize="18" Name="QuitBtn">
                 <MenuItem.Icon>
                     <Image Source="/quit.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
@@ -213,22 +213,22 @@
             
         </ContextMenu>
         <ContextMenu x:Key="PinnedItemMenu" x:Name="PinnedItemMenu">
-            <MenuItem Header="Open" Click="PinnedItemMenu_Open" FontSize="18">
+            <MenuItem Header="Open" Click="PinnedItemMenu_Open" FontSize="18" Name="OpenBtn">
                 <MenuItem.Icon>
                     <Image Source="/open_newTab.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Protect" Click="PinnedItemMenu_Protect" FontSize="18">
+            <MenuItem Header="Protect" Click="PinnedItemMenu_Protect" FontSize="18" Name="ProtectBtn">
                 <MenuItem.Icon>
                     <Image Source="/ShieldIcon.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Rename" Click="PinnedItemMenu_Rename" FontSize="18">
+            <MenuItem Header="Rename" Click="PinnedItemMenu_Rename" FontSize="18" Name="RenameBtn">
                 <MenuItem.Icon>
                     <Image Source="/edit.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="Unpin" Click="PinnedItemMenu_Unpin" FontSize="18">
+            <MenuItem Header="Unpin" Click="PinnedItemMenu_Unpin" FontSize="18" Name="UnpinBtn">
                 <MenuItem.Icon>
                     <Image Source="/keep_off.png" Width="18" Height="18" Margin="0"/>
                 </MenuItem.Icon>
