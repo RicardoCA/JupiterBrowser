@@ -2017,7 +2017,7 @@ namespace JupiterBrowser
 
         private void OpenNewTab()
         {
-            var urlInputDialog = new UrlInputDialog();
+            var urlInputDialog = new UrlInputDialog(langCode);
             if (urlInputDialog.ShowDialog() == true)
             {
                 var newTab = new TabItem { TabName = "New Tab " + id };
@@ -2085,7 +2085,7 @@ namespace JupiterBrowser
                 if (selectedTab.WebView != null)
                 {
                     string url = selectedTab.WebView.Source.ToString();
-                    var urlInputDialog = new UrlInputDialog();
+                    var urlInputDialog = new UrlInputDialog(langCode);
                     if (url.IndexOf("http") != -1)
                     {
                         urlInputDialog = new UrlInputDialog(url);
@@ -2104,7 +2104,7 @@ namespace JupiterBrowser
                 else
                 {
                     // Se o WebView não existe ainda, cria um novo
-                    var urlInputDialog = new UrlInputDialog();
+                    var urlInputDialog = new UrlInputDialog(langCode);
                     if (urlInputDialog.ShowDialog() == true)
                     {
                         var webView = new WebView2();
@@ -2137,10 +2137,10 @@ namespace JupiterBrowser
                 if (selectedTab.WebView != null)
                 {
                     string url = selectedTab.WebView.Source.ToString();
-                    var urlInputDialog = new UrlInputDialog();
+                    var urlInputDialog = new UrlInputDialog(langCode);
                     if (url.IndexOf("http") != -1)
                     {
-                        urlInputDialog = new UrlInputDialog(url);
+                        urlInputDialog = new UrlInputDialog(url,langCode);
                     }
 
 
@@ -2168,7 +2168,7 @@ namespace JupiterBrowser
                 else
                 {
                     // Se o WebView não existe ainda, cria um novo
-                    var urlInputDialog = new UrlInputDialog();
+                    var urlInputDialog = new UrlInputDialog(langCode);
                     if (urlInputDialog.ShowDialog() == true)
                     {
                         var webView = new WebView2();

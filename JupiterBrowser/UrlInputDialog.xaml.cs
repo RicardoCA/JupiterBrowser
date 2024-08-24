@@ -19,7 +19,9 @@ namespace JupiterBrowser
 
         private int lastResult = 0;
 
-        public UrlInputDialog()
+        private string language = "en-US";
+
+        public UrlInputDialog(string language)
         {
             InitializeComponent();
             this.KeyDown += Window_KeyDown;
@@ -27,9 +29,16 @@ namespace JupiterBrowser
             LoadLastResult();
             LoadNavigationHistory();
             LoadSettings();
+            this.language = language;
+            if (language == "en-US")
+                TextUrlInput.Text = "Enter URL, Search or Press Esc:";
+            if (language == "pt-BR")
+                TextUrlInput.Text = "Digite a URL, Pesquise ou pressione Esc:";
+            if (language == "ES")
+                TextUrlInput.Text = "Ingresar URL, buscar o presionar Esc:";
         }
 
-        public UrlInputDialog(string url)
+        public UrlInputDialog(string url, string language)
         {
             InitializeComponent();
             this.KeyDown += Window_KeyDown;
@@ -38,6 +47,13 @@ namespace JupiterBrowser
             LoadLastResult();
             LoadNavigationHistory();
             LoadSettings();
+            this.language = language;
+            if (language == "en-US")
+                TextUrlInput.Text = "Enter URL, Search or Press Esc:";
+            if (language == "pt-BR")
+                TextUrlInput.Text = "Digite a URL, Pesquise ou pressione Esc:";
+            if (language == "ES")
+                TextUrlInput.Text = "Ingresar URL, buscar o presionar Esc:";
         }
 
         private void LoadSettings()
