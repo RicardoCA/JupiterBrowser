@@ -118,11 +118,12 @@ namespace JupiterBrowser
             {
                 _ = InitializeAsync();
                 CheckForUpdatesTimer();
-                ChangeLanguage(langCode);
+                
             }
             else
             {
                 LoadSettings();
+                ChangeLanguage(langCode);
                 CleanUpdates();
                 LoadSidebarColor();
                 LoadPinneds();
@@ -130,7 +131,7 @@ namespace JupiterBrowser
                 OpenStartPage();
                 CheckForUpdatesTimer();
                 LoadFolders();
-                ChangeLanguage(langCode);
+                
 
             }
 
@@ -310,6 +311,7 @@ namespace JupiterBrowser
             await SyncOnStart();
 
             LoadSettings();
+            ChangeLanguage(langCode);
             CleanUpdates();
             LoadSidebarColor();
             LoadPinneds();
@@ -318,6 +320,7 @@ namespace JupiterBrowser
             LoadTabsClosedMobile();
             OpenStartPage();
             LoadFolders();
+            
         }
 
        
@@ -512,7 +515,13 @@ namespace JupiterBrowser
                 {
                     this.email = account.Email;
                     this.password = account.Password;
-                    ToastWindow.Show("Synchronizing browser.", 6000);
+
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Synchronizing browser.", 6000);
+                    if(langCode.Equals("ES"))
+                        ToastWindow.Show("Sincronizando navegador.", 6000);
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Sincronizando navegador.", 6000);
                 }
             }
         }
@@ -586,7 +595,13 @@ namespace JupiterBrowser
             bool accountExists = await AccountExistsAsync(email, password);
             if (accountExists)
             {
-                ToastWindow.Show("Synchronizing browser...");
+                if (langCode.Equals("en-US"))
+                    ToastWindow.Show("Synchronizing browser.", 6000);
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Sincronizando navegador.", 6000);
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Sincronizando navegador.", 6000);
+
                 string[] uploadFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "closedtabs.json","folders.json" };
                 var storage = new FirebaseStorage("jupiterbrowser-8f6b2.appspot.com");
 
@@ -771,7 +786,15 @@ namespace JupiterBrowser
             {
                 // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
                 string currentName = clickedItem.TabName;
-                PromptWindow promptWindow = new PromptWindow(currentName, "Rename Tab:");
+                PromptWindow promptWindow = null;
+                if (langCode.Equals("en-US"))
+                    promptWindow = new PromptWindow(currentName, "Rename Tab:");
+                if (langCode.Equals("pt-BR"))
+                    promptWindow = new PromptWindow(currentName, "Renomear Guia:");
+                if (langCode.Equals("ES"))
+                    promptWindow = new PromptWindow(currentName, "Cambiar nombre de pestaña:");
+
+
                 if (promptWindow.ShowDialog() == true)
                 {
                     if (promptWindow.UserInput.Length > 0)
@@ -974,7 +997,12 @@ namespace JupiterBrowser
             }
             else
             {
-                ToastWindow.Show("Select a tab for this.");
+                if(langCode.Equals("en-US"))
+                    ToastWindow.Show("Select a tab for this.");
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Selecione uma aba para isso.");
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Seleccione una pestaña para esto.");
             }
 
         }
@@ -1031,7 +1059,12 @@ namespace JupiterBrowser
             }
             else
             {
-                ToastWindow.Show("Select a tab for this.");
+                if (langCode.Equals("en-US"))
+                    ToastWindow.Show("Select a tab for this.");
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Selecione uma aba para isso.");
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Seleccione una pestaña para esto.");
             }
         }
 
@@ -1081,8 +1114,17 @@ namespace JupiterBrowser
                     {
                         try
                         {
+                            ConfirmDialog confirmDialog = null;
+                            
 
-                            ConfirmDialog confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+
+                            if(langCode.Equals("en-US"))
+                                confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                            if (langCode.Equals("pt-BR"))
+                                confirmDialog = new ConfirmDialog("Você tem guias para restaurar, deseja restaurar?");
+                            if (langCode.Equals("ES"))
+                                confirmDialog = new ConfirmDialog("¿Tienes guías para restaurar, quieres restaurar?");
+
                             if (confirmDialog.ShowDialog() == true)
                             {
                                 var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
@@ -1151,8 +1193,17 @@ namespace JupiterBrowser
                     {
                         try
                         {
+                            ConfirmDialog confirmDialog = null;
 
-                            ConfirmDialog confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                            if (langCode.Equals("en-US"))
+                                confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                            if (langCode.Equals("pt-BR"))
+                                confirmDialog = new ConfirmDialog("Você tem guias para restaurar, deseja restaurar?");
+                            if (langCode.Equals("ES"))
+                                confirmDialog = new ConfirmDialog("¿Tienes guías para restaurar, quieres restaurar?");
+
+
+
                             if (confirmDialog.ShowDialog() == true)
                             {
                                 var loadedTabs = JsonConvert.DeserializeObject<ObservableCollection<TabItem>>(jsonContent);
@@ -1473,19 +1524,35 @@ namespace JupiterBrowser
                 if (selectedTab.adBlock == false)
                 {
                     selectedTab.adBlock = true;
-                    ToastWindow.Show("Native AdBlock enabled.");
+
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Native AdBlock enabled.");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("AdBlock nativo ativado.");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("AdBlock nativo habilitado.");
                     selectedTab.WebView.Reload();
                 }
                 else
                 {
                     selectedTab.adBlock = false;
                     selectedTab.WebView.Reload();
-                    ToastWindow.Show("Native AdBlock disabled.");
+                    if (langCode.Equals("en-US"))
+                        ToastWindow.Show("Native AdBlock disabled.");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("AdBlock nativo desativado.");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("AdBlock nativo deshabilitado.");
                 }
             }
             else
             {
-                ToastWindow.Show("Select a tab for this.");
+                if(langCode.Equals("en-US"))
+                    ToastWindow.Show("Select a tab for this.");
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Selecione uma aba para isso.");
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Seleccione una pestaña para esto.");
             }
         }
 
@@ -1573,12 +1640,22 @@ namespace JupiterBrowser
                                 if (decryptedPassword.Equals(password))
                                 {
                                     string url = vault.Decrypt(selectedTab.url);
-                                    ToastWindow.Show("Opening tab.");
+                                    if(langCode.Equals("en-US"))
+                                        ToastWindow.Show("Opening tab.");
+                                    if (langCode.Equals("pt-BR"))
+                                        ToastWindow.Show("Abrindo guia.");
+                                    if (langCode.Equals("ES"))
+                                        ToastWindow.Show("Pestaña de apertura");
                                     OpenNewTabWithUrl(url);
                                 }
                                 else
                                 {
-                                    ToastWindow.Show("Wrong password.");
+                                    if(langCode.Equals("en-US"))
+                                        ToastWindow.Show("Wrong password.");
+                                    if (langCode.Equals("pt-BR"))
+                                        ToastWindow.Show("Senha errada.");
+                                    if (langCode.Equals("ES"))
+                                        ToastWindow.Show("Contraseña incorrecta.");
                                 }
                             }
                         }
@@ -1727,7 +1804,12 @@ namespace JupiterBrowser
             {
                 // Remove o item existente
                 PinnedTabs.Remove(existingTab);
-                ToastWindow.Show("Unpinned site: " + currentUrl);
+                if(langCode.Equals("en-US"))
+                    ToastWindow.Show("Unpinned site: " + currentUrl);
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Site não fixado: " + currentUrl);
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Sitio no fijado: " + currentUrl);
             }
             else
             {
@@ -1743,7 +1825,12 @@ namespace JupiterBrowser
                         LogoUrl = currentLogo,
                         url = currentUrl
                     });
-                    ToastWindow.Show("Pinned site: " + currentUrl);
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Pinned site: " + currentUrl);
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Site fixado: " + currentUrl);
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("Sitio anclado: " + currentUrl);
 
                 }
 
@@ -2094,7 +2181,12 @@ namespace JupiterBrowser
             }
             else
             {
-                ToastWindow.Show("Please select a tab to edit.");
+                if(langCode.Equals("en-US"))
+                    ToastWindow.Show("Please select a tab to edit.");
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Selecione uma aba para editar.");
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Seleccione una pestaña para editar.");
 
             }
 
@@ -2114,7 +2206,12 @@ namespace JupiterBrowser
             }
             else
             {
-                ToastWindow.Show("You already have the latest version.");
+                if(langCode.Equals("en-US"))
+                    ToastWindow.Show("You already have the latest version.");
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Você já tem a versão mais recente.");
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("Ya tienes la última versión.");
             }
 
         }
@@ -2199,8 +2296,13 @@ namespace JupiterBrowser
                 {
                     selectedTab.WebView?.Dispose();
                     Tabs.Remove(selectedTab);
-                    ToastWindow.Show("Tab closed.");
-                    
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Tab closed.");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Aba fechada.");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("Pestaña cerrada.");
+
                 }
 
             }
@@ -2214,7 +2316,12 @@ namespace JupiterBrowser
 
         private void ShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)\nCtrl + Shift + Y(open youtube app)\nCtrl + Shift + T(open tiktok app)\nCtrl + Shift + X(open X app) ", 7000);
+            if(langCode.Equals("en-US"))
+                ToastWindow.Show("Ctrl + T (new tab)\nCtrl + L (edit tab url)\nCtrl + H (open historic)\nCtrl + D (Pin/Unpin)\nCtrl + S (toggle sidebar)\nCtrl + W (copy url)\nCtrl + J (open downloads)\nCtrl + F4 (close tab)\nCtrl + Shift + N (open incognito window)\nCtrl + Shift + W(open whatsapp app)\nCtrl + Shift + F(open facebook app)\nCtrl + Shift + I(open instagram app)\nCtrl + Shift + Y(open youtube app)\nCtrl + Shift + T(open tiktok app)\nCtrl + Shift + X(open X app) ", 7000);
+            if (langCode.Equals("pt-BR"))
+                ToastWindow.Show("Ctrl + T (nova aba)\nCtrl + L (editar URL da aba)\nCtrl + H (abrir histórico)\nCtrl + D (Fixar/Desfixar)\nCtrl + S (alternar barra lateral)\nCtrl + W (copiar URL)\nCtrl + J (abrir downloads)\nCtrl + F4 (fechar aba)\nCtrl + Shift + N (abrir janela anônima)\nCtrl + Shift + W(abrir aplicativo do WhatsApp)\nCtrl + Shift + F(abrir aplicativo do Facebook)\nCtrl + Shift + I(abrir aplicativo do Instagram)\nCtrl + Shift + Y(abrir aplicativo do YouTube)\nCtrl + Shift + T(abrir aplicativo do TikTok)\nCtrl + Shift + X(abrir aplicativo do X)", 7000);
+            if (langCode.Equals("ES"))
+                ToastWindow.Show("Ctrl + T (nueva pestaña)\nCtrl + L (editar URL de la pestaña)\nCtrl + H (abrir historial)\nCtrl + D (Fijar/Desfijar)\nCtrl + S (alternar barra lateral)\nCtrl + W (copiar URL)\nCtrl + J (abrir descargas)\nCtrl + F4 (cerrar pestaña)\nCtrl + Shift + N (abrir ventana incógnita)\nCtrl + Shift + W(abrir aplicación de WhatsApp)\nCtrl + Shift + F(abrir aplicación de Facebook)\nCtrl + Shift + I(abrir aplicación de Instagram)\nCtrl + Shift + Y(abrir aplicación de YouTube)\nCtrl + Shift + T(abrir aplicación de TikTok)\nCtrl + Shift + X(abrir aplicación de X)", 7000);
         }
 
         private void CopyURL()
@@ -2225,17 +2332,32 @@ namespace JupiterBrowser
                 if (url.IndexOf("http") != -1)
                 {
                     Clipboard.SetText(url);
-                    ToastWindow.Show("Url copied.");
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Url copied.");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Url copiada.");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("Url copiada.");
                 }
                 else
                 {
-                    ToastWindow.Show("You cannot be on a file or startpage.");
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("You cannot be on a file or startpage.");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Você não pode estar em um arquivo ou página inicial.");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("No puedes estar en un archivo o página de inicio.");
                 }
 
             }
             else
             {
-                ToastWindow.Show("No tab selected or no url available.");
+                if(langCode.Equals("en-US"))
+                    ToastWindow.Show("No tab selected or no url available.");
+                if (langCode.Equals("pt-BR"))
+                    ToastWindow.Show("Nenhuma aba selecionada ou nenhuma URL disponível.");
+                if (langCode.Equals("ES"))
+                    ToastWindow.Show("No hay ninguna pestaña seleccionada o no hay ninguna URL disponible.");
             }
         }
 
@@ -2468,7 +2590,12 @@ namespace JupiterBrowser
                                                 // Insere o novo item na mesma posição
                                                 PinnedTabs.Insert(index, updatedItem);
                                                 SavePinneds();
-                                                ToastWindow.Show("Pinned protected.");
+                                                if(langCode.Equals("en-US"))
+                                                    ToastWindow.Show("Pinned protected.");
+                                                if (langCode.Equals("pt-BR"))
+                                                    ToastWindow.Show("Fixado protegido.");
+                                                if (langCode.Equals("ES"))
+                                                    ToastWindow.Show("Fijado protegido.");
                                             }
                                         }
                                     }
@@ -2522,7 +2649,12 @@ namespace JupiterBrowser
                                         // Insere o novo item na mesma posição
                                         PinnedTabs.Insert(index, updatedItem);
                                         SavePinneds();
-                                        ToastWindow.Show("Pinned protected.");
+                                        if (langCode.Equals("en-US"))
+                                            ToastWindow.Show("Pinned protected.");
+                                        if (langCode.Equals("pt-BR"))
+                                            ToastWindow.Show("Fixado protegido.");
+                                        if (langCode.Equals("ES"))
+                                            ToastWindow.Show("Fijado protegido.");
                                     }
                                 }
                             }
@@ -2619,7 +2751,12 @@ namespace JupiterBrowser
                     {
                         // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
                         string currentName = clickedItem.TabName;
-                        ToastWindow.Show("Site unpinned: " + currentName);
+                        if(langCode.Equals("en-US"))
+                            ToastWindow.Show("Site unpinned: " + currentName);
+                        if (langCode.Equals("pt-BR"))
+                            ToastWindow.Show("Site não fixado: " + currentName);
+                        if (langCode.Equals("ES"))
+                            ToastWindow.Show("Sitio desanclado: " + currentName);
                         PinnedTabs.Remove(clickedItem);
                         SavePinneds();
 
@@ -2662,12 +2799,22 @@ namespace JupiterBrowser
                                         {
                                             string currentName = clickedItem.TabName;
                                             string url = vault.Decrypt(clickedItem.url);
-                                            ToastWindow.Show("Opening tab.");
+                                            if(langCode.Equals("en-US"))
+                                                ToastWindow.Show("Opening tab.");
+                                            if (langCode.Equals("pt-BR"))
+                                                ToastWindow.Show("Abrindo guia.");
+                                            if (langCode.Equals("ES"))
+                                                ToastWindow.Show("Pestaña de apertura.");
                                             OpenNewTabWithUrl(url, currentName);
                                         }
                                         else
                                         {
-                                            ToastWindow.Show("Wrong password.");
+                                            if(langCode.Equals("en-US"))
+                                                ToastWindow.Show("Wrong password.");
+                                            if (langCode.Equals("pt-BR"))
+                                                ToastWindow.Show("Senha errada.");
+                                            if (langCode.Equals("ES"))
+                                                ToastWindow.Show("Contraseña incorrecta.");
                                         }
 
                                     }
@@ -3450,7 +3597,12 @@ namespace JupiterBrowser
                             if (droppedData.isProtected == false)
                             {
                                 OpenNewTabWithUrl(droppedData.url);
-                                ToastWindow.Show("Opening tab.");
+                                if(langCode.Equals("en-US"))
+                                    ToastWindow.Show("Opening tab.");
+                                if (langCode.Equals("pt-BR"))
+                                    ToastWindow.Show("Abrindo guia.");
+                                if (langCode.Equals("ES"))
+                                    ToastWindow.Show("Pestaña de apertura.");
                             }
                             else
                             {
@@ -3468,12 +3620,22 @@ namespace JupiterBrowser
                                             {
                                                 string currentName = droppedData.TabName;
                                                 string url = vault.Decrypt(droppedData.url);
-                                                ToastWindow.Show("Opening tab.");
+                                                if (langCode.Equals("en-US"))
+                                                    ToastWindow.Show("Opening tab.");
+                                                if (langCode.Equals("pt-BR"))
+                                                    ToastWindow.Show("Abrindo guia.");
+                                                if (langCode.Equals("ES"))
+                                                    ToastWindow.Show("Pestaña de apertura.");
                                                 OpenNewTabWithUrl(url, currentName);
                                             }
                                             else
                                             {
-                                                ToastWindow.Show("Wrong password.");
+                                                if(langCode.Equals("en-US"))
+                                                    ToastWindow.Show("Wrong password.");
+                                                if (langCode.Equals("pt-BR"))
+                                                    ToastWindow.Show("Senha errada.");
+                                                if (langCode.Equals("ES"))
+                                                    ToastWindow.Show("Contraseña incorrecta.");
                                             }
 
                                         }
@@ -3530,7 +3692,12 @@ namespace JupiterBrowser
                             if (!exists)
                             {
                                 PinnedTabs.Add(droppedData);
-                                ToastWindow.Show($"Pinned site: {droppedData.url}");
+                                if(langCode.Equals("en-US"))
+                                    ToastWindow.Show($"Pinned site: {droppedData.url}");
+                                if (langCode.Equals("pt-BR"))
+                                    ToastWindow.Show($"Site fixado: {droppedData.url}");
+                                if (langCode.Equals("ES"))
+                                    ToastWindow.Show($"Sitio anclado: {droppedData.url}");
                                 SavePinneds();
                                 droppedData.WebView.Dispose();
                                 Tabs.Remove(droppedData);
@@ -3582,7 +3749,12 @@ namespace JupiterBrowser
                 }
                 else
                 {
-                    ToastWindow.Show("Select a folder.");
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Select a folder.");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Selecione uma pasta.");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("Seleccione una carpeta.");
                 }
             }
         }
@@ -3594,7 +3766,12 @@ namespace JupiterBrowser
             {
                 if(selectedItem is Folder folder)
                 {
-                    ToastWindow.Show("Folder: "+folder.folderName + " selected");
+                    if(langCode.Equals("en-US"))
+                        ToastWindow.Show("Folder: "+folder.folderName + " selected");
+                    if (langCode.Equals("pt-BR"))
+                        ToastWindow.Show("Pasta: " + folder.folderName + " selecionada");
+                    if (langCode.Equals("ES"))
+                        ToastWindow.Show("Carpeta: " + folder.folderName + " seleccionada");
                 }
                 
             }
