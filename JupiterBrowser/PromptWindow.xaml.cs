@@ -20,18 +20,22 @@ namespace JupiterBrowser
     public partial class PromptWindow : Window
     {
         public string UserInput { get; private set; } = "";
-        public PromptWindow()
+
+        public string language = "en-US";
+        public PromptWindow(string language)
         {
             InitializeComponent();
             this.KeyDown += Window_KeyDown;
             textPrompt.Focus();
+            this.language = language;
         }
 
-        public PromptWindow(string text, string title = null)
+        public PromptWindow(string text, string title = null, string language = "en-US")
         {
             InitializeComponent();
             this.KeyDown += Window_KeyDown;
             textPrompt.Focus();
+            this.language = language;
             if (textPrompt.Text != null)
             {
                 textPrompt.Text = text;

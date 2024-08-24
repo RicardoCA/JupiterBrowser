@@ -49,8 +49,8 @@
 
             <Grid Grid.Row="1" Margin="0,10,0,0">
                 <TextBox x:Name="textPrompt" Background="Black" Foreground="White" VerticalAlignment="Center" KeyDown="PromptTextBox_KeyDown"/>
-                <Button Content="OK" Margin="10,66,0,-56" Width="124" Click="Ok_Click"  />
-                <Button Content="Close" Margin="230,66,0,-56" Width="124" Click="Close_Click"  />
+                <Button x:Name="OkBtn" Content="OK" Margin="10,66,0,-56" Width="124" Click="Ok_Click"  />
+                <Button x:Name="CloseBtn" Content="Close" Margin="230,66,0,-56" Width="124" Click="Close_Click"  />
             </Grid>
 
             

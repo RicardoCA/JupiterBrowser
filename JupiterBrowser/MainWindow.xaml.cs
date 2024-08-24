@@ -788,11 +788,11 @@ namespace JupiterBrowser
                 string currentName = clickedItem.TabName;
                 PromptWindow promptWindow = null;
                 if (langCode.Equals("en-US"))
-                    promptWindow = new PromptWindow(currentName, "Rename Tab:");
+                    promptWindow = new PromptWindow(currentName, "Rename Tab:",langCode);
                 if (langCode.Equals("pt-BR"))
-                    promptWindow = new PromptWindow(currentName, "Renomear Guia:");
+                    promptWindow = new PromptWindow(currentName, "Renomear Guia:",langCode);
                 if (langCode.Equals("ES"))
-                    promptWindow = new PromptWindow(currentName, "Cambiar nombre de pestaña:");
+                    promptWindow = new PromptWindow(currentName, "Cambiar nombre de pestaña:",langCode);
 
 
                 if (promptWindow.ShowDialog() == true)
@@ -1629,7 +1629,13 @@ namespace JupiterBrowser
                     }
                     else
                     {
-                        PromptWindow promptWindow = new PromptWindow("", "Password:");
+                        PromptWindow promptWindow = null;
+                        if(langCode.Equals("en-US"))
+                            promptWindow = new PromptWindow("", "Password:",langCode);
+                        if (langCode.Equals("pt-BR"))
+                            promptWindow = new PromptWindow("", "Senha:", langCode);
+                        if (langCode.Equals("ES"))
+                            promptWindow = new PromptWindow("", "Contraseña:", langCode);
                         if (promptWindow.ShowDialog() == true)
                         {
                             if (!string.IsNullOrEmpty(promptWindow.UserInput))
@@ -2504,7 +2510,15 @@ namespace JupiterBrowser
                     {
                         // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia
                         string currentName = clickedItem.TabName;
-                        PromptWindow promptWindow = new PromptWindow(currentName, "Rename Tab:");
+
+                        PromptWindow promptWindow = null;
+                        if(langCode.Equals("en-US"))
+                            promptWindow = new PromptWindow(currentName, "Rename Tab:", langCode);
+                        if (langCode.Equals("pt-BR"))
+                            promptWindow = new PromptWindow(currentName, "Renomear Guia:", langCode);
+                        if (langCode.Equals("ES"))
+                            promptWindow = new PromptWindow(currentName, "Cambiar nombre de pestaña:", langCode);
+
                         if (promptWindow.ShowDialog() == true)
                         {
                             if (!string.IsNullOrEmpty(promptWindow.UserInput))
@@ -2543,7 +2557,14 @@ namespace JupiterBrowser
                         Vault vault = new Vault();
                         if (vault.HasVaultExist() == false)
                         {
-                            PromptWindow promptWindow = new PromptWindow("", "Password:");
+                            PromptWindow promptWindow = null;
+                            if(langCode.Equals("en-US"))
+                                promptWindow = new PromptWindow("", "Password:", langCode);
+                            if (langCode.Equals("pt-BR"))
+                                promptWindow = new PromptWindow("", "Senha:", langCode);
+                            if (langCode.Equals("ES"))
+                                promptWindow = new PromptWindow("", "Contraseña:", langCode);
+
                             if (promptWindow.ShowDialog() == true)
                             {
                                 if (!string.IsNullOrEmpty(promptWindow.UserInput))
@@ -2687,7 +2708,13 @@ namespace JupiterBrowser
                     {
                         // Aqui você pode abrir uma caixa de diálogo para editar o nome da guia fixada
                         string currentName = clickedItem.TabName;
-                        PromptWindow promptWindow = new PromptWindow(currentName, "Rename Pinned Tab:");
+                        PromptWindow promptWindow = null;
+                        if(langCode.Equals("en-US"))
+                            promptWindow = new PromptWindow(currentName, "Rename Pinned Tab:", langCode);
+                        if (langCode.Equals("pt-BR"))
+                            promptWindow = new PromptWindow(currentName, "Renomear aba fixada:", langCode);
+                        if (langCode.Equals("ES"))
+                            promptWindow = new PromptWindow(currentName, "Cambiar el nombre de la pestaña anclada:", langCode);
                         if (promptWindow.ShowDialog() == true)
                         {
                             if (!string.IsNullOrEmpty(promptWindow.UserInput))
@@ -2788,7 +2815,14 @@ namespace JupiterBrowser
                             Vault vault = new Vault();
                             if (vault.HasVaultExist())
                             {
-                                PromptWindow promptWindow = new PromptWindow("", "Password:");
+                                PromptWindow promptWindow = null;
+                                if(langCode.Equals("en-US"))
+                                    promptWindow = new PromptWindow("", "Password:", langCode);
+                                if (langCode.Equals("pt-BR"))
+                                    promptWindow = new PromptWindow("", "Senha:", langCode);
+                                if (langCode.Equals("ES"))
+                                    promptWindow = new PromptWindow("", "Contraseña:", langCode);
+
                                 if (promptWindow.ShowDialog() == true)
                                 {
                                     if (!string.IsNullOrEmpty(promptWindow.UserInput))
@@ -3615,7 +3649,13 @@ namespace JupiterBrowser
                                 Vault vault = new Vault();
                                 if (vault.HasVaultExist())
                                 {
-                                    PromptWindow promptWindow = new PromptWindow("", "Password:");
+                                    PromptWindow promptWindow = null;
+                                    if(langCode.Equals("en-US"))
+                                        promptWindow = new PromptWindow("", "Password:", langCode);
+                                    if (langCode.Equals("pt-BR"))
+                                        promptWindow = new PromptWindow("", "Senha:", langCode);
+                                    if (langCode.Equals("ES"))
+                                        promptWindow = new PromptWindow("", "Contraseña:", langCode);
                                     if (promptWindow.ShowDialog() == true)
                                     {
                                         if (!string.IsNullOrEmpty(promptWindow.UserInput))
@@ -3836,7 +3876,8 @@ namespace JupiterBrowser
 
         private void addFolder()
         {
-            PromptWindow promptWindow = new PromptWindow("","Folder name:");
+            PromptWindow promptWindow = null;
+            promptWindow = new PromptWindow("","Folder name:", langCode);
             if (promptWindow.ShowDialog() == true)
             {
                 string name = promptWindow.UserInput;
