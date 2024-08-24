@@ -990,7 +990,7 @@ namespace JupiterBrowser
             if (TabListBox.SelectedItem is TabItem selectedTab && selectedTab.WebView != null)
             {
                 url = selectedTab.WebView.Source.ToString();
-                var colorPicker = new SiteColorPicker(url);
+                var colorPicker = new SiteColorPicker(url,langCode);
                 colorPicker.OnColorsSelected += ColorPicker_OnColorsSelected;
                 colorPicker.ShowDialog();
 
@@ -3416,8 +3416,14 @@ namespace JupiterBrowser
 
         private void ClearBtn_Click(object sender, RoutedEventArgs e)
         {
-            ConfirmDialog confirmDialog = new ConfirmDialog("Do you want to close all open tabs?", langCode);
-            if(confirmDialog.ShowDialog() == true)
+            ConfirmDialog confirmDialog = null;
+            if(langCode.Equals("en-US"))
+                confirmDialog = new ConfirmDialog("Do you want to close all open tabs?", langCode);
+            if (langCode.Equals("pt-BR"))
+                confirmDialog = new ConfirmDialog("Deseja fechar todas as guias abertas?", langCode);
+            if (langCode.Equals("EN"))
+                confirmDialog = new ConfirmDialog("¿Quieres cerrar todas las pestañas abiertas?", langCode);
+            if (confirmDialog.ShowDialog() == true)
             {
                 foreach (var tabItem in Tabs.ToList())
                 {

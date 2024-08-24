@@ -17,10 +17,32 @@ namespace JupiterBrowser
 
         public event Action<SiteTheme> OnColorsSelected;
 
-        public SiteColorPicker(string url)
+        public string language = "en-US";
+
+        public SiteColorPicker(string url, string language)
         {
             InitializeComponent();
             siteTheme.url = url;
+            this.language = language;
+
+            if(language == "en-US")
+            {
+                ApplyBtn.Content = "Apply";
+                RestoreBtn.Content = "Restore";
+                CloseBtn.Content = "Close";
+            }
+            if(language == "pt-BR")
+            {
+                ApplyBtn.Content = "Aplicar";
+                RestoreBtn.Content = "Restaurar";
+                CloseBtn.Content = "Fechar";
+            }
+            if(language == "ES")
+            {
+                ApplyBtn.Content = "Aplicar";
+                RestoreBtn.Content = "Restaurar";
+                CloseBtn.Content = "Cerrar";
+            }
         }
 
         private void ColorBall_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
