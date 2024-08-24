@@ -26,11 +26,11 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Label Content="You are already logged in." Foreground="White" x:Name="loggedText"/>
+        <Label  Content="You are already logged in." Foreground="White" x:Name="loggedText"/>
 
         <!-- Create Account Section -->
         <StackPanel Grid.Column="0" Margin="10" x:Name="RegisterSection" Visibility="Collapsed">
-            <Label Content="Register Account" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Margin="10"/>
+            <Label Name="RegisterAccountTitle" Content="Register Account" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Margin="10"/>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
                 
 
                 <!-- Name -->
-                <Label Content="Name:" Foreground="White" Margin="10" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <Label Name="NameLabel" Content="Name:" Foreground="White" Margin="10" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                 <TextBox Name="NameTextBox" Margin="10" Grid.Row="0" Grid.Column="1" Width="200"/>
 
                 <!-- E-mail -->
@@ -66,7 +66,7 @@
 
         <!-- Login Account Section -->
         <StackPanel Grid.Column="1" Margin="10" x:Name="LoginSection" Visibility="Collapsed">
-            <Label Content="Login Account" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Margin="10"/>
+            <Label Name="LoginTitle" Content="Login Account" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Margin="10"/>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -96,7 +96,7 @@
         <!-- Close Button -->
         <!-- StackPanel na linha 2 -->
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Margin="0">
-            <Button Click="Close_Click" Content="Close" Width="100" Height="20" Margin="10" Background="Transparent" Foreground="White"/>
+            <Button Name="CloseBtn" Click="Close_Click" Content="Close" Width="100" Height="20" Margin="10" Background="Transparent" Foreground="White"/>
             <Button Click="Logout_Click" Content="Logout" Width="100" Height="20" Margin="10" Background="Transparent" Foreground="White" x:Name="LogoutButton" Visibility="Collapsed"/>
         </StackPanel>
     </Grid>

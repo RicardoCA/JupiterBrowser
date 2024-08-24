@@ -32,7 +32,7 @@ namespace JupiterBrowser
 {
     public partial class MainWindow : Window
     {
-        private string VERSION = "7.0";
+        private string VERSION = "1.8.0";
         public ObservableCollection<TabItem> Tabs { get; set; }
         public ObservableCollection<TabItem> PinnedTabs { get; set; }
         private TabItem _draggedItem;
@@ -717,7 +717,7 @@ namespace JupiterBrowser
 
         private void Account_Click(object sender, RoutedEventArgs e)
         {
-            AccountCreate accountCreate = new AccountCreate();
+            AccountCreate accountCreate = new AccountCreate(langCode);
             if (accountCreate.ShowDialog() == true)
             {
 

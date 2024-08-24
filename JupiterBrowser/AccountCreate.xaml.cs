@@ -35,14 +35,48 @@ namespace JupiterBrowser
 
         private FirebaseAuthClient authClient;
         private FirebaseClient databaseClient;
+        private string language = "en-US";
 
-        public AccountCreate()
+        public AccountCreate(string language)
         {
 
             AmbienteCheck();
             InitializeComponent();
             InitializeFirebase();
             IsLogged();
+            this.language = language;
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
+            if(language == "en-US")
+            {
+                LoginTitle.Content = "Login Account";
+                RegisterAccountTitle.Content = "Register Account";
+                CreateAccountButton.Content = "Create Account";
+                CloseBtn.Content = "Close";
+                loggedText.Content = "You are already logged in.";
+                NameLabel.Content = "Name:";
+            }
+            if(language == "pt-BR")
+            {
+                LoginTitle.Content = "Login da Conta";
+                RegisterAccountTitle.Content = "Registrar Conta";
+                CreateAccountButton.Content = "Criar Conta";
+                CloseBtn.Content = "Fechar";
+                loggedText.Content = "Você já está logado.";
+                NameLabel.Content = "Nome:";
+            }
+            if(language == "ES")
+            {
+                LoginTitle.Content = "Cuenta de inicio de sesión";
+                RegisterAccountTitle.Content = "Registrar Cuenta";
+                CreateAccountButton.Content = "Crear Cuenta";
+                CloseBtn.Content = "Cerrar";
+                loggedText.Content = "Ya has iniciado sesión.";
+                NameLabel.Content = "Nombre:";
+            }
         }
 
         private void AmbienteCheck()
@@ -165,7 +199,12 @@ namespace JupiterBrowser
                 RegisterSection.Visibility = Visibility.Visible;
                 LogoutButton.Visibility = Visibility.Collapsed;
                 loggedText.Visibility = Visibility.Collapsed;
-                ToastWindow.Show("You have logged out.");
+                if(language == "en-US")
+                    ToastWindow.Show("You have logged out.");
+                if (language == "pt-BR")
+                    ToastWindow.Show("Você efetuou logout.");
+                if (language == "ES")
+                    ToastWindow.Show("Has cerrado la sesión.");
                 Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
             }
         }
@@ -194,7 +233,12 @@ namespace JupiterBrowser
         {
             if (await EmailExists(email))
             {
-                MessageBox.Show("Email already exists. Try using a different email.");
+                if(language == "en-US")
+                    MessageBox.Show("Email already exists. Try using a different email.");
+                if (language == "pt-BR")
+                    MessageBox.Show("O e-mail já existe. Tente usar um e-mail diferente.");
+                if (language == "ES")
+                    MessageBox.Show("El correo electrónico ya existe. Intente utilizar un correo electrónico diferente.");
                 return;
             }
             Sha1 sha1 = new Sha1();
@@ -220,11 +264,21 @@ namespace JupiterBrowser
                 LogoutButton.Visibility = Visibility.Visible;
                 loggedText.Visibility = Visibility.Visible;
 
-                ToastWindow.Show($"Account successfully created for: {email}");
+                if(language == "en-US")
+                    ToastWindow.Show($"Account successfully created for: {email}");
+                if (language == "pt-BR")
+                    ToastWindow.Show($"Conta criada com sucesso para: {email}");
+                if (language == "ES")
+                    ToastWindow.Show($"Cuenta creada exitosamente para: {email}");
             }
             catch (Exception ex)
             {
-                ToastWindow.Show($"Error creating account: {ex.Message}");
+                if(language == "en-US")
+                    ToastWindow.Show($"Error creating account: {ex.Message}");
+                if (language == "pt-BR")
+                    ToastWindow.Show($"Erro ao criar conta: {ex.Message}");
+                if (language == "ES")
+                    ToastWindow.Show($"Error al crear la cuenta: {ex.Message}");
             }
         }
 
@@ -265,23 +319,43 @@ namespace JupiterBrowser
                         }
                         else
                         {
-                            ToastWindow.Show("Password must contain more than 6 characters.");
+                            if(language == "en-us")
+                                ToastWindow.Show("Password must contain more than 6 characters.");
+                            if (language == "pt-BR")
+                                ToastWindow.Show("A senha deve conter mais de 6 caracteres.");
+                            if (language == "ES")
+                                ToastWindow.Show("La contraseña debe contener más de 6 caracteres.");
                         }
                     }
                     else
                     {
-                        ToastWindow.Show("Invalid E-mail.");
+                        if(language == "en-US")
+                            ToastWindow.Show("Invalid E-mail.");
+                        if (language == "pt-BR")
+                            ToastWindow.Show("E-mail inválido.");
+                        if (language == "ES")
+                            ToastWindow.Show("Correo electrónico no válido.");
 
                     }
                 }
                 else
                 {
-                    ToastWindow.Show("Invalid E-mail.");
+                    if (language == "en-US")
+                        ToastWindow.Show("Invalid E-mail.");
+                    if (language == "pt-BR")
+                        ToastWindow.Show("E-mail inválido.");
+                    if (language == "ES")
+                        ToastWindow.Show("Correo electrónico no válido.");
                 }
             }
             else
             {
-                ToastWindow.Show("Invalid Name.");
+                if (language == "en-US")
+                    ToastWindow.Show("Invalid Name.");
+                if (language == "pt-BR")
+                    ToastWindow.Show("Nome inválido.");
+                if (language == "ES")
+                    ToastWindow.Show("Nombre no válido.");
             }
 
             
@@ -315,26 +389,51 @@ namespace JupiterBrowser
                             LogoutButton.Visibility = Visibility.Visible;
                             loggedText.Visibility = Visibility.Visible;
                             SaveUserToFile(u);
-                            ToastWindow.Show("Login successful.\nRestart Jupiter Browser...");
+                            if(language == "en-US")
+                                ToastWindow.Show("Login successful.\nRestart Jupiter Browser...");
+                            if (language == "en-US")
+                                ToastWindow.Show("Login bem-sucedido.\nReinicie o navegador Jupiter...");
+                            if (language == "en-US")
+                                ToastWindow.Show("Inicio de sesión exitoso.\nReinicie Jupiter Browser...");
                         }
                         else
                         {
-                            ToastWindow.Show("Invalid email or password.");
+                            if(language == "en-US")
+                                ToastWindow.Show("Invalid email or password.");
+                            if (language == "pt-BR")
+                                ToastWindow.Show("E-mail ou senha inválidos.");
+                            if (language == "ES")
+                                ToastWindow.Show("Correo electrónico o contraseña no válidos.");
                         }
                     }
                     else
                     {
-                        ToastWindow.Show("Invalid Password.");
+                        if(language == "en-US")
+                            ToastWindow.Show("Invalid Password.");
+                        if (language == "pt-BR")
+                            ToastWindow.Show("Senha inválida.");
+                        if (language == "ES")
+                            ToastWindow.Show("Contraseña inválida.");
                     }
                 }
                 else
                 {
-                    ToastWindow.Show("Invalid E-mail.");
+                    if (language == "en-US")
+                        ToastWindow.Show("Invalid E-mail.");
+                    if (language == "pt-BR")
+                        ToastWindow.Show("E-mail inválido.");
+                    if (language == "ES")
+                        ToastWindow.Show("Correo electrónico no válido.");
                 }
             }
             else
             {
-                ToastWindow.Show("Invalid E-mail.");
+                if (language == "en-US")
+                    ToastWindow.Show("Invalid E-mail.");
+                if (language == "pt-BR")
+                    ToastWindow.Show("E-mail inválido.");
+                if (language == "ES")
+                    ToastWindow.Show("Correo electrónico no válido.");
             }
         }
     }

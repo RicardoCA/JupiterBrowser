@@ -48,7 +48,12 @@ namespace JupiterBrowser
             }
             catch (Exception ex)
             {
-                ToastWindow.Show($"Failed to load settings: {ex.Message}");
+                if(language == "en-US")
+                    ToastWindow.Show($"Failed to load settings: {ex.Message}");
+                if (language == "pt-BR")
+                    ToastWindow.Show($"Falha ao carregar as configurações: {ex.Message}");
+                if (language == "ES")
+                    ToastWindow.Show($"Error al cargar la configuración: {ex.Message}");
             }
         }
 
@@ -73,17 +78,32 @@ namespace JupiterBrowser
                     shortcut.WorkingDirectory = appDirectory; // Define o diretório de trabalho
                     shortcut.Save();
 
-                    ToastWindow.Show("Jupiter Browser set to start with the operating system.");
+                    if(language == "en-US")
+                        ToastWindow.Show("Jupiter Browser set to start with the operating system.");
+                    if (language == "pt-BR")
+                        ToastWindow.Show("O navegador Jupiter está configurado para iniciar com o sistema operacional.");
+                    if (language == "ES")
+                        ToastWindow.Show("Jupiter Browser está configurado para iniciarse con el sistema operativo.");
                 }
                 else
                 {
                     System.IO.File.Delete(shortcutPath);
-                    ToastWindow.Show("Jupiter Browser set to not start with the operating system.");
+                    if(language == "en-US")
+                        ToastWindow.Show("Jupiter Browser set to not start with the operating system.");
+                    if (language == "pt-BR")
+                        ToastWindow.Show("O navegador Jupiter está configurado para não iniciar com o sistema operacional.");
+                    if (language == "ES")
+                        ToastWindow.Show("Jupiter Browser está configurado para no iniciarse con el sistema operativo.");
                 }
             }
             catch (Exception ex)
             {
-                ToastWindow.Show("Error: " + ex.Message);
+                if(language == "en-US")
+                    ToastWindow.Show("Error: " + ex.Message);
+                if (language == "pt-BR")
+                    ToastWindow.Show("Erro: " + ex.Message);
+                if (language == "ES")
+                    ToastWindow.Show("Error: " + ex.Message);
             }
         }
 
@@ -281,11 +301,21 @@ namespace JupiterBrowser
             if (File.Exists("navigationLog.json"))
             {
                 File.Delete("navigationLog.json");
-                ToastWindow.Show("Navigation recommendations deleted.");
+                if(language == "en-US")
+                    ToastWindow.Show("Navigation recommendations deleted.");
+                if (language == "pt-BR")
+                    ToastWindow.Show("Recomendações de navegação excluídas.");
+                if (language == "ES")
+                    ToastWindow.Show("Recomendaciones de navegación eliminadas.");
             }
             else
             {
-                ToastWindow.Show("There are no navigation recommendations to delete yet.");
+                if(language == "en-US")
+                    ToastWindow.Show("There are no navigation recommendations to delete yet.");
+                if (language == "pt-BR")
+                    ToastWindow.Show("Ainda não há recomendações de navegação para excluir.");
+                if (language == "ES")
+                    ToastWindow.Show("Todavía no hay recomendaciones de navegación para eliminar.");
             }
         }
 
@@ -301,12 +331,22 @@ namespace JupiterBrowser
                     }
                     catch (Exception ex)
                     {
-                        ToastWindow.Show($"Erro ao deletar o arquivo {file}: {ex.Message}");
+                        if(language == "en-US")
+                            ToastWindow.Show($"Error deleting the file {file}: {ex.Message}");
+                        if (language == "pt-BR")
+                            ToastWindow.Show($"Erro ao deletar o arquivo {file}: {ex.Message}");
+                        if (language == "ES")
+                            ToastWindow.Show($"Error al eliminar el archivo {file}: {ex.Message}");
 
                     }
                 }
             }
-            ToastWindow.Show("Browser restored to factory default.");
+            if(language == "en-US")
+                ToastWindow.Show("Browser restored to factory default.");
+            if (language == "pt-BR")
+                ToastWindow.Show("Navegador restaurado para os padrões de fábrica.");
+            if (language == "ES")
+                ToastWindow.Show("Navegador restaurado a valores predeterminados de fábrica.");
             Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
         }
 
@@ -322,7 +362,12 @@ namespace JupiterBrowser
             };
 
             SaveSettings(settings);
-            ToastWindow.Show("Settings have been applied.");
+            if(language == "en-US")
+                ToastWindow.Show("Settings have been applied.");
+            if (language == "pt-BR")
+                ToastWindow.Show("As configurações foram aplicadas.");
+            if (language == "ES")
+                ToastWindow.Show("Se han aplicado los ajustes.");
 
 
 
@@ -412,7 +457,12 @@ namespace JupiterBrowser
             }
             catch (Exception ex)
             {
-                ToastWindow.Show($"Failed to save settings: {ex.Message}");
+                if(language == "en-US")
+                    ToastWindow.Show($"Failed to save settings: {ex.Message}");
+                if (language == "pt-BR")
+                    ToastWindow.Show($"Falha ao salvar as configurações: {ex.Message}");
+                if (language == "ES")
+                    ToastWindow.Show($"No se pudieron guardar las configuraciones: {ex.Message}");
             }
         }
 
