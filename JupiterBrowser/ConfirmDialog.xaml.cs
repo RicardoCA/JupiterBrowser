@@ -19,10 +19,27 @@ namespace JupiterBrowser
     /// </summary>
     public partial class ConfirmDialog : Window
     {
-        public ConfirmDialog(string msg)
+        public string language = "en-US";
+        public ConfirmDialog(string msg, string language)
         {
             InitializeComponent();
             Msg.Text = msg;
+            this.language = language;
+            if(language == "en-US" )
+            {
+                YesBtn.Content = "Yes";
+                NoBtn.Content = "No";
+            }
+            if(language == "pt-BR")
+            {
+                YesBtn.Content = "Sim";
+                NoBtn.Content = "Não";
+            }
+            if(language == "ES")
+            {
+                YesBtn.Content = "Sí";
+                NoBtn.Content = "No";
+            }
         }
 
         private void YesButton_Click(object sender, RoutedEventArgs e)

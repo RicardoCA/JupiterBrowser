@@ -1119,11 +1119,11 @@ namespace JupiterBrowser
 
 
                             if(langCode.Equals("en-US"))
-                                confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                                confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?",langCode);
                             if (langCode.Equals("pt-BR"))
-                                confirmDialog = new ConfirmDialog("Você tem guias para restaurar, deseja restaurar?");
+                                confirmDialog = new ConfirmDialog("Você tem guias para restaurar, deseja restaurar?", langCode);
                             if (langCode.Equals("ES"))
-                                confirmDialog = new ConfirmDialog("¿Tienes guías para restaurar, quieres restaurar?");
+                                confirmDialog = new ConfirmDialog("¿Tienes guías para restaurar, quieres restaurar?", langCode);
 
                             if (confirmDialog.ShowDialog() == true)
                             {
@@ -1196,11 +1196,11 @@ namespace JupiterBrowser
                             ConfirmDialog confirmDialog = null;
 
                             if (langCode.Equals("en-US"))
-                                confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?");
+                                confirmDialog = new ConfirmDialog("You have guides to restore, do you want to restore?", langCode);
                             if (langCode.Equals("pt-BR"))
-                                confirmDialog = new ConfirmDialog("Você tem guias para restaurar, deseja restaurar?");
+                                confirmDialog = new ConfirmDialog("Você tem guias para restaurar, deseja restaurar?", langCode);
                             if (langCode.Equals("ES"))
-                                confirmDialog = new ConfirmDialog("¿Tienes guías para restaurar, quieres restaurar?");
+                                confirmDialog = new ConfirmDialog("¿Tienes guías para restaurar, quieres restaurar?", langCode);
 
 
 
@@ -2922,7 +2922,7 @@ namespace JupiterBrowser
 
         private void SidebarThemeMenu_Click(object sender, RoutedEventArgs e)
         {
-            ThemeColorPicker themeColorPicker = new ThemeColorPicker();
+            ThemeColorPicker themeColorPicker = new ThemeColorPicker(langCode);
 
             // Subscribing to the OnColorSelected event
             themeColorPicker.OnColorSelected += (backgroundColor) =>
@@ -3416,7 +3416,7 @@ namespace JupiterBrowser
 
         private void ClearBtn_Click(object sender, RoutedEventArgs e)
         {
-            ConfirmDialog confirmDialog = new ConfirmDialog("Do you want to close all open tabs?");
+            ConfirmDialog confirmDialog = new ConfirmDialog("Do you want to close all open tabs?", langCode);
             if(confirmDialog.ShowDialog() == true)
             {
                 foreach (var tabItem in Tabs.ToList())

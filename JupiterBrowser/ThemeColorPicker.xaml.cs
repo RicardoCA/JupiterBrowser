@@ -17,10 +17,31 @@ namespace JupiterBrowser
 
         public event Action<string> OnColorSelected;
 
-        public ThemeColorPicker()
+        private string language = "en-US";
+
+        public ThemeColorPicker(string language)
         {
             InitializeComponent();
             Loaded += ThemeColorPicker_Loaded;
+            this.language = language;
+            if (language == "en-US")
+            {
+                ApplyBtn.Content = "Apply";
+                CloseBtn.Content = "Close";
+            }
+                
+            if (language == "pt-BR")
+            {
+                ApplyBtn.Content = "Aplicar";
+                CloseBtn.Content = "Fechar";
+            }
+                
+            if (language == "ES")
+            {
+                ApplyBtn.Content = "Aplicar";
+                CloseBtn.Content = "Cerrar";
+            }
+                
         }
 
         private void ThemeColorPicker_Loaded(object sender, RoutedEventArgs e)
