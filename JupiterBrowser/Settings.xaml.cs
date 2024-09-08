@@ -7,9 +7,7 @@ using System.Reflection;
 
 namespace JupiterBrowser
 {
-    /// <summary>
-    /// Lógica interna para Settings.xaml
-    /// </summary>
+    //
     public partial class Settings : Window
     {
         private string[] restaureFiles = { "calc.json", "navigationLog.json", "pinneds.json", "sidebar.json", "siteColors.json", "vault.json", "settings.json", "account.json", "closedtabs.json","folders.json" };
@@ -41,6 +39,7 @@ namespace JupiterBrowser
                         SetSearchEngine(settings.SearchEngine);
                         SetMiniWindow(settings.MiniWindow);
                         SetSelectedInterfaceLanguage(settings.Language);
+                        SetApiKeyChatGPT(settings.ApiKeyChatGPT);
                         language = settings.Language;
                         UpdateUI();
                     }
@@ -55,6 +54,11 @@ namespace JupiterBrowser
                 if (language == "ES")
                     ToastWindow.Show($"Error al cargar la configuración: {ex.Message}");
             }
+        }
+
+        private void SetApiKeyChatGPT(string apiKey)
+        {
+            ApiKeyInput.Text = apiKey;
         }
 
         private void EnableDisableStartup(object sender, RoutedEventArgs e)
@@ -161,6 +165,8 @@ namespace JupiterBrowser
                 StartupBtn.Content = "Enable/Disable";
                 MiniWindowTrue.Content = "Enabled (default)";
                 MiniWindowFalse.Content = "Disabled";
+                ApiKeyTitle.Text = "AI API Key";
+                ApiKeyLabel.Text = "Set your ChatGPT API Key.";
             }
             if(language == "pt-BR")
             {
@@ -187,6 +193,8 @@ namespace JupiterBrowser
                 StartupBtn.Content = "Ativar/Desativar";
                 MiniWindowTrue.Content = "Ativado (default)";
                 MiniWindowFalse.Content = "Desativado";
+                ApiKeyTitle.Text = "Chave de API de IA";
+                ApiKeyLabel.Text = "Defina sua chave API ChatGPT.";
             }
             if(language == "ES")
             {
@@ -213,6 +221,8 @@ namespace JupiterBrowser
                 StartupBtn.Content = "Habilitar/Deshabilitar";
                 MiniWindowTrue.Content = "Activado (default)";
                 MiniWindowFalse.Content = "Desactivado";
+                ApiKeyTitle.Text = "Clave API de IA";
+                ApiKeyLabel.Text = "Configure su clave API ChatGPT.";
             }
         }
 
@@ -359,6 +369,7 @@ namespace JupiterBrowser
                 SearchEngine = GetSearchEngine(),
                 MiniWindow = GetMiniWindow(),
                 Language = GetSelectedInterfaceLanguage(),
+                ApiKeyChatGPT = GetApiKeyChatGPT(),
             };
 
             SaveSettings(settings);
@@ -371,6 +382,11 @@ namespace JupiterBrowser
 
 
 
+        }
+
+        private string GetApiKeyChatGPT()
+        {
+            return ApiKeyInput.Text;
         }
 
         private string GetMiniWindow()
@@ -482,5 +498,7 @@ namespace JupiterBrowser
         public string SearchEngine { get; set; }
 
         public string Language { get; set; }
+
+        public string ApiKeyChatGPT { get; set; }
     }
 }

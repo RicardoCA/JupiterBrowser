@@ -27,5 +27,6 @@
   "translateBtn": "Translate",
   "closeBtn": "Close",
   "removeFolderBtn": "Remove Folder",
-  "removeSiteBtn": "Remove site"
+  "removeSiteBtn": "Remove site",
+  "apiKeyTitle": "AI API Key"
 }

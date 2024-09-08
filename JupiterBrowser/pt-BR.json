@@ -27,5 +27,6 @@
   "translateBtn": "Traduzir",
   "closeBtn": "Fechar",
   "removeFolderBtn": "Apagar pasta",
-  "removeSiteBtn": "Apagar site"
+  "removeSiteBtn": "Apagar site",
+  "apiKeyTitle": "Chave de API de IA"
 }

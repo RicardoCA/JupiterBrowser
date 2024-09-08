@@ -27,5 +27,6 @@
   "translateBtn": "Traducir",
   "closeBtn": "Cerrar",
   "removeFolderBtn": "Eliminar carpeta",
-  "removeSiteBtn": "Eliminar sitio web"
+  "removeSiteBtn": "Eliminar sitio web",
+  "apiKeyTitle": "Clave API de IA"
 }
