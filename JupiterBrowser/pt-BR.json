@@ -28,5 +28,6 @@
   "closeBtn": "Fechar",
   "removeFolderBtn": "Apagar pasta",
   "removeSiteBtn": "Apagar site",
-  "apiKeyTitle": "Chave de API de IA"
+  "apiKeyTitle": "Chave de API de IA",
+  "chatbotBtn": "IA"
 }

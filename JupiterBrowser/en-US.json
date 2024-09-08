@@ -28,5 +28,6 @@
   "closeBtn": "Close",
   "removeFolderBtn": "Remove Folder",
   "removeSiteBtn": "Remove site",
-  "apiKeyTitle": "AI API Key"
+  "apiKeyTitle": "AI API Key",
+  "chatbotBtn": "AI"
 }

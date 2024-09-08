@@ -75,6 +75,7 @@ namespace JupiterBrowser
         private string email = "";
         private string password = "";
         public string langCode = "en-US";
+        public string apiKeyChatgpt = "";
 
 
 
@@ -148,6 +149,12 @@ namespace JupiterBrowser
             UpdateUI();
         }
 
+        private void ChatBotBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ChatBot chatbot = new ChatBot();
+            chatbot.Show();
+        }
+
         private void UpdateUI()
         {
             BackBtn.ToolTip = App.Translator.GetString("BackBtn");
@@ -158,7 +165,8 @@ namespace JupiterBrowser
             CopyUrlBtn.ToolTip = App.Translator.GetString("copyUrlBtn");
             clearBtn.ToolTip = App.Translator.GetString("closeTabsBtn");
             ToggleSidebarBtn.ToolTip = App.Translator.GetString("toggleSidebarBtn");
-            
+            chatbotBtn.ToolTip = App.Translator.GetString("chatbotBtn");
+
             var jupiterMenu = this.Resources["BrowserMenu"] as ContextMenu;
             var pinsMenu = this.Resources["PinnedItemMenu"] as ContextMenu;
             var tabMenu = this.Resources["TabItemMenu"] as ContextMenu;
@@ -780,6 +788,8 @@ namespace JupiterBrowser
                             "ES" => "ES",
                             _ => "en-US"
                         };
+
+                        apiKeyChatgpt = settings.ApiKeyChatGPT;
                     }
                 }
             }

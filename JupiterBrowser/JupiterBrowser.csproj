@@ -17,6 +17,7 @@
     <None Remove="card.png" />
     <None Remove="contact.png" />
     <None Remove="delete.png" />
+    <None Remove="diamong.png" />
     <None Remove="downloads.png" />
     <None Remove="edit.png" />
     <None Remove="folder.png" />
@@ -81,6 +82,7 @@
     <Resource Include="card.png" />
     <Resource Include="contact.png" />
     <Resource Include="delete.png" />
+    <Resource Include="diamong.png" />
     <Resource Include="downloads.png" />
     <Resource Include="edit.png" />
     <Resource Include="folder.png" />
