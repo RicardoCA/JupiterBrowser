@@ -32,6 +32,68 @@ namespace JupiterBrowser
             LoadSettings();
         }
 
+        private async Task<string> GenerateImageWithChatGPT(string prompt)
+        {
+            try
+            {
+                // Crie o cliente HTTP
+                using (var client = new HttpClient())
+                {
+                    // Defina a chave de autenticação da API
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKeyChatgpt);
+
+                    // Crie o objeto de requisição para a API ChatGPT (para geração de imagem)
+                    var requestBody = new
+                    {
+                        model = "dall-e-3", // Substitua pelo modelo apropriado para gerar imagens
+                        prompt = prompt,
+                        n = 1,
+                        size = "1024x1024" // Tamanho da imagem
+                    };
+
+                    // Converta o objeto de requisição em JSON
+                    var jsonContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+
+                    // Envie a requisição para a API
+                    var response = await client.PostAsync("https://api.openai.com/v1/images/generations", jsonContent);
+                    
+                    // Verifique se a requisição foi bem-sucedida
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+
+                        // Deserialize para o objeto ImageResponse
+                        var imageResponse = JsonConvert.DeserializeObject<ImageResponse>(responseString);
+                        
+                        // Verifique se há dados e extraia a URL da imagem gerada
+                        if (imageResponse?.data != null && imageResponse.data.Count > 0)
+                        {
+                            string imageUrl = imageResponse.data[0].url;
+                            AddImageToLeft(imageUrl);
+                            return imageUrl;
+                        }
+                        else
+                        {
+                            return "Error: No image data returned from API.";
+                        }
+                    }
+                    else
+                    {
+                        // Capture o conteúdo de erro da API
+                        string errorResponse = await response.Content.ReadAsStringAsync();
+                        ToastWindow.Show($"Error: API returned status code {response.StatusCode} with message: {errorResponse}");
+                        return $"Error: API returned status code {response.StatusCode} with message: {errorResponse}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Error Generate Image: {ex.Message}";
+            }
+        }
+
+
+
         private async Task<string> SendMessageToChatGPT(string message)
         {
             try
@@ -66,6 +128,7 @@ namespace JupiterBrowser
 
                         // Extraia a resposta gerada pelo ChatGPT
                         string reply = chatGptResponse.choices[0].message.content;
+                        
                         return reply;
                     }
                     else
@@ -100,6 +163,102 @@ namespace JupiterBrowser
                 ToastWindow.Show($"Failed to load settings: {ex.Message}");
             }
         }
+
+        private async Task<BitmapImage> LoadImageFromUrlAsync(string imageUrl)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    // Baixa os bytes da imagem a partir da URL
+                    var imageBytes = await client.GetByteArrayAsync(imageUrl);
+
+                    // Crie um BitmapImage a partir dos bytes
+                    BitmapImage bitmap = new BitmapImage();
+                    using (var stream = new MemoryStream(imageBytes))
+                    {
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = stream;
+                        bitmap.EndInit();
+                        bitmap.Freeze(); // Congela o BitmapImage para que ele possa ser usado em diferentes threads
+                    }
+
+                    return bitmap;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Trate qualquer erro que ocorrer ao carregar a imagem
+                MessageBox.Show($"Error loading image: {ex.Message}");
+                return null;
+            }
+        }
+
+        private async Task SaveImageToDownloads(string imageUrl, string fileName)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    // Baixa os bytes da imagem a partir da URL
+                    var imageBytes = await client.GetByteArrayAsync(imageUrl);
+
+                    // Caminho para salvar a imagem diretamente no diretório de Downloads do usuário
+                    string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    downloadsPath = System.IO.Path.Combine(downloadsPath, "Downloads");
+
+                    string filePath = System.IO.Path.Combine(downloadsPath, fileName);
+
+                    // Salva a imagem no diretório de Downloads
+                    await File.WriteAllBytesAsync(filePath, imageBytes);
+
+                    ToastWindow.Show($"Image saved to {filePath}", 7000);
+                }
+            }
+            catch (Exception ex)
+            {
+                ToastWindow.Show($"Error saving image: {ex.Message}", 7000);
+            }
+        }
+
+
+        private async void AddImageToLeft(string imageUrl)
+        {
+            string fileName = "GeneratedImage_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+
+            // Salva a imagem no diretório de Downloads
+            await SaveImageToDownloads(imageUrl, fileName);
+
+            // Cria um objeto Image para exibir a imagem
+            Image generatedImage = new Image
+            {
+                Width = 400, // Defina uma largura máxima
+                Height = 400,
+                Margin = new Thickness(5),
+                HorizontalAlignment = HorizontalAlignment.Left, // Alinha a imagem à esquerda
+                Stretch = Stretch.UniformToFill // Mantém a proporção da imagem
+            };
+
+            // Carrega a imagem a partir da URL
+            BitmapImage bitmap = await LoadImageFromUrlAsync(imageUrl);
+
+            if (bitmap != null)
+            {
+                // Atribua a imagem ao controle Image
+                generatedImage.Source = bitmap;
+
+                // Adiciona o controle Image ao StackPanel (MessagesPanel)
+                MessagesPanel.Children.Add(generatedImage);
+
+                // Rola para a última mensagem
+                MessagesPanel.UpdateLayout();
+                var scrollViewer = MessagesPanel.Parent as ScrollViewer;
+                scrollViewer?.ScrollToBottom();
+            }
+        }
+
+
 
         private void AddMessageToLeft(string message)
         {
@@ -139,8 +298,19 @@ namespace JupiterBrowser
 
             // Adiciona o TextBlock ao StackPanel (MessagesPanel)
             MessagesPanel.Children.Add(messageTextBlock);
-            string reply = await SendMessageToChatGPT(message);
-            AddMessageToLeft(reply);
+
+            if (textIARadio.IsChecked == true)
+            {
+                string reply = await SendMessageToChatGPT(message);
+                AddMessageToLeft(reply);
+            }
+            else
+            {
+                AddMessageToLeft("Loading...");
+                await GenerateImageWithChatGPT(message);
+                
+            }
+            
 
 
             // Limpa o TextBox
@@ -151,5 +321,15 @@ namespace JupiterBrowser
             var scrollViewer = MessagesPanel.Parent as ScrollViewer;
             scrollViewer?.ScrollToBottom();
         }
+    }
+
+    public class ImageResponse
+    {
+        public List<ImageData> data { get; set; }
+    }
+
+    public class ImageData
+    {
+        public string url { get; set; }
     }
 }
