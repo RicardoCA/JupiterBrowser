@@ -274,6 +274,12 @@ namespace JupiterBrowser
                 TextWrapping = TextWrapping.Wrap // Permite que o texto quebre em várias linhas
             };
 
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem copyMenuItem = new MenuItem { Header = "Copy" };
+            copyMenuItem.Click += (s, e) => Clipboard.SetText(messageTextBlock.Text); // Copia o texto para a área de transferência
+            contextMenu.Items.Add(copyMenuItem);
+            messageTextBlock.ContextMenu = contextMenu;
+
             // Adiciona o TextBlock ao StackPanel (MessagesPanel)
             MessagesPanel.Children.Add(messageTextBlock);
 
@@ -283,17 +289,15 @@ namespace JupiterBrowser
             scrollViewer?.ScrollToBottom();
         }
 
-        private async void SendMessage_Click(object sender, RoutedEventArgs e)
+        private async void sendMessage(string message)
         {
-            // Pega o texto do TextBox
-            string message = MessageInput.Text;
-
             // Cria um TextBlock para exibir a mensagem
             TextBlock messageTextBlock = new TextBlock
             {
                 Text = message,
                 Margin = new Thickness(5),
-                
+                Foreground = new SolidColorBrush(Colors.White),
+
             };
 
             // Adiciona o TextBlock ao StackPanel (MessagesPanel)
@@ -308,9 +312,9 @@ namespace JupiterBrowser
             {
                 AddMessageToLeft("Loading...");
                 await GenerateImageWithChatGPT(message);
-                
+
             }
-            
+
 
 
             // Limpa o TextBox
@@ -320,6 +324,14 @@ namespace JupiterBrowser
             MessagesPanel.UpdateLayout();
             var scrollViewer = MessagesPanel.Parent as ScrollViewer;
             scrollViewer?.ScrollToBottom();
+        }
+
+        private async void SendMessage_Click(object sender, RoutedEventArgs e)
+        {
+            // Pega o texto do TextBox
+            string message = MessageInput.Text;
+            sendMessage(message);
+            
         }
     }
 
