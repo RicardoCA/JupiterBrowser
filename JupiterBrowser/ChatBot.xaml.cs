@@ -70,6 +70,7 @@ namespace JupiterBrowser
                         {
                             string imageUrl = imageResponse.data[0].url;
                             AddImageToLeft(imageUrl);
+                            SendBtn.IsEnabled = true;
                             return imageUrl;
                         }
                         else
@@ -168,6 +169,7 @@ namespace JupiterBrowser
         {
             try
             {
+
                 using (HttpClient client = new HttpClient())
                 {
                     // Baixa os bytes da imagem a partir da URL
@@ -248,6 +250,12 @@ namespace JupiterBrowser
                 // Atribua a imagem ao controle Image
                 generatedImage.Source = bitmap;
 
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem copyMenuItem = new MenuItem { Header = "Copy URL from Image" };
+                copyMenuItem.Click += (s, e) => Clipboard.SetText(imageUrl); // Copia o texto para a área de transferência
+                contextMenu.Items.Add(copyMenuItem);
+                generatedImage.ContextMenu = contextMenu;
+
                 // Adiciona o controle Image ao StackPanel (MessagesPanel)
                 MessagesPanel.Children.Add(generatedImage);
 
@@ -302,11 +310,13 @@ namespace JupiterBrowser
 
             // Adiciona o TextBlock ao StackPanel (MessagesPanel)
             MessagesPanel.Children.Add(messageTextBlock);
+            SendBtn.IsEnabled = false;
 
             if (textIARadio.IsChecked == true)
             {
                 string reply = await SendMessageToChatGPT(message);
                 AddMessageToLeft(reply);
+                SendBtn.IsEnabled = true;
             }
             else
             {

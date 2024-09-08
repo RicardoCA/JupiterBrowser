@@ -26,7 +26,7 @@
         <!-- Painel de entrada de mensagem com botão de envio -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
             <TextBox x:Name="MessageInput" Width="600" Height="30" VerticalAlignment="Center" />
-            <Button Content="Send" Width="57" Height="30" Margin="10,0,0,0" Click="SendMessage_Click">
+            <Button Name="SendBtn" Content="Send" Width="57" Height="30" Margin="10,0,0,0" Click="SendMessage_Click">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="Transparent"/>
